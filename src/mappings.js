@@ -1,0 +1,313 @@
+import { baseUrl, decompressLines } from "./utils.js";
+
+var init = false;
+var gene2set_ranges;
+var set2gene_ranges;
+var tokens_names_ranges;
+var tokens_descriptions_ranges;
+var sets_ranges;
+var collections_ranges;
+
+const gene2set_cache = new Map;
+const set2gene_cache = new Map;
+const tokens_names_cache = new Map;
+const tokens_descriptions_cache = new Map;
+const sets_cache = new Map;
+const collections_cache = new Map;
+
+async function retrieveRanges(resource) {
+    var res = await fetch(baseUrl+ "/" + resource + ".ranges.gz");
+    if (!res.ok) {
+        throw "failed to fetch ranges for '" + resource + "'";
+    }
+
+    var buffer = await res.arrayBuffer();
+    var lengths = decompressLines(buffer);
+
+    var ranges = [0];
+    for (var i = 0; i < lengths.length - 1; i++) { // ignore the empty string due to the trailing newline.
+        ranges.push(ranges[i] + Number(lengths[i]) + 1);
+    }
+    return ranges;
+}
+
+async function retrieveNamedRanges(resource) {
+    var res = await fetch(baseUrl+ "/" + resource + ".ranges.gz");
+    if (!res.ok) {
+        throw "failed to fetch ranges for '" + resource + "'";
+    }
+
+    var buffer = await res.arrayBuffer();
+    var lines = decompressLines(buffer);
+
+    var last = 0;
+    var output = new Map; 
+    for (var i = 0; i < lines.length - 1; i++) { // ignore the empty string due to the trailing newline.
+        let split = lines[i].split("\t");
+        let next = last + Number(split[1]) + 1; // +1 for the newline.
+        output.set(split[0], [last, next]);
+        last = next;
+    }
+
+    return output;
+}
+
+function retrieveBytesByIndex(resource, ranges, index) {
+    var start = ranges[index];
+    var end = ranges[index + 1];
+    return retrieveBytes(resource, start, end);
+}
+
+async function retrieveBytes(resource, start, end) {
+    end--; // ignore the newline.
+
+    var url = baseUrl + "/" + resource;
+    var res = await fetch(url, {
+        "headers": {
+            "Range": "bytes=" + String(start) + "-" + String(end) 
+        }
+    });
+    if (!res.ok) {
+        throw "failed to fetch ranges for '" + resource + "'";
+    }
+
+    var txt = await res.text();
+    return txt.slice(0, end - start); // make sure we limit it to the requested length.
+}
+
+// Building back the indices from the diffs.
+function convertToUint32Array(txt) {
+    var output = [];
+    var last = 0;
+    txt.split("\t").forEach(x => {
+        var y = Number(x) + last;
+        output.push(y);
+        last = y;
+    });
+    return new Uint32Array(output);
+}
+
+/**
+ * Initialize all **gesel** mapping assets.
+ *
+ * @return {boolean} `true` when mapping assets are downloaded and initialized.
+ * If the assets were already downloaded, `false` is returned instead.
+ *
+ * @async
+ */
+export async function initializeMappings() {
+    if (init) {
+        return false;
+    }
+
+    await Promise.all([
+        retrieveRanges("set2gene.tsv")
+            .then(res => {
+                set2gene_ranges = res;
+                return true;
+            }),
+
+        retrieveRanges("gene2set.tsv")
+            .then(res => { 
+                gene2set_ranges = res;
+                return true;
+            }),
+
+        retrieveRanges("sets.tsv")
+            .then(res => {
+                sets_ranges = res;
+                return true;
+            }),
+
+        retrieveRanges("collections.tsv")
+            .then(res => {
+                collections_ranges = res;
+                return true;
+            }),
+
+        retrieveNamedRanges("tokens-names.tsv")
+            .then(res => {
+                tokens_names_ranges = res;
+                return true;
+            }),
+
+        retrieveNamedRanges("tokens-descriptions.tsv")
+            .then(res => {
+                tokens_descriptions_ranges = res;
+                return true;
+            })
+    ]);
+
+    init = true;
+    return true;
+}
+
+/**
+ * Get all sets containing a gene.
+ * This assumes that the promise returned by {@linkcode initializeMappings} has been resolved.
+ *
+ * @param {number} gene - Index of a gene, referencing an element in {@linkcode genes}.
+ *
+ * @return {Array} An array of integers containing the indices for all sets containing the gene.
+ * Indices refer to elements in {@linkcode sets}.
+ * 
+ * @async
+ */
+export async function fetchSetsForGene(gene) {
+    let cached = gene2set_cache.get(gene);
+    if (typeof cached !== "undefined") {
+        return cached;
+    }
+
+    let text = await retrieveBytesByIndex("gene2set.tsv", gene2set_ranges, gene);
+    let output = convertToUint32Array(text);
+    gene2set_cache.set(gene, output);
+    return output;
+}
+
+/**
+ * Get all genes within a set.
+ * This assumes that the promise returned by {@linkcode initializeMappings} has been resolved.
+ *
+ * @param {number} set - Index of a set, referencing an element in {@linkcode sets}.
+ *
+ * @return {Array} An array of integers containing the indices for all genes within the set.
+ * Indices refer to elements in {@linkcode genes}.
+ *
+ * @async
+ */
+export async function fetchGenesForSet(set) {
+    let cached = set2gene_cache.get(set);
+    if (typeof cached !== "undefined") {
+        return cached;
+    }
+
+    let text = await retrieveBytesByIndex("set2gene.tsv", set2gene_ranges, set);
+    let output = convertToUint32Array(text);
+    set2gene_cache.set(set, output);
+    return output;
+}
+
+/**
+ * @return {number} Total number of sets.
+ */
+export function totalSets() {
+    return sets_ranges.length;
+}
+
+/**
+ * @return {number} Total number of collections.
+ */
+export function totalCollections() {
+    return collections_ranges.length;
+}
+
+/**
+ * Obtain the details for a set.
+ * This assumes that the promise returned by {@linkcode initializeMappings} has been resolved.
+ *
+ * @param {number} set - Index of a set.
+ *
+ * @return {object} Object containing the details of the set, with the following properties:
+ *
+ * - `name`, the name of the set.
+ * - `description`, the description of the set.
+ * - `size`, the number of genes in the set.
+ * - `collection`, the index of the collection containing the set.
+ * - `number`, the number of the set within the collection.
+ *
+ * @async
+ */
+export async function fetchSetDetails(set) {
+    let cached = sets_cache.get(set);
+    if (typeof cached !== "undefined") {
+        return cached;
+    }
+
+    let text = await retrieveBytesByIndex("sets.tsv", sets_ranges, set);
+    let split = text.split("\t");
+    let output = {
+        name: split[0],
+        description: split[1],
+        size: Number(split[2]),
+        collection: Number(split[3]),
+        number: Number(split[4])
+    };
+
+    set2gene_cache.set(set, output);
+    return output;
+}
+
+/**
+ * Obtain the details for a collection.
+ * This assumes that the promise returned by {@linkcode initializeMappings} has been resolved.
+ *
+ * @param {number} set - Index of a set.
+ *
+ * @return {object} Object containing the details of the collection, with the following properties:
+ *
+ * - `id`, the Genomitory identifier for this set.
+ * - `start`, the index for the first set in the collection in the output of {@linkcode sets}.
+ *   All sets from the same collection are stored contiguously.
+ * - `size`, the number of sets in the collection.
+ * - `title`, the title for the collection.
+ * - `description`, the description for the collection.
+ * - `species`, the species for all gene identifiers in the collection.
+ *   This should contain the full scientific name, e.g., `"Homo sapiens"`, `"Mus musculus"`.
+ *
+ * @async
+ */
+export async function fetchCollectionDetails(set) {
+    let cached = collections_cache.get(set);
+    if (typeof cached !== "undefined") {
+        return cached;
+    }
+
+    let text = await retrieveBytesByIndex("collections.tsv", collections_ranges, set);
+    let split = text.split("\t");
+    let output = {
+        id: split[0],
+        start: Number(split[1]),
+        size: Number(split[2]),
+        title: split[3],
+        description: split[4],
+        species: split[5]
+    };
+
+    set2gene_cache.set(set, output);
+    return output;
+}
+
+export async function fetchSetsByNameToken(token) {
+    let cached = tokens_names_cache.get(token);
+    if (typeof cached !== "undefined") {
+        return cached;
+    }
+
+    let pos = tokens_names_ranges.get(token);
+    if (typeof pos === "undefined") {
+        return new Uint8Array;
+    }
+
+    let text = await retrieveBytes("tokens-names.tsv", pos[0], pos[1]);
+    let output = convertToUint32Array(text);
+    tokens_names_cache.set(token, output);
+    return output;
+}
+
+export async function fetchSetsByDescriptionToken(token) {
+    let cached = tokens_descriptions_cache.get(token);
+    if (typeof cached !== "undefined") {
+        return cached;
+    }
+
+    let pos = tokens_descriptions_ranges.get(token);
+    if (typeof pos === "undefined") {
+        return new Uint8Array;
+    }
+
+    let text = await retrieveBytes("tokens-descriptions.tsv", pos[0], pos[1]);
+    let output = convertToUint32Array(text);
+    tokens_descriptions_cache.set(token, output);
+    return output;
+}

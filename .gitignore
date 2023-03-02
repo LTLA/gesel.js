@@ -1,0 +1,10 @@
+*.swp
+assets/
+node_modules
+.parcel-cache/
+dist/
+package-lock.json
+index.html
+.babelrc
+web/
+docs/built

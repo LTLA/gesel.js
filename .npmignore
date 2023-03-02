@@ -1,0 +1,6 @@
+tests/
+docs/
+assets/
+*.html
+*.R
+.gitignore
