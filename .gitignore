@@ -8,3 +8,5 @@ index.html
 .babelrc
 web/
 docs/built
+files/
+blah.js
