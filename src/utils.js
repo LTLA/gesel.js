@@ -131,3 +131,30 @@ export function convertToUint32Array(txt) { // Building back the indices from th
     });
     return new Uint32Array(output);
 }
+
+/**
+ * @param {Array} Array of arrays over which to compute the intersection.
+ * @return {Array} Intersection of all arrays in {arrays}.
+ */
+export function intersect(arrays) {
+    if (arrays.length == 0) {
+        return [];
+    } else if (arrays.length == 1) {
+        return arrays[0];
+    }
+
+    let ref = new Set(arrays[0]);
+    for (var i = 1; i < arrays.length; i++) {
+        let running = new Set;
+        for (const x of arrays[i]) {
+            if (ref.has(x)) {
+                running.add(x);
+            }
+        }
+        ref = running;
+    }
+
+    return Array.from(ref);
+}
+
+

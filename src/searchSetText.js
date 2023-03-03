@@ -11,7 +11,7 @@ export async function fetchSetsByNameToken(token) {
     }
 
     if (!n_init) {
-        n_ranges = utils.retrieveNamedRanges("tokens-names.tsv")
+        n_ranges = await utils.retrieveNamedRanges("tokens-names.tsv")
         n_init = true;
     }
 
@@ -37,26 +37,22 @@ export async function fetchSetsByDescriptionToken(token) {
     }
 
     if (!d_init) {
-        d_ranges = utils.retrieveNamedRanges("tokens-names.tsv")
+        d_ranges = await utils.retrieveNamedRanges("tokens-descriptions.tsv")
         d_init = true;
     }
-
 
     let pos = d_ranges.get(token);
     if (typeof pos === "undefined") {
         return new Uint8Array;
     }
 
-    let text = await retrieveBytes("tokens-descriptions.tsv", pos[0], pos[1]);
-    let output = convertToUint32Array(text);
-    tokens_descriptions_cache.set(token, output);
+    let text = await utils.retrieveBytes("tokens-descriptions.tsv", pos[0], pos[1]);
+    let output = utils.convertToUint32Array(text);
+    d_cache.set(token, output);
     return output;
 }
 
 /**
- * Performs a simple search of the name and description text for each set.
- * This function assumes that {@linkcode initialize} (or all components theoref) has already been run. 
- *
  * @param {string} query - Query string.
  * Each stretch of alphanumeric characters and dashes is treated as a single word.
  * A set's name and/or description must contain all words to be considered a match.
@@ -86,5 +82,5 @@ export async function searchSetText(query, { inName = true, inDescription = true
         }
     }
 
-    return intersect(await Promise.all(gathered))
+    return utils.intersect(await Promise.all(gathered))
 }

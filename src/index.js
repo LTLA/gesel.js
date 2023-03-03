@@ -1,5 +1,4 @@
-export * from "./search.js";
-export { setDownload } from "./utils.js";
+export { setDownload, intersect } from "./utils.js";
 
 export * from "./fetchAllGenes.js";
 export * from "./mapGenesBySymbol.js";
@@ -14,6 +13,8 @@ export { fetchSingleCollection, numberOfCollections } from "./fetchSingleCollect
 
 export { fetchGenesForSet } from "./fetchGenesForSet.js";
 export { fetchSetsForGene } from "./fetchSetsForGene.js";
+
+export { searchSetText } from "./searchSetText.js";
 
 import { initializeMappings } from "./mappings.js";
 
