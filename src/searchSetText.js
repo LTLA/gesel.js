@@ -69,18 +69,33 @@ export async function searchSetText(query, { inName = true, inDescription = true
     let tokens = processed.split(/\s+/);
     tokens = tokens.filter(x => x !== "" || x !== "-");
 
-    let gathered = [];
-    let gathered_tokens = [];
+    let gathered_names = [];
     if (inName) {
         for (const tok of tokens) {
-            gathered.push(fetchSetsByNameToken(tok));
-        }
-    }
-    if (inDescription) {
-        for (const tok of tokens) {
-            gathered.push(fetchSetsByDescriptionToken(tok));
+            gathered_names.push(fetchSetsByNameToken(tok));
         }
     }
 
-    return utils.intersect(await Promise.all(gathered))
+    let gathered_descriptions = [];
+    if (inDescription) {
+        for (const tok of tokens) {
+            gathered_descriptions.push(fetchSetsByDescriptionToken(tok));
+        }
+    }
+
+    let resolved_names = await Promise.all(gathered_names);
+    let resolved_descriptions = await Promise.all(gathered_descriptions);
+
+    let gathered = [];
+    for (var i = 0; i < tokens.length; i++) {
+        let n = (inName ? resolved_names[i] : []);
+        let d = (inDescription ? resolved_descriptions[i] : []);
+
+        let combined = new Uint32Array(n.length + d.length);
+        combined.set(n);
+        combined.set(d, n.length);
+        gathered.push(combined);
+    }
+
+    return utils.intersect(gathered);
 }
