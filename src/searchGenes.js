@@ -37,31 +37,31 @@ function define_prefix(species) {
 }
 
 /**
- * @param {Array} searches - Array of strings containing gene identifiers of some kind (e.g., Ensembl, symbol, Entrez).
+ * @param {Array} queries - Array of strings containing gene identifiers of some kind (e.g., Ensembl, symbol, Entrez).
  * @param {?string} species - String specifying the species of interest.
  * This is used to filter the matching genes to the indicated species.
  * We currently support `"Homo sapiens"`, `"Mus musculus"`, `"Macaca fascicularis"`, `"Rattus norvegicus"`, `"Caenorhabditis elegans"`, `"Drosophila melanogaster"`, `"Pan troglodytes"` and `"Danio rerio"`;
  * any other string or `null` is ignored.
  * @param {object} [options={}] - Optional parameters.
  * @param {boolean} [options.ignoreCase=true] - Whether to ignore case in the search query.
- * @param {boolean} [options.allowSymbol=true] - Whether strings in `searches` might be symbols.
- * @param {boolean} [options.allowEntrez=false] - Whether strings in `searches` might be Entrez IDs.
+ * @param {boolean} [options.allowSymbol=true] - Whether strings in `queries` might be symbols.
+ * @param {boolean} [options.allowEntrez=false] - Whether strings in `queries` might be Entrez IDs.
  *
- * @return {Array} An array of length equal to `searches`.
+ * @return {Array} An array of length equal to `queries`.
  * Each element of the array is an array containing the **gesel** gene IDs that match the corresponding search string.
  * Each gene ID is an index into the array returned by {@linkcode fetchAllGenes}.
  *
  * @async
  */
-export async function searchGenes(searches, species, { ignoreCase = true, allowSymbol = true, allowEntrez = false } ={}) {
+export async function searchGenes(queries, species, { ignoreCase = true, allowSymbol = true, allowEntrez = false } ={}) {
     var by_ens = await mapGenesByEnsembl();
     var by_sym = (allowSymbol ? await mapGenesBySymbol({ lowerCase: ignoreCase }) : new Map);
     var by_ent = (allowEntrez ? await mapGenesByEntrez() : new Map);
     var mapping = [];
 
     // Adding all the mapped entries first.
-    for (var i = 0; i < searches.length; i++) {
-        let current = searches[i];
+    for (var i = 0; i < queries.length; i++) {
+        let current = queries[i];
         if (current.length == 0) {
             mapping.push([]);
             continue;
