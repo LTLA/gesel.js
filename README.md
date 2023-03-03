@@ -4,7 +4,7 @@
 
 Search for interesting gene sets, client-side.
 This uses Javascript to do the queries in the browser, improving latency and avoiding the need for a back-end service.
-The queries rely on prebuilt indices served with CORS, currently provided by Jay's CDN.
+The queries rely on prebuilt indices for gene sets of interest, e.g., [here](https://github.com/LTLA/gesel-feedstock).
 
 ## Quick start
 
@@ -43,10 +43,10 @@ let collection_info = gesel.collections();
 The mapping functions will accept and return _indices_ into these arrays.
 
 ```js
-# All sets involving the first gene.
+// All sets involving the first gene.
 let first_set = await gesel.fetchSetsForGene(0);
 
-# All genes in the first set.
+// All genes in the first set.
 let first_set = await gesel.fetchGenesForSet(0);
 ```
 
@@ -67,19 +67,4 @@ let sets_with_gene = await gesel.findOverlappingGenes([1, 10, 1000]);
 let sets_with_text = await gesel.searchSetText("KEGG immune");
 ``` 
 
-See the [API documentation](http://pages.github.com/LTLA/gesel) for more details.
-
-## For `gesel` maintainers
-
-Indices and other assets are constructed using the `build_assets.R` script.
-This pulls the latest versions of all public gene set collections from the Genomitory and constructs indices to map genes to sets.
-All assets are stored in the `assets/` output directory, to be hosted on the server of choice.
-
-On load, **gesel** will download some of these indices in full - any such files should be Gzip-compressed.
-For simplicity, files used for range requests should be left uncompressed. 
-We reduce the amount of data transfer by encoding the genes and sets as the diff of sorted integers,
-so clients should take the cumulative sum to obtain the actual identifiers.
-
-To build the documentation, use `npm run jsdoc` and update the `gh-pages` branch of this repository.
-
-To test the package, use `npm run test`.
+See the [API documentation](https://ltla.github.io/gesel.js) for more details.
