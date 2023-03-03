@@ -42,14 +42,15 @@ export async function initializeSets () {
     var start = 0;
     coll_data.forEach((x, i) => {
         var details = x.split("\t");
-        var len = Number(details[1]);
+        var len = Number(details[5]);
         _collections.push({
-            "id": details[0],
+            "title": details[0],
+            "description": details[1],
+            "species": details[2],
+            "maintainer": details[3],
+            "source": details[4],
             "start": start,
-            "size": len,
-            "title": details[2],
-            "description": details[3],
-            "species": details[4]
+            "size": len
         });
 
         // For easier access going the other way.
@@ -116,14 +117,15 @@ export function lowerCaseSetDetails() {
  * @return {Array} Array of objects where each entry corresponds to a set collection and contains details about that collection.
  * Each object can be expected to contain:
  * 
- * - `id`, the Genomitory identifier for this set.
- * - `start`, the index for the first set in the collection in the output of {@linkcode sets}.
- *   All sets from the same collection are stored contiguously.
- * - `size`, the number of sets in the collection.
  * - `title`, the title for the collection.
  * - `description`, the description for the collection.
  * - `species`, the species for all gene identifiers in the collection.
  *   This should contain the full scientific name, e.g., `"Homo sapiens"`, `"Mus musculus"`.
+ * - `maintainer`, the maintainer of this collection.
+ * - `source`, the source of this set, usually a link to some external resource.
+ * - `start`, the index for the first set in the collection in the output of {@linkcode sets}.
+ *   All sets from the same collection are stored contiguously.
+ * - `size`, the number of sets in the collection.
  */
 export function collections() {
     return _collections;

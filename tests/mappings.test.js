@@ -25,7 +25,6 @@ test("fetching set details", async () => {
 
 test("fetching collection details", async () => {
     var deets = await gesel.fetchCollectionDetails(0);
-    expect(typeof deets.id).toBe("string");
     expect(typeof deets.start).toBe("number");
     expect(typeof deets.size).toBe("number");
     expect(typeof deets.title).toBe("string");
@@ -35,12 +34,12 @@ test("fetching collection details", async () => {
 
 test("fetching sets by token", async () => {
     {
-        let sets = await token.fetchSetsByNameToken("kegg");
+        let sets = await token.fetchSetsByNameToken("0000001");
         expect(sets.length).toBeGreaterThan(0);
     }
 
     {
-        let sets = await token.fetchSetsByDescriptionToken("anneleen");
+        let sets = await token.fetchSetsByDescriptionToken("metabolism");
         expect(sets.length).toBeGreaterThan(0);
     }
 })

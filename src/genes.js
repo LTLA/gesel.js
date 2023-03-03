@@ -16,7 +16,7 @@ export async function initializeGenes() {
         return false;
     }
 
-    var res = await fetch(baseUrl + "/genes.tsv.gz")
+    var res = await fetch(baseUrl + "/symbol2gene.tsv.gz")
     if (!res.ok) {
         throw "failed to fetch gene information";
     }

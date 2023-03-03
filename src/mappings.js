@@ -34,7 +34,7 @@ async function retrieveRanges(resource) {
     var lengths = decompressLines(buffer);
 
     var ranges = [0];
-    for (var i = 0; i < lengths.length - 1; i++) { // ignore the empty string due to the trailing newline.
+    for (var i = 0; i < lengths.length; i++) { 
         ranges.push(ranges[i] + Number(lengths[i]) + 1);
     }
     return ranges;
@@ -51,7 +51,7 @@ async function retrieveNamedRanges(resource) {
 
     var last = 0;
     var output = new Map; 
-    for (var i = 0; i < lines.length - 1; i++) { // ignore the empty string due to the trailing newline.
+    for (var i = 0; i < lines.length; i++) { 
         let split = lines[i].split("\t");
         let next = last + Number(split[1]) + 1; // +1 for the newline.
         output.set(split[0], [last, next]);
@@ -70,12 +70,11 @@ async function retrieveRangesWithExtras(resource) {
     var buffer = await res.arrayBuffer();
     var lines = decompressLines(buffer);
 
-    var last = 0;
     var ranges = [0];
     var extra = [];
-    for (var i = 1; i < lines.length - 1; i++) { // ignore the empty string due to the trailing newline.
+    for (var i = 0; i < lines.length; i++) {
         let split = lines[i].split("\t");
-        ranges.push(ranges[i] + Number(split[0]) + 1);
+        ranges.push(ranges[i] + Number(split[0]) + 1); // +1 for the newline.
         extra.push(Number(split[1]));
     }
 
@@ -249,14 +248,14 @@ export async function fetchGenesForSet(set) {
  * @return {number} Total number of sets.
  */
 export function totalSets() {
-    return sets_ranges.length;
+    return sets_sizes.length;
 }
 
 /**
  * @return {number} Total number of collections.
  */
 export function totalCollections() {
-    return collections_ranges.length;
+    return collections_sizes.length;
 }
 
 /**
@@ -303,14 +302,15 @@ export async function fetchSetDetails(set) {
  *
  * @return {object} Object containing the details of the collection, with the following properties:
  *
- * - `id`, the Genomitory identifier for this set.
- * - `start`, the index for the first set in the collection in the output of {@linkcode sets}.
- *   All sets from the same collection are stored contiguously.
- * - `size`, the number of sets in the collection.
  * - `title`, the title for the collection.
  * - `description`, the description for the collection.
  * - `species`, the species for all gene identifiers in the collection.
  *   This should contain the full scientific name, e.g., `"Homo sapiens"`, `"Mus musculus"`.
+ * - `maintainer`, the maintainer of this collection.
+ * - `source`, the source of this set, usually a link to some external resource.
+ * - `start`, the index for the first set in the collection in the output of {@linkcode sets}.
+ *   All sets from the same collection are stored contiguously.
+ * - `size`, the number of sets in the collection.
  *
  * @async
  */
@@ -326,6 +326,8 @@ export async function fetchCollectionDetails(collection) {
         title: split[0],
         description: split[1],
         species: split[2],
+        maintainer: split[3],
+        source: split[4],
         start: collections_starts[collection],
         size: collections_sizes[collection]
     };

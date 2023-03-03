@@ -1,6 +1,5 @@
-import { fetchSetsForGene, fetchSetsByNameToken, fetchSetsByDescriptionToken, fetchSetDetails } from "./mappings.js";
+import { fetchSetsForGene, fetchSetsByNameToken, fetchSetsByDescriptionToken, fetchSetDetails, sets_sizes } from "./mappings.js";
 import { genes, genesBySymbol, genesByEnsembl, possiblyEnsembl } from "./genes.js";
-import { sets } from "./sets.js";
 
 /**
  * Search for sets with overlaps with the user-supplied set of genes.
@@ -36,7 +35,6 @@ export async function findOverlappingSets(genes, { sort = false } = {}) {
         }
     }
 
-    let sinfo = sets();
     let output = [];
     for (const [id, count] of Object.entries(set_count)) {
         let id0 = Number(id);
@@ -46,7 +44,7 @@ export async function findOverlappingSets(genes, { sort = false } = {}) {
         };
 
         if (sort) {
-            let size = sinfo[id0].size;
+            let size = sets_sizes[id0];
             // Adding a sorting condition; we give more weight to gene sets
             // with multiple entries.
             let stat = (count == 1 ? 0.000000001 : count) / size;

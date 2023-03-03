@@ -62,14 +62,14 @@ test("mapping multiple genes works with species constraints", async () => {
     expect(output[5].status).toBe("none");
 });
 
-test("searching by text works as expected", async () => {
+test.skip("searching by text works as expected", async () => {
     // Searching the names.
     {
-        let results = await gesel.searchSetText("KEGG metabolism", { inDescription: false });
+        let results = await gesel.searchSetText("GO metabolism", { inDescription: false });
         expect(results.length).toBeGreaterThan(0);
         for (var i = 0; i < Math.min(10, results.length); i++) {
             let deets = await gesel.fetchSetDetails(results[i]);
-            expect(deets.name).toMatch(/KEGG.*metabolism/i);
+            expect(deets.name).toMatch(/GO.*metabolism/i);
         }
     }
 

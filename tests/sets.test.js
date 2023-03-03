@@ -14,10 +14,13 @@ test("sets extraction works as expected", async () => {
     expect(s[0].name.toLowerCase()).toBe(alt[0].name);
 
     // Same result as fetchSetDetails.
-    let jump = Math.trunc(s.length / 10);
+    let jump = Math.max(Math.trunc(s.length / 10));
     for (var i = 0; i < s.length; i += jump) {
         expect(s[i]).toEqual(await gesel.fetchSetDetails(i));
     }
+
+    let last = s.length - 1;
+    expect(s[last]).toEqual(await gesel.fetchSetDetails(last));
 });
 
 test("collections extraction works as expected", async () => {
@@ -37,8 +40,11 @@ test("collections extraction works as expected", async () => {
     expect(last_col.size > 0).toBe(true);
 
     // Same result as fetchCollectionDetails.
-    let jump = Math.trunc(c.length / 10);
+    let jump = Math.max(1, Math.trunc(c.length / 10));
     for (var i = 0; i < c.length; i += jump) {
         expect(c[i]).toEqual(await gesel.fetchCollectionDetails(i));
     }
+
+    let last = c.length - 1;
+    expect(c[last]).toEqual(await gesel.fetchCollectionDetails(last));
 });
