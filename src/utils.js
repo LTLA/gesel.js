@@ -14,7 +14,7 @@ export var downloader = (file, start = null, end = null) => {
 /**
  * Set the global download function to fetch pre-built indices.
  * By default, it uses the indices from [the feedstock repository](https://github.com/LTLA/gesel-feedstock).
- * Applications may specify a different function, e.g., to point to another set of indices; this should be done before calling any {@linkcode initialize} functions.
+ * Applications may specify a different function, e.g., to point to another set of indices; this should be done before calling any other **gesel** functions.
  *
  * @param {function} fun - Function that performs a GET request to an index file, returning a Response object containing the file contents.
  * This accepts three arguments:
