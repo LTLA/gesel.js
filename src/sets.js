@@ -1,4 +1,4 @@
-import { baseUrl, decompressLines } from "./utils.js";
+import { downloader, decompressLines } from "./utils.js";
 
 var init = false;
 var _collections = [];
@@ -17,7 +17,7 @@ export async function initializeSets () {
         return false;
     }
 
-    var [ sres, cres ] = await Promise.all([fetch(baseUrl + "/sets.tsv.gz"), fetch(baseUrl + "/collections.tsv.gz")]);
+    var [ sres, cres ] = await Promise.all([downloader("sets.tsv.gz"), downloader("collections.tsv.gz")]);
     if (!sres.ok) {
         throw "failed to fetch set information";
     }

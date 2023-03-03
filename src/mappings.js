@@ -1,4 +1,4 @@
-import { baseUrl, decompressLines } from "./utils.js";
+import { downloader, decompressLines } from "./utils.js";
 
 var init = false;
 var gene2set_ranges;
@@ -25,7 +25,7 @@ var collections_starts;
  ***************************************************/
 
 async function retrieveRanges(resource) {
-    var res = await fetch(baseUrl+ "/" + resource + ".ranges.gz");
+    var res = await downloader(resource + ".ranges.gz");
     if (!res.ok) {
         throw "failed to fetch ranges for '" + resource + "'";
     }
@@ -41,7 +41,7 @@ async function retrieveRanges(resource) {
 }
 
 async function retrieveNamedRanges(resource) {
-    var res = await fetch(baseUrl+ "/" + resource + ".ranges.gz");
+    var res = await downloader(resource + ".ranges.gz");
     if (!res.ok) {
         throw "failed to fetch ranges for '" + resource + "'";
     }
@@ -62,7 +62,7 @@ async function retrieveNamedRanges(resource) {
 }
 
 async function retrieveRangesWithExtras(resource) {
-    var res = await fetch(baseUrl+ "/" + resource + ".ranges.gz");
+    var res = await downloader(resource + ".ranges.gz");
     if (!res.ok) {
         throw "failed to fetch ranges for '" + resource + "'";
     }
@@ -93,12 +93,7 @@ function retrieveBytesByIndex(resource, ranges, index) {
 async function retrieveBytes(resource, start, end) {
     end--; // ignore the newline.
 
-    var url = baseUrl + "/" + resource;
-    var res = await fetch(url, {
-        "headers": {
-            "Range": "bytes=" + String(start) + "-" + String(end) 
-        }
-    });
+    var res = await downloader(resource, start, end);
     if (!res.ok) {
         throw "failed to fetch ranges for '" + resource + "'";
     }

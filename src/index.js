@@ -2,6 +2,7 @@ export * from "./genes.js";
 export * from "./sets.js";
 export * from "./mappings.js";
 export * from "./search.js";
+export { setDownload } from "./utils.js";
 
 import { initializeGenes } from "./genes.js";
 import { initializeSets } from "./sets.js";

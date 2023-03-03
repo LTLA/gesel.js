@@ -1,4 +1,4 @@
-import { baseUrl, decompressLines } from "./utils.js";
+import { downloader, decompressLines } from "./utils.js";
 
 var init = false;
 var _genes = [];
@@ -16,7 +16,7 @@ export async function initializeGenes() {
         return false;
     }
 
-    var res = await fetch(baseUrl + "/symbol2gene.tsv.gz")
+    var res = await downloader("symbol2gene.tsv.gz")
     if (!res.ok) {
         throw "failed to fetch gene information";
     }
