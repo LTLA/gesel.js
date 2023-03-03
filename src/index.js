@@ -1,10 +1,14 @@
-export * from "./genes.js";
 export * from "./sets.js";
 export * from "./mappings.js";
 export * from "./search.js";
 export { setDownload } from "./utils.js";
 
-import { initializeGenes } from "./genes.js";
+export * from "./fetchAllGenes.js";
+export * from "./fetchGenesBySymbol.js";
+export * from "./fetchGenesByEntrez.js";
+export * from "./fetchGenesByEnsembl.js";
+export * from "./mapMultipleGenes.js";
+
 import { initializeSets } from "./sets.js";
 import { initializeMappings } from "./mappings.js";
 
@@ -22,7 +26,7 @@ import { initializeMappings } from "./mappings.js";
  * @async
  */
 export async function initialize({ includeSets = false } = {}) {
-    let promises = [initializeGenes(), initializeMappings()];
+    let promises = [initializeMappings()];
     if (includeSets) {
         promises.push(initializeSets());
     }

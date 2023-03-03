@@ -15,53 +15,6 @@ test("finding overlapping sets works as expected", async () => {
     }
 });
 
-var candidates = [
-    "Adam8",
-    "SNAP25",
-    "ENSG00000000003",
-    "ENSG11111000003",
-    "asdasd",
-    ""
-];
-
-test("mapping multiple genes works as expected", async () => {
-    var output = gesel.mapMultipleGenes(candidates, "any");
-    expect(output.length).toBe(candidates.length);
-
-    // Symbols match both human and mouse.
-    expect(output[0].status).toBe("multiple"); 
-    expect(output[1].status).toBe("multiple"); 
-
-    // This one is okay.
-    expect(output[2].status).toBe("ok"); 
-    expect(output[2].ensembl).toBe(candidates[2]); 
-    var ginfo = gesel.genes();
-    expect(ginfo[output[2].id].ensembl).toBe(candidates[2]);
-
-    // Looks like Ensembl but is filtered out.
-    expect(output[3].status).toBe("filtered");
-
-    // Bad!
-    expect(output[4].status).toBe("none");
-    expect(output[5].status).toBe("none");
-});
-
-test("mapping multiple genes works with species constraints", async () => {
-    var output = gesel.mapMultipleGenes(candidates, "Mus musculus");
-    expect(output.length).toBe(candidates.length);
-
-    expect(output[0].status).toBe("ok"); 
-    expect(output[1].status).toBe("ok"); 
-
-    // Filtered out.
-    expect(output[2].status).toBe("filtered");
-    expect(output[3].status).toBe("filtered");
-
-    // Bad!
-    expect(output[4].status).toBe("none");
-    expect(output[5].status).toBe("none");
-});
-
 test.skip("searching by text works as expected", async () => {
     // Searching the names.
     {

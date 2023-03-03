@@ -1,5 +1,4 @@
 import { fetchSetsForGene, fetchSetsByNameToken, fetchSetsByDescriptionToken, fetchSetDetails, sets_sizes } from "./mappings.js";
-import { genes, genesBySymbol, genesByEnsembl, possiblyEnsembl } from "./genes.js";
 
 /**
  * Search for sets with overlaps with the user-supplied set of genes.
@@ -60,109 +59,6 @@ export async function findOverlappingSets(genes, { sort = false } = {}) {
     }
 
     return output;
-}
-
-/**
- * Find genes based on their Ensembl IDs or symbols. 
- * This function assumes that {@linkcode initializeGenes} has already been run. 
- *
- * @param [Array] searches - Array of strings, each of which contains the Ensembl ID or symbol for a gene.
- * @param [string] species - String specifying the species of interest.
- * This is used to filter the matching Ensembl IDs to the indicated species.
- * We currently support `"Homo sapiens"`, `"Mus musculus"` and `"Macaca fascicularis"`;
- * any other string is ignored.
- *
- * @return {Array} An array of length equal to `searches`.
- * Each element of the array is an object containing the `status` of the mapping to Ensembl IDs:
- *
- * - If `status = "none"`, there are no matching genes for the search string.
- * - If `status = "ok"`, there is exactly one matching gene, and we report its index (`id`) and Ensembl ID (`ensembl`).
- * - If `status = "filtered"`, there was at least one match but they were all filtered out (e.g., incorrect species, no involvement in any gene sets).
- * - If `status = "multiple"`, there are multiple matches.
- *   We report the indices (`id`) and Ensembl IDs (`ensembl`) for all matching genes.
- */
-export function mapMultipleGenes(searches, species) {
-    var prefix = null;
-    switch(species) {
-        case "Homo sapiens":
-            prefix = "ENSG";
-            break;
-        case "Mus musculus":
-            prefix = "ENSMUSG";
-            break;
-        case "Macaca fascicularis":
-            prefix = "ENSMFAG";
-            break;
-    }
-
-    var ginfo = genes();
-    var by_ens = genesByEnsembl();
-    var by_sym = genesBySymbol({ lowerCase: true });
-
-    var mapping = [];
-
-    for (var i = 0; i < searches.length; i++) {
-        let current = searches[i];
-        if (current.length == 0) {
-            mapping.push({ 
-                "status": "none" 
-            });
-            continue;
-        }
-
-        if (possiblyEnsembl(current)) {
-            let proper = current.toUpperCase();
-            if (proper in by_ens && (prefix === null || proper.startsWith(prefix))) { 
-                mapping.push({ 
-                    "status": "ok", 
-                    "id": by_ens[proper],
-                    "ensembl": proper
-                });
-            } else {
-                mapping.push({ 
-                    "status": "filtered" 
-                });
-            }
-            continue;
-        }
-
-        let lowered = current.toLowerCase();
-        if (! (lowered in by_sym)) {
-            mapping.push({ "status": "none" });
-            continue;
-        }
-        
-        let hits = by_sym[lowered];
-        let approved = [];
-        let ensembls = [];
-        for (const hit of hits) {
-            let ens0 = ginfo[hit].ensembl;
-            if (prefix === null || ens0.startsWith(prefix)) {
-                approved.push(hit);
-                ensembls.push(ens0);
-            }
-        }
-
-        if (approved.length > 1) {
-            mapping.push({ 
-                "status": "multiple", 
-                "id": approved, 
-                "ensembl": ensembls
-            });
-        } else if (approved.length == 0) {
-            mapping.push({ 
-                "status": "filtered" 
-            });
-        } else {
-            mapping.push({ 
-                "status": "ok", 
-                "id": approved[0], 
-                "ensembl": ensembls[0] 
-            });
-        }
-    }
-
-    return mapping;
 }
 
 function intersect(arrays) {
