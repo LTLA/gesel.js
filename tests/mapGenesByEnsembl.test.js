@@ -1,8 +1,8 @@
 import * as utils from "./utils.js";
 import * as gesel from "../src/index.js";
 
-test("fetchGenesByEnsembl works as expected", async () => {
-    let info = await gesel.fetchGenesByEnsembl();
+test("mapGenesByEnsembl works as expected", async () => {
+    let info = await gesel.mapGenesByEnsembl();
     let ref = await gesel.fetchAllGenes();
     expect(info.size).toEqual(ref.length);
 

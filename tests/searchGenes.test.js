@@ -12,7 +12,7 @@ var candidates = [
 ];
 
 test("mapping multiple genes works as expected", async () => {
-    var output = await gesel.mapMultipleGenes(candidates, null);
+    var output = await gesel.searchGenes(candidates, null);
     expect(output.length).toBe(candidates.length);
 
     // Symbols match both human and mouse.
@@ -36,8 +36,8 @@ test("mapping multiple genes works as expected", async () => {
 });
 
 test("mapping multiple genes works in a case-sensitive manner", async () => {
-    var ref = await gesel.mapMultipleGenes(candidates, null);
-    var output = await gesel.mapMultipleGenes(candidates, null, { ignoreCase: false });
+    var ref = await gesel.searchGenes(candidates, null);
+    var output = await gesel.searchGenes(candidates, null, { ignoreCase: false });
     expect(output.length).toBe(candidates.length);
 
     // Symbols don't match both human/mouse anymore.
@@ -57,7 +57,7 @@ test("mapping multiple genes works in a case-sensitive manner", async () => {
 });
 
 test("mapping multiple genes works with species constraints", async () => {
-    var output = await gesel.mapMultipleGenes(candidates, "Mus musculus");
+    var output = await gesel.searchGenes(candidates, "Mus musculus");
     expect(output.length).toBe(candidates.length);
 
     // Only one match expected.

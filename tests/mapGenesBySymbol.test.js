@@ -1,8 +1,8 @@
 import * as utils from "./utils.js";
 import * as gesel from "../src/index.js";
 
-test("fetchGenesBySymbol works as expected", async () => {
-    let info = await gesel.fetchGenesBySymbol();
+test("mapGenesBySymbol works as expected", async () => {
+    let info = await gesel.mapGenesBySymbol();
     expect(info.size).toBeGreaterThan(0);
     let nvals = (await gesel.fetchAllGenes()).length;
 
@@ -21,8 +21,8 @@ test("fetchGenesBySymbol works as expected", async () => {
     expect(info.has("Snap25")).toBe(true);
 })
 
-test("fetchGenesBySymbol works as expected with lowercasing", async () => {
-    let info = await gesel.fetchGenesBySymbol({ lowerCase: true });
+test("mapGenesBySymbol works as expected with lowercasing", async () => {
+    let info = await gesel.mapGenesBySymbol({ lowerCase: true });
     expect(info.size).toBeGreaterThan(0);
     let nvals = (await gesel.fetchAllGenes()).length;
 
@@ -37,7 +37,7 @@ test("fetchGenesBySymbol works as expected with lowercasing", async () => {
     expect(okay_ids).toEqual(info.size);
 
     // Check with a more concrete example.
-    let ref = await gesel.fetchGenesBySymbol();
+    let ref = await gesel.mapGenesBySymbol();
     let found = new Set(info.get("snap25"));
     let union = new Set([...ref.get("SNAP25"), ...ref.get("Snap25")]);
     expect(Array.from(found).sort()).toEqual(Array.from(union).sort());

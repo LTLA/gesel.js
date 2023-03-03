@@ -9,7 +9,7 @@ var by_entrez = new Map;
  *
  * @async
  */
-export async function fetchGenesByEntrez() {
+export async function mapGenesByEntrez() {
     if (by_entrez_init) {
         return by_entrez;
     }

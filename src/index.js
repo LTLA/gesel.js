@@ -3,10 +3,10 @@ export * from "./search.js";
 export { setDownload } from "./utils.js";
 
 export * from "./fetchAllGenes.js";
-export * from "./fetchGenesBySymbol.js";
-export * from "./fetchGenesByEntrez.js";
-export * from "./fetchGenesByEnsembl.js";
-export * from "./mapMultipleGenes.js";
+export * from "./mapGenesBySymbol.js";
+export * from "./mapGenesByEntrez.js";
+export * from "./mapGenesByEnsembl.js";
+export * from "./searchGenes.js";
 
 export { fetchAllSets } from "./fetchAllSets.js";
 export { fetchSingleSet } from "./fetchSingleSet.js";

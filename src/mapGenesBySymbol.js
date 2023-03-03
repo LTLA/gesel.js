@@ -15,7 +15,7 @@ var by_symbol_lower = new Map;
  *
  * @async
  */
-export async function fetchGenesBySymbol({ lowerCase = false } = {}) {
+export async function mapGenesBySymbol({ lowerCase = false } = {}) {
     if (!lowerCase) {
         if (by_symbol_init) {
             return by_symbol;

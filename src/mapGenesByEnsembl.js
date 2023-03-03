@@ -8,7 +8,7 @@ var by_ens = new Map;
  * i.e., an index into the array returned by {@linkcode fetchAllGenes}.
  * @async
  */
-export async function fetchGenesByEnsembl() {
+export async function mapGenesByEnsembl() {
     if (by_ens_init) {
         return by_ens;
     }

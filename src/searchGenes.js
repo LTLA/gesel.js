@@ -1,7 +1,7 @@
 import { fetchAllGenes } from "./fetchAllGenes.js";
-import { fetchGenesByEnsembl } from "./fetchGenesByEnsembl.js";
-import { fetchGenesBySymbol } from "./fetchGenesBySymbol.js";
-import { fetchGenesByEntrez } from "./fetchGenesByEntrez.js";
+import { mapGenesByEnsembl } from "./mapGenesByEnsembl.js";
+import { mapGenesBySymbol } from "./mapGenesBySymbol.js";
+import { mapGenesByEntrez } from "./mapGenesByEntrez.js";
 
 function define_prefix(species) {
     var prefix = null;
@@ -37,8 +37,6 @@ function define_prefix(species) {
 }
 
 /**
- * Find genes based on their Ensembl IDs or symbols. 
- *
  * @param {Array} searches - Array of strings containing gene identifiers of some kind (e.g., Ensembl, symbol, Entrez).
  * @param {?string} species - String specifying the species of interest.
  * This is used to filter the matching genes to the indicated species.
@@ -55,10 +53,10 @@ function define_prefix(species) {
  *
  * @async
  */
-export async function mapMultipleGenes(searches, species, { ignoreCase = true, allowSymbol = true, allowEntrez = false } ={}) {
-    var by_ens = await fetchGenesByEnsembl();
-    var by_sym = (allowSymbol ? await fetchGenesBySymbol({ lowerCase: ignoreCase }) : new Map);
-    var by_ent = (allowEntrez ? await fetchGenesByEntrez() : new Map);
+export async function searchGenes(searches, species, { ignoreCase = true, allowSymbol = true, allowEntrez = false } ={}) {
+    var by_ens = await mapGenesByEnsembl();
+    var by_sym = (allowSymbol ? await mapGenesBySymbol({ lowerCase: ignoreCase }) : new Map);
+    var by_ent = (allowEntrez ? await mapGenesByEntrez() : new Map);
     var mapping = [];
 
     // Adding all the mapped entries first.
