@@ -36,6 +36,24 @@ async function initialize() {
     return true;
 }
 
+export async function fetchSetSizes() {
+    if (!init) {
+        if (full.init) {
+            // Pulling it from the full info instead, if we already got it.
+            let tmp_sizes = [];
+            let meta = await full.fetchAllSets();
+            for (const x of meta) {
+                tmp_sizes.push(x.size);
+            }
+            return tmp_sizes;
+        }
+
+        await initialize();
+    }
+
+    return sizes;
+}
+
 /**
  * @return {number} Total number of sets.
  */

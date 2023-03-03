@@ -15,6 +15,7 @@ export { fetchGenesForSet } from "./fetchGenesForSet.js";
 export { fetchSetsForGene } from "./fetchSetsForGene.js";
 
 export { searchSetText } from "./searchSetText.js";
+export { findOverlappingSets } from "./findOverlappingSets.js";
 
 import { initializeMappings } from "./mappings.js";
 
