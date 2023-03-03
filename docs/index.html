@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>Home - Documentation</title>
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <script src="scripts/nav.js" defer></script>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav >
+    
+    <input type="text" id="nav-search" placeholder="Search" />
+    
+    
+    <h2><a href="index.html">Home</a></h2><h2><a href="https://github.roche.com/GP/gesel" target="_blank" class="menu-item" id="repository" >Github repo</a></h2><h3>Global</h3><ul><li><a href="global.html#collections">collections</a></li><li><a href="global.html#fetchCollectionDetails">fetchCollectionDetails</a></li><li><a href="global.html#fetchGenesForSet">fetchGenesForSet</a></li><li><a href="global.html#fetchSetDetails">fetchSetDetails</a></li><li><a href="global.html#fetchSetsForGene">fetchSetsForGene</a></li><li><a href="global.html#findOverlappingSets">findOverlappingSets</a></li><li><a href="global.html#genes">genes</a></li><li><a href="global.html#genesByEnsembl">genesByEnsembl</a></li><li><a href="global.html#genesBySymbol">genesBySymbol</a></li><li><a href="global.html#initialize">initialize</a></li><li><a href="global.html#initializeGenes">initializeGenes</a></li><li><a href="global.html#initializeMappings">initializeMappings</a></li><li><a href="global.html#initializeSets">initializeSets</a></li><li><a href="global.html#lowerCaseSetDetails">lowerCaseSetDetails</a></li><li><a href="global.html#mapMultipleGenes">mapMultipleGenes</a></li><li><a href="global.html#possiblyEnsembl">possiblyEnsembl</a></li><li><a href="global.html#searchSetText">searchSetText</a></li><li><a href="global.html#setDownload">setDownload</a></li><li><a href="global.html#sets">sets</a></li><li><a href="global.html#totalCollections">totalCollections</a></li><li><a href="global.html#totalSets">totalSets</a></li></ul>
+    
+</nav>
+
+<div id="main">
+    
+
+    
+
+
+
+    
+
+
+    <section class="package">
+        <h3> </h3>		
+    </section>
+
+
+
+
+
+
+
+
+
+    
+
+
+
+    <section class="readme usertext">
+        <article><h1>Client-side gene set search</h1>
+<h2>Overview</h2>
+<p>Search for interesting gene sets, client-side.
+This uses Javascript to do the queries in the browser, improving latency and avoiding the need for a back-end service.
+The queries rely on prebuilt indices served with CORS, currently provided by Jay's CDN.</p>
+<h2>Quick start</h2>
+<p><a href="https://www.npmjs.com/package/gesel"><strong>gesel</strong></a> can be installed with the usual commands:</p>
+<pre class="prettyprint source lang-sh"><code>npm i gesel
+</code></pre>
+<p><strong>gesel</strong> is implemented as an ES6 module, so importing is as simple as:</p>
+<pre class="prettyprint source lang-js"><code>import * as gesel from &quot;gesel&quot;;
+</code></pre>
+<p>Before use, make sure to initialize the module first - this will download all necessary files.</p>
+<pre class="prettyprint source lang-js"><code>await gesel.initialize();
+</code></pre>
+<p>After that, most <strong>gesel</strong> functions can be called freely.</p>
+<h2>Basic usage</h2>
+<p>Information about genes, sets and collections are immediately available by calling the relevant getters:</p>
+<pre class="prettyprint source lang-js"><code>let gene_info = gesel.genes();
+
+// If 'includeSets = true' in initialize():
+let set_info = gesel.sets();
+let collection_info = gesel.collections();
+</code></pre>
+<p>The mapping functions will accept and return <em>indices</em> into these arrays.</p>
+<pre class="prettyprint source lang-js"><code># All sets involving the first gene.
+let first_set = await gesel.fetchSetsForGene(0);
+
+# All genes in the first set.
+let first_set = await gesel.fetchGenesForSet(0);
+</code></pre>
+<p>Alternatively, given an index, we can determine the identity of the set/collection by querying the indices:</p>
+<pre class="prettyprint source lang-js"><code>let first_set_info = await gesel.fetchSetDetails(0); // first set
+let first_collection_info = await gesel.fetchCollectionDetails(0); // first collection
+</code></pre>
+<p>Applications can use the search functions to perform more complex queries:</p>
+<pre class="prettyprint source lang-js"><code>// Find all sets that contain one or more of the supplied gene indices.
+let sets_with_gene = await gesel.findOverlappingGenes([1, 10, 1000]); 
+
+// Find all sets where the name matches a query string.
+let sets_with_text = await gesel.searchSetText(&quot;KEGG immune&quot;);
+</code></pre>
+<p>See the <a href="http://pages.github.com/LTLA/gesel">API documentation</a> for more details.</p>
+<h2>For <code>gesel</code> maintainers</h2>
+<p>Indices and other assets are constructed using the <code>build_assets.R</code> script.
+This pulls the latest versions of all public gene set collections from the Genomitory and constructs indices to map genes to sets.
+All assets are stored in the <code>assets/</code> output directory, to be hosted on the server of choice.</p>
+<p>On load, <strong>gesel</strong> will download some of these indices in full - any such files should be Gzip-compressed.
+For simplicity, files used for range requests should be left uncompressed.
+We reduce the amount of data transfer by encoding the genes and sets as the diff of sorted integers,
+so clients should take the cumulative sum to obtain the actual identifiers.</p>
+<p>To build the documentation, use <code>npm run jsdoc</code> and update the <code>gh-pages</code> branch of this repository.</p>
+<p>To test the package, use <code>npm run test</code>.</p></article>
+    </section>
+
+
+
+
+
+
+    
+    
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.11</a> on Fri Mar 03 2023 06:59:00 GMT+0000 (Coordinated Universal Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+<script src="scripts/search.js" defer></script>
+
+
+<script src="scripts/collapse.js" defer></script>
+
+
+</body>
+</html>
