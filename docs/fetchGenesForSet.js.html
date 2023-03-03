@@ -3,7 +3,7 @@
 <head>
     
     <meta charset="utf-8">
-    <title>Home - Documentation</title>
+    <title>fetchGenesForSet.js - Documentation</title>
     
     
     <script src="scripts/prettify/prettify.js"></script>
@@ -37,77 +37,49 @@
 
 <div id="main">
     
+    <h1 class="page-title">fetchGenesForSet.js</h1>
+    
 
     
 
 
 
     
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import * as utils from "./utils.js";
 
+var init = false;
+var ranges;
+const cache = new Map;
 
-    <section class="package">
-        <h3> </h3>		
+/**
+ * @param {number} set - Set ID, see {@linkcode fetchAllSets} for details.
+ *
+ * @return {Uint32Array} Array of integers containing the IDs for all genes belonging to the set.
+ * Gene IDs refer to indices in {@linkcode fetchAllGenes}.
+ *
+ * @async
+ */
+export async function fetchGenesForSet(set) {
+    let cached = cache.get(set);
+    if (typeof cached !== "undefined") {
+        return cached;
+    }
+
+    if (!init) {
+        ranges = await utils.retrieveRanges("set2gene.tsv");
+        init = true;
+    }
+
+    let text = await utils.retrieveBytesByIndex("set2gene.tsv", ranges, set);
+    let output = utils.convertToUint32Array(text);
+    cache.set(set, output);
+    return output;
+}
+</code></pre>
+        </article>
     </section>
-
-
-
-
-
-
-
-
-
-    
-
-
-
-    <section class="readme usertext">
-        <article><h1>Client-side gene set search</h1>
-<h2>Overview</h2>
-<p>Search for interesting gene sets, client-side.
-This uses Javascript to do the queries in the browser, improving latency and avoiding the need for a back-end service.
-The queries rely on prebuilt indices for gene sets of interest, e.g., <a href="https://github.com/LTLA/gesel-feedstock">here</a>.</p>
-<h2>Quick start</h2>
-<p><a href="https://www.npmjs.com/package/gesel"><strong>gesel</strong></a> can be installed with the usual commands:</p>
-<pre class="prettyprint source lang-sh"><code>npm i gesel
-</code></pre>
-<p><strong>gesel</strong> is implemented as an ES6 module, so importing is as simple as:</p>
-<pre class="prettyprint source lang-js"><code>import * as gesel from &quot;gesel&quot;;
-</code></pre>
-<p>Before use, make sure to initialize the module first - this will download all necessary files.</p>
-<pre class="prettyprint source lang-js"><code>await gesel.initialize();
-</code></pre>
-<p>After that, most <strong>gesel</strong> functions can be called freely.</p>
-<h2>Basic usage</h2>
-<p>Information about genes, sets and collections are immediately available by calling the relevant getters:</p>
-<pre class="prettyprint source lang-js"><code>let gene_info = gesel.genes();
-
-// If 'includeSets = true' in initialize():
-let set_info = gesel.sets();
-let collection_info = gesel.collections();
-</code></pre>
-<p>The mapping functions will accept and return <em>indices</em> into these arrays.</p>
-<pre class="prettyprint source lang-js"><code>// All sets involving the first gene.
-let first_set = await gesel.fetchSetsForGene(0);
-
-// All genes in the first set.
-let first_set = await gesel.fetchGenesForSet(0);
-</code></pre>
-<p>Alternatively, given an index, we can determine the identity of the set/collection by querying the indices:</p>
-<pre class="prettyprint source lang-js"><code>let first_set_info = await gesel.fetchSetDetails(0); // first set
-let first_collection_info = await gesel.fetchCollectionDetails(0); // first collection
-</code></pre>
-<p>Applications can use the search functions to perform more complex queries:</p>
-<pre class="prettyprint source lang-js"><code>// Find all sets that contain one or more of the supplied gene indices.
-let sets_with_gene = await gesel.findOverlappingGenes([1, 10, 1000]); 
-
-// Find all sets where the name matches a query string.
-let sets_with_text = await gesel.searchSetText(&quot;KEGG immune&quot;);
-</code></pre>
-<p>See the <a href="https://ltla.github.io/gesel.js">API documentation</a> for more details.</p></article>
-    </section>
-
-
 
 
 

@@ -3,7 +3,7 @@
 <head>
     
     <meta charset="utf-8">
-    <title>fetchAllGenes.js - Documentation</title>
+    <title>findOverlappingSets.js - Documentation</title>
     
     
     <script src="scripts/prettify/prettify.js"></script>
@@ -37,7 +37,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">fetchAllGenes.js</h1>
+    <h1 class="page-title">findOverlappingSets.js</h1>
     
 
     
@@ -47,83 +47,53 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>import { downloader, decompressLines } from "./utils.js";
-
-var gene_symbol_init = false;
-var gene_entrez_init = false;
-var _genes = null;
-
-function add_mapping(gene_data, key) {
-    if (_genes == null) {
-        _genes = [];
-        for (const x of gene_data) {
-            let details = x.split("\t");
-            let obj = { ensembl: details[0] };
-            obj[key] = details.slice(1);
-            _genes.push(obj);
-        }
-    } else {
-        if (gene_data.length !== _genes.length) {
-            throw new Error("discrepancy between length of symbol and entrez mappings");
-        }
-
-        for (var i = 0; i &lt; gene_data.length; i++) {
-            let x = gene_data[i];
-            let existing = _genes[i];
-
-            let details = x.split("\t");
-            if (details[0] !== existing.ensembl) {
-                throw new Error("discrepancy between symbol and entrez mappings for " + details[0]);
-            }
- 
-            existing[key] = details.slice(1);
-        }
-    }
-}
+            <pre class="prettyprint source linenums"><code>import { fetchSetSizes } from "./fetchSingleSet.js";
+import { fetchSetsForGene } from "./fetchSetsForGene.js";
 
 /**
+ * @param {Array} genes - Array of integers containing user-supplied gene IDs, see {@linkcode fetchAllGenes} for details.
  * @param {object} [options={}] - Optional parameters.
- * @param {string} [options.mapping="symbol"] - Which mappings from Ensembl IDs should be retrived.
- * This may be `"symbol"`, `"entrez"` or `"both"`.
+ * @param {boolean} [options.includeSize=false] - Whether to include the size of each set in the output.
  *
- * @return {Array} Array of objects where each object corresponds to a gene and contains the following properties:
+ * @return {Array} An array of objects, where each object corresponds to a set that has non-zero overlaps with `genes`.
+ * Each object contains:
  *
- * - `ensembl`: string containing the Ensembl ID for the gene.
- * - `symbol`: array containing strings with the gene symbols.
- *   This is only guaranteed to exist if `mapping = "symbol"` or `mapping = "both"`.
- * - `entrez`: array containing strings with the Entrez IDs.
- *   This is only guaranteed to exist if `mapping = "entrez"` or `mapping = "both"`.
- *
- * In the context of **gesel**, the identifier for each gene is encoded as its index in this output array.
+ * - `id`: the ID of the set in {@linkcode fetchAllSets}.
+ * - `count`: the number of genes in the set that overlap with genes in `genes`.
+ * - `size`: the size of each set.
+ *   Only included if `includeSize = true`.
  *
  * @async
  */
-export async function fetchAllGenes({ mapping = "symbol" } = {}) {
-    let symbol = (mapping == "symbol" || mapping == "both");
-    if (symbol &amp;&amp; !gene_symbol_init) {
-        var res = await downloader("symbol2gene.tsv.gz")
-        if (!res.ok) {
-            throw "failed to fetch symbol information for genes";
+export async function findOverlappingSets(genes, { includeSize = false } = {}) {
+    var collected = await Promise.all(genes.map(x => fetchSetsForGene(x)));
+    var sets_sizes = (includeSize ? await fetchSetSizes() : null);
+
+    var set_count = {};
+    for (const found of collected) {
+        for (const set of found) {
+            if (! (set in set_count)) {
+                set_count[set] = 1;
+            } else {
+                ++(set_count[set]);
+            }
         }
-        var buffer = await res.arrayBuffer();
-        let gene_data = decompressLines(buffer);
-        add_mapping(gene_data, "symbol");
-        gene_symbol_init = true;
     }
 
-    let entrez = (mapping == "entrez" || mapping == "both");
-    if (entrez &amp;&amp; !gene_entrez_init) {
-        var res = await downloader("entrez2gene.tsv.gz")
-        if (!res.ok) {
-            throw "failed to fetch Entrez information for genes";
+    let output = [];
+    for (const [id, count] of Object.entries(set_count)) {
+        let id0 = Number(id);
+        let details = { 
+            "id": id0,
+            "count": count
+        };
+        if (includeSize) {
+            details.size = sets_sizes[id0];
         }
-        var buffer = await res.arrayBuffer();
-        let gene_data = decompressLines(buffer);
-        add_mapping(gene_data, "entrez");
-        gene_entrez_init = true;
+        output.push(details);
     }
 
-    return _genes;
+    return output;
 }
 </code></pre>
         </article>

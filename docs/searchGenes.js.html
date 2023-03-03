@@ -3,7 +3,7 @@
 <head>
     
     <meta charset="utf-8">
-    <title>mapMultipleGenes.js - Documentation</title>
+    <title>searchGenes.js - Documentation</title>
     
     
     <script src="scripts/prettify/prettify.js"></script>
@@ -31,13 +31,13 @@
     <input type="text" id="nav-search" placeholder="Search" />
     
     
-    <h2><a href="index.html">Home</a></h2><h2><a href="https://github.roche.com/GP/gesel" target="_blank" class="menu-item" id="repository" >Github repo</a></h2><h3>Global</h3><ul><li><a href="global.html#collections">collections</a></li><li><a href="global.html#fetchAllGenes">fetchAllGenes</a></li><li><a href="global.html#fetchCollectionDetails">fetchCollectionDetails</a></li><li><a href="global.html#fetchGenesByEnsembl">fetchGenesByEnsembl</a></li><li><a href="global.html#fetchGenesByEntrez">fetchGenesByEntrez</a></li><li><a href="global.html#fetchGenesBySymbol">fetchGenesBySymbol</a></li><li><a href="global.html#fetchGenesForSet">fetchGenesForSet</a></li><li><a href="global.html#fetchSetDetails">fetchSetDetails</a></li><li><a href="global.html#fetchSetsForGene">fetchSetsForGene</a></li><li><a href="global.html#findOverlappingSets">findOverlappingSets</a></li><li><a href="global.html#initialize">initialize</a></li><li><a href="global.html#initializeMappings">initializeMappings</a></li><li><a href="global.html#initializeSets">initializeSets</a></li><li><a href="global.html#lowerCaseSetDetails">lowerCaseSetDetails</a></li><li><a href="global.html#mapMultipleGenes">mapMultipleGenes</a></li><li><a href="global.html#searchSetText">searchSetText</a></li><li><a href="global.html#setDownload">setDownload</a></li><li><a href="global.html#sets">sets</a></li><li><a href="global.html#totalCollections">totalCollections</a></li><li><a href="global.html#totalSets">totalSets</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h2><a href="https://github.roche.com/GP/gesel" target="_blank" class="menu-item" id="repository" >Github repo</a></h2><h3>Global</h3><ul><li><a href="global.html#fetchAllCollections">fetchAllCollections</a></li><li><a href="global.html#fetchAllGenes">fetchAllGenes</a></li><li><a href="global.html#fetchAllSets">fetchAllSets</a></li><li><a href="global.html#fetchGenesForSet">fetchGenesForSet</a></li><li><a href="global.html#fetchSetsForGene">fetchSetsForGene</a></li><li><a href="global.html#fetchSingleCollection">fetchSingleCollection</a></li><li><a href="global.html#fetchSingleSet">fetchSingleSet</a></li><li><a href="global.html#findOverlappingSets">findOverlappingSets</a></li><li><a href="global.html#intersect">intersect</a></li><li><a href="global.html#mapGenesByEnsembl">mapGenesByEnsembl</a></li><li><a href="global.html#mapGenesByEntrez">mapGenesByEntrez</a></li><li><a href="global.html#mapGenesBySymbol">mapGenesBySymbol</a></li><li><a href="global.html#numberOfCollections">numberOfCollections</a></li><li><a href="global.html#numberOfSets">numberOfSets</a></li><li><a href="global.html#searchGenes">searchGenes</a></li><li><a href="global.html#searchSetText">searchSetText</a></li><li><a href="global.html#setDownload">setDownload</a></li></ul>
     
 </nav>
 
 <div id="main">
     
-    <h1 class="page-title">mapMultipleGenes.js</h1>
+    <h1 class="page-title">searchGenes.js</h1>
     
 
     
@@ -48,9 +48,9 @@
     <section>
         <article>
             <pre class="prettyprint source linenums"><code>import { fetchAllGenes } from "./fetchAllGenes.js";
-import { fetchGenesByEnsembl } from "./fetchGenesByEnsembl.js";
-import { fetchGenesBySymbol } from "./fetchGenesBySymbol.js";
-import { fetchGenesByEntrez } from "./fetchGenesByEntrez.js";
+import { mapGenesByEnsembl } from "./mapGenesByEnsembl.js";
+import { mapGenesBySymbol } from "./mapGenesBySymbol.js";
+import { mapGenesByEntrez } from "./mapGenesByEntrez.js";
 
 function define_prefix(species) {
     var prefix = null;
@@ -86,33 +86,31 @@ function define_prefix(species) {
 }
 
 /**
- * Find genes based on their Ensembl IDs or symbols. 
- *
- * @param {Array} searches - Array of strings containing gene identifiers of some kind (e.g., Ensembl, symbol, Entrez).
+ * @param {Array} queries - Array of strings containing gene identifiers of some kind (e.g., Ensembl, symbol, Entrez).
  * @param {?string} species - String specifying the species of interest.
  * This is used to filter the matching genes to the indicated species.
  * We currently support `"Homo sapiens"`, `"Mus musculus"`, `"Macaca fascicularis"`, `"Rattus norvegicus"`, `"Caenorhabditis elegans"`, `"Drosophila melanogaster"`, `"Pan troglodytes"` and `"Danio rerio"`;
  * any other string or `null` is ignored.
  * @param {object} [options={}] - Optional parameters.
  * @param {boolean} [options.ignoreCase=true] - Whether to ignore case in the search query.
- * @param {boolean} [options.allowSymbol=true] - Whether strings in `searches` might be symbols.
- * @param {boolean} [options.allowEntrez=false] - Whether strings in `searches` might be Entrez IDs.
+ * @param {boolean} [options.allowSymbol=true] - Whether strings in `queries` might be symbols.
+ * @param {boolean} [options.allowEntrez=false] - Whether strings in `queries` might be Entrez IDs.
  *
- * @return {Array} An array of length equal to `searches`.
+ * @return {Array} An array of length equal to `queries`.
  * Each element of the array is an array containing the **gesel** gene IDs that match the corresponding search string.
  * Each gene ID is an index into the array returned by {@linkcode fetchAllGenes}.
  *
  * @async
  */
-export async function mapMultipleGenes(searches, species, { ignoreCase = true, allowSymbol = true, allowEntrez = false } ={}) {
-    var by_ens = await fetchGenesByEnsembl();
-    var by_sym = (allowSymbol ? await fetchGenesBySymbol({ lowerCase: ignoreCase }) : new Map);
-    var by_ent = (allowEntrez ? await fetchGenesByEntrez() : new Map);
+export async function searchGenes(queries, species, { ignoreCase = true, allowSymbol = true, allowEntrez = false } ={}) {
+    var by_ens = await mapGenesByEnsembl();
+    var by_sym = (allowSymbol ? await mapGenesBySymbol({ lowerCase: ignoreCase }) : new Map);
+    var by_ent = (allowEntrez ? await mapGenesByEntrez() : new Map);
     var mapping = [];
 
     // Adding all the mapped entries first.
-    for (var i = 0; i &lt; searches.length; i++) {
-        let current = searches[i];
+    for (var i = 0; i &lt; queries.length; i++) {
+        let current = queries[i];
         if (current.length == 0) {
             mapping.push([]);
             continue;
@@ -179,7 +177,7 @@ export async function mapMultipleGenes(searches, species, { ignoreCase = true, a
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.11</a> on Fri Mar 03 2023 18:01:14 GMT+0000 (Coordinated Universal Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.11</a> on Fri Mar 03 2023 22:02:51 GMT+0000 (Coordinated Universal Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>

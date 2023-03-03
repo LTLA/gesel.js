@@ -3,7 +3,7 @@
 <head>
     
     <meta charset="utf-8">
-    <title>fetchAllGenes.js - Documentation</title>
+    <title>fetchAllSets.js - Documentation</title>
     
     
     <script src="scripts/prettify/prettify.js"></script>
@@ -37,7 +37,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">fetchAllGenes.js</h1>
+    <h1 class="page-title">fetchAllSets.js</h1>
     
 
     
@@ -48,82 +48,60 @@
     <section>
         <article>
             <pre class="prettyprint source linenums"><code>import { downloader, decompressLines } from "./utils.js";
+import { fetchAllCollections } from "./fetchAllCollections.js";
 
-var gene_symbol_init = false;
-var gene_entrez_init = false;
-var _genes = null;
-
-function add_mapping(gene_data, key) {
-    if (_genes == null) {
-        _genes = [];
-        for (const x of gene_data) {
-            let details = x.split("\t");
-            let obj = { ensembl: details[0] };
-            obj[key] = details.slice(1);
-            _genes.push(obj);
-        }
-    } else {
-        if (gene_data.length !== _genes.length) {
-            throw new Error("discrepancy between length of symbol and entrez mappings");
-        }
-
-        for (var i = 0; i &lt; gene_data.length; i++) {
-            let x = gene_data[i];
-            let existing = _genes[i];
-
-            let details = x.split("\t");
-            if (details[0] !== existing.ensembl) {
-                throw new Error("discrepancy between symbol and entrez mappings for " + details[0]);
-            }
- 
-            existing[key] = details.slice(1);
-        }
-    }
-}
+export var init = false;
+var _sets = [];
 
 /**
- * @param {object} [options={}] - Optional parameters.
- * @param {string} [options.mapping="symbol"] - Which mappings from Ensembl IDs should be retrived.
- * This may be `"symbol"`, `"entrez"` or `"both"`.
+ * @return {Array} Array of objects where each entry corresponds to a set and contains the details about that set.
+ * Each object can be expected to contain:
+ * 
+ * - `name`, the name of the set.
+ * - `description`, the description of the set.
+ * - `size`, the number of genes in the set.
+ * - `collection`, the index of the collection containing the set.
+ * - `number`, the number of the set within the collection.
  *
- * @return {Array} Array of objects where each object corresponds to a gene and contains the following properties:
- *
- * - `ensembl`: string containing the Ensembl ID for the gene.
- * - `symbol`: array containing strings with the gene symbols.
- *   This is only guaranteed to exist if `mapping = "symbol"` or `mapping = "both"`.
- * - `entrez`: array containing strings with the Entrez IDs.
- *   This is only guaranteed to exist if `mapping = "entrez"` or `mapping = "both"`.
- *
- * In the context of **gesel**, the identifier for each gene is encoded as its index in this output array.
- *
+ * In a **gesel** context, the identifier for a set (i.e., the "set ID") is defined as the index of the set in this array.
  * @async
  */
-export async function fetchAllGenes({ mapping = "symbol" } = {}) {
-    let symbol = (mapping == "symbol" || mapping == "both");
-    if (symbol &amp;&amp; !gene_symbol_init) {
-        var res = await downloader("symbol2gene.tsv.gz")
-        if (!res.ok) {
-            throw "failed to fetch symbol information for genes";
-        }
-        var buffer = await res.arrayBuffer();
-        let gene_data = decompressLines(buffer);
-        add_mapping(gene_data, "symbol");
-        gene_symbol_init = true;
+export async function fetchAllSets() {
+    if (init) {
+        return _sets;
     }
 
-    let entrez = (mapping == "entrez" || mapping == "both");
-    if (entrez &amp;&amp; !gene_entrez_init) {
-        var res = await downloader("entrez2gene.tsv.gz")
-        if (!res.ok) {
-            throw "failed to fetch Entrez information for genes";
-        }
-        var buffer = await res.arrayBuffer();
-        let gene_data = decompressLines(buffer);
-        add_mapping(gene_data, "entrez");
-        gene_entrez_init = true;
+    var [ sres, _collections ] = await Promise.all([downloader("sets.tsv.gz"), fetchAllCollections()]);
+    if (!sres.ok) {
+        throw "failed to fetch set information";
+    }
+    var set_data = decompressLines(await sres.arrayBuffer());
+
+    for (var i = 0; i &lt; set_data.length; i++) {
+        let x = set_data[i];
+        var details = x.split("\t");
+        _sets.push({
+            "name": details[0],
+            "description": details[1],
+            "size": Number(details[2])
+        });
     }
 
-    return _genes;
+    let start = 0;
+    for (var i = 0; i &lt; _collections.length; i++) {
+        let len = _collections[i].size;
+
+        // For easier access going the other way.
+        for (var j = 0; j &lt; len; j++) {
+            _sets[j + start].collection = i;
+            _sets[j + start].number = j;
+        }
+
+        start += len;
+    }
+
+    init = true;
+    return _sets;
 }
 </code></pre>
         </article>

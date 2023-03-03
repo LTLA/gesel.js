@@ -31,7 +31,7 @@
     <input type="text" id="nav-search" placeholder="Search" />
     
     
-    <h2><a href="index.html">Home</a></h2><h2><a href="https://github.roche.com/GP/gesel" target="_blank" class="menu-item" id="repository" >Github repo</a></h2><h3>Global</h3><ul><li><a href="global.html#collections">collections</a></li><li><a href="global.html#fetchAllGenes">fetchAllGenes</a></li><li><a href="global.html#fetchCollectionDetails">fetchCollectionDetails</a></li><li><a href="global.html#fetchGenesByEnsembl">fetchGenesByEnsembl</a></li><li><a href="global.html#fetchGenesByEntrez">fetchGenesByEntrez</a></li><li><a href="global.html#fetchGenesBySymbol">fetchGenesBySymbol</a></li><li><a href="global.html#fetchGenesForSet">fetchGenesForSet</a></li><li><a href="global.html#fetchSetDetails">fetchSetDetails</a></li><li><a href="global.html#fetchSetsForGene">fetchSetsForGene</a></li><li><a href="global.html#findOverlappingSets">findOverlappingSets</a></li><li><a href="global.html#initialize">initialize</a></li><li><a href="global.html#initializeMappings">initializeMappings</a></li><li><a href="global.html#initializeSets">initializeSets</a></li><li><a href="global.html#lowerCaseSetDetails">lowerCaseSetDetails</a></li><li><a href="global.html#mapMultipleGenes">mapMultipleGenes</a></li><li><a href="global.html#searchSetText">searchSetText</a></li><li><a href="global.html#setDownload">setDownload</a></li><li><a href="global.html#sets">sets</a></li><li><a href="global.html#totalCollections">totalCollections</a></li><li><a href="global.html#totalSets">totalSets</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h2><a href="https://github.roche.com/GP/gesel" target="_blank" class="menu-item" id="repository" >Github repo</a></h2><h3>Global</h3><ul><li><a href="global.html#fetchAllCollections">fetchAllCollections</a></li><li><a href="global.html#fetchAllGenes">fetchAllGenes</a></li><li><a href="global.html#fetchAllSets">fetchAllSets</a></li><li><a href="global.html#fetchGenesForSet">fetchGenesForSet</a></li><li><a href="global.html#fetchSetsForGene">fetchSetsForGene</a></li><li><a href="global.html#fetchSingleCollection">fetchSingleCollection</a></li><li><a href="global.html#fetchSingleSet">fetchSingleSet</a></li><li><a href="global.html#findOverlappingSets">findOverlappingSets</a></li><li><a href="global.html#intersect">intersect</a></li><li><a href="global.html#mapGenesByEnsembl">mapGenesByEnsembl</a></li><li><a href="global.html#mapGenesByEntrez">mapGenesByEntrez</a></li><li><a href="global.html#mapGenesBySymbol">mapGenesBySymbol</a></li><li><a href="global.html#numberOfCollections">numberOfCollections</a></li><li><a href="global.html#numberOfSets">numberOfSets</a></li><li><a href="global.html#searchGenes">searchGenes</a></li><li><a href="global.html#searchSetText">searchSetText</a></li><li><a href="global.html#setDownload">setDownload</a></li></ul>
     
 </nav>
 
@@ -132,7 +132,7 @@
 
     
 
-    <h4 class="name" id="collections"><span class="type-signature"></span>collections<span class="signature">()</span><span class="type-signature"> &rarr; {Array}</span></h4>
+    <h4 class="name" id="fetchAllCollections"><span class="type-signature type-signature-async">(async) </span>fetchAllCollections<span class="signature">()</span><span class="type-signature"> &rarr; {Array}</span></h4>
 
     
 
@@ -141,15 +141,11 @@
 
 <dl class="details">
     
-    <dt class="tag-description">Description:</dt>
-    <dd class="tag-description"><ul class="dummy"><li><p>Retrieve information about each gene set collection known to <strong>gesel</strong>.
-This function assumes that the promise returned by <a href="global.html#initializeSets"><code>initializeSets</code></a> has already been resolved.</p></li></ul></dd>
-    
 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="sets.js.html">sets.js</a>, <a href="sets.js.html#line130">line 130</a>
+        <a href="fetchAllCollections.js.html">fetchAllCollections.js</a>, <a href="fetchAllCollections.js.html#line23">line 23</a>
     </li></ul></dd>
     
 
@@ -223,10 +219,11 @@ Each object can be expected to contain:</p>
 This should contain the full scientific name, e.g., <code>&quot;Homo sapiens&quot;</code>, <code>&quot;Mus musculus&quot;</code>.</li>
 <li><code>maintainer</code>, the maintainer of this collection.</li>
 <li><code>source</code>, the source of this set, usually a link to some external resource.</li>
-<li><code>start</code>, the index for the first set in the collection in the output of <a href="global.html#sets"><code>sets</code></a>.
+<li><code>start</code>, the index for the first set in the collection in the output of <code>sets</code>.
 All sets from the same collection are stored contiguously.</li>
 <li><code>size</code>, the number of sets in the collection.</li>
 </ul>
+<p>In a <strong>gesel</strong> context, the identifier for a collection (i.e., the &quot;collection ID&quot;) is defined as the index of the collection in this array.</p>
 </div>
 
 
@@ -507,7 +504,7 @@ This is only guaranteed to exist if <code>mapping = &quot;entrez&quot;</code> or
 
     
 
-    <h4 class="name" id="fetchCollectionDetails"><span class="type-signature type-signature-async">(async) </span>fetchCollectionDetails<span class="signature">(set)</span><span class="type-signature"> &rarr; {object}</span></h4>
+    <h4 class="name" id="fetchAllSets"><span class="type-signature type-signature-async">(async) </span>fetchAllSets<span class="signature">()</span><span class="type-signature"> &rarr; {Array}</span></h4>
 
     
 
@@ -516,15 +513,125 @@ This is only guaranteed to exist if <code>mapping = &quot;entrez&quot;</code> or
 
 <dl class="details">
     
-    <dt class="tag-description">Description:</dt>
-    <dd class="tag-description"><ul class="dummy"><li><p>Obtain the details for a collection.
-This assumes that the promise returned by <a href="global.html#initializeMappings"><code>initializeMappings</code></a> has been resolved.</p></li></ul></dd>
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="fetchAllSets.js.html">fetchAllSets.js</a>, <a href="fetchAllSets.js.html#line20">line 20</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5 class="h5-returns">Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>Array of objects where each entry corresponds to a set and contains the details about that set.
+Each object can be expected to contain:</p>
+<ul>
+<li><code>name</code>, the name of the set.</li>
+<li><code>description</code>, the description of the set.</li>
+<li><code>size</code>, the number of genes in the set.</li>
+<li><code>collection</code>, the index of the collection containing the set.</li>
+<li><code>number</code>, the number of the set within the collection.</li>
+</ul>
+<p>In a <strong>gesel</strong> context, the identifier for a set (i.e., the &quot;set ID&quot;) is defined as the index of the set in this array.</p>
+</div>
+
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Array</span>
+
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="fetchGenesForSet"><span class="type-signature type-signature-async">(async) </span>fetchGenesForSet<span class="signature">(set)</span><span class="type-signature"> &rarr; {Uint32Array}</span></h4>
+
+    
+
+
+
+
+<dl class="details">
     
 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="mappings.js.html">mappings.js</a>, <a href="mappings.js.html#line312">line 312</a>
+        <a href="fetchGenesForSet.js.html">fetchGenesForSet.js</a>, <a href="fetchGenesForSet.js.html#line15">line 15</a>
     </li></ul></dd>
     
 
@@ -613,7 +720,7 @@ This assumes that the promise returned by <a href="global.html#initializeMapping
 
             
 
-            <td class="description last"><p>Index of a set.</p></td>
+            <td class="description last"><p>Set ID, see <a href="global.html#fetchAllSets"><code>fetchAllSets</code></a> for details.</p></td>
         </tr>
 
     
@@ -639,18 +746,448 @@ This assumes that the promise returned by <a href="global.html#initializeMapping
 
         
 <div class="param-desc">
-    <p>Object containing the details of the collection, with the following properties:</p>
-<ul>
-<li><code>title</code>, the title for the collection.</li>
-<li><code>description</code>, the description for the collection.</li>
-<li><code>species</code>, the species for all gene identifiers in the collection.
-This should contain the full scientific name, e.g., <code>&quot;Homo sapiens&quot;</code>, <code>&quot;Mus musculus&quot;</code>.</li>
-<li><code>maintainer</code>, the maintainer of this collection.</li>
-<li><code>source</code>, the source of this set, usually a link to some external resource.</li>
-<li><code>start</code>, the index for the first set in the collection in the output of <a href="global.html#sets"><code>sets</code></a>.
-All sets from the same collection are stored contiguously.</li>
-<li><code>size</code>, the number of sets in the collection.</li>
-</ul>
+    <p>Array of integers containing the IDs for all genes belonging to the set.
+Gene IDs refer to indices in <a href="global.html#fetchAllGenes"><code>fetchAllGenes</code></a>.</p>
+</div>
+
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Uint32Array</span>
+
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="fetchSetsForGene"><span class="type-signature type-signature-async">(async) </span>fetchSetsForGene<span class="signature">(gene)</span><span class="type-signature"> &rarr; {Uint32Array}</span></h4>
+
+    
+
+
+
+
+<dl class="details">
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="fetchSetsForGene.js.html">fetchSetsForGene.js</a>, <a href="fetchSetsForGene.js.html#line15">line 15</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <h5 class="h5-parameters">Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>gene</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Gene ID, see <a href="global.html#fetchAllGenes"><code>fetchAllGenes</code></a> for details.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5 class="h5-returns">Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>Array of integers containing the IDs of all sets containing the gene.
+IDs are treated as indices into the return value of <a href="global.html#fetchAllSets"><code>fetchAllSets</code></a> or as input to <a href="global.html#fetchSingleSet"><code>fetchSingleSet</code></a>.</p>
+</div>
+
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Uint32Array</span>
+
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="fetchSingleCollection"><span class="type-signature type-signature-async">(async) </span>fetchSingleCollection<span class="signature">(collection, options<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {object}</span></h4>
+
+    
+
+
+
+
+<dl class="details">
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="fetchSingleCollection.js.html">fetchSingleCollection.js</a>, <a href="fetchSingleCollection.js.html#line70">line 70</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <h5 class="h5-parameters">Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>collection</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>Collection ID, see <a href="global.html#fetchAllCollections"><code>fetchAllCollections</code></a> for details.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>options</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    <code>{}</code>
+                
+                </td>
+            
+
+            <td class="description last"><p>Optional parameters.</p>
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>forceRequest</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    <code>false</code>
+                
+                </td>
+            
+
+            <td class="description last"><p>Whether to force a request to the server.
+By default, the cached collection information is used if <a href="global.html#fetchAllCollections"><code>fetchAllCollections</code></a> has previously been called.
+Setting this to <code>true</code> is only useful for testing.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5 class="h5-returns">Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>Object containing the details of the collection.
+This should be identical to the corresponding entry of the array returned by <a href="global.html#fetchAllCollections"><code>fetchAllCollections</code></a>.</p>
 </div>
 
 
@@ -677,7 +1214,7 @@ All sets from the same collection are stored contiguously.</li>
 
     
 
-    <h4 class="name" id="fetchGenesByEnsembl"><span class="type-signature type-signature-async">(async) </span>fetchGenesByEnsembl<span class="signature">()</span><span class="type-signature"> &rarr; {Map}</span></h4>
+    <h4 class="name" id="fetchSingleSet"><span class="type-signature type-signature-async">(async) </span>fetchSingleSet<span class="signature">(set, options<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {object}</span></h4>
 
     
 
@@ -690,7 +1227,734 @@ All sets from the same collection are stored contiguously.</li>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="fetchGenesByEnsembl.js.html">fetchGenesByEnsembl.js</a>, <a href="fetchGenesByEnsembl.js.html#line11">line 11</a>
+        <a href="fetchSingleSet.js.html">fetchSingleSet.js</a>, <a href="fetchSingleSet.js.html#line83">line 83</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <h5 class="h5-parameters">Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>set</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>Set ID, see <a href="global.html#fetchAllSets"><code>fetchAllSets</code></a> for details.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>options</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    <code>{}</code>
+                
+                </td>
+            
+
+            <td class="description last"><p>Optional parameters.</p>
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>forceRequest</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    <code>false</code>
+                
+                </td>
+            
+
+            <td class="description last"><p>Whether to force a request to the server.
+By default, the cached collection information is used if <a href="global.html#fetchAllSets"><code>fetchAllSets</code></a> has previously been called.
+Setting this to <code>true</code> is only useful for testing.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5 class="h5-returns">Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>Object containing the details of the set.
+This should be identical to the corresponding entry of the array returned by <a href="global.html#fetchAllSets"><code>fetchAllSets</code></a>.</p>
+</div>
+
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">object</span>
+
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="findOverlappingSets"><span class="type-signature type-signature-async">(async) </span>findOverlappingSets<span class="signature">(genes, options<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Array}</span></h4>
+
+    
+
+
+
+
+<dl class="details">
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="findOverlappingSets.js.html">findOverlappingSets.js</a>, <a href="findOverlappingSets.js.html#line19">line 19</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <h5 class="h5-parameters">Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>genes</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>Array of integers containing user-supplied gene IDs, see <a href="global.html#fetchAllGenes"><code>fetchAllGenes</code></a> for details.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>options</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    <code>{}</code>
+                
+                </td>
+            
+
+            <td class="description last"><p>Optional parameters.</p>
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>includeSize</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    <code>false</code>
+                
+                </td>
+            
+
+            <td class="description last"><p>Whether to include the size of each set in the output.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5 class="h5-returns">Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>An array of objects, where each object corresponds to a set that has non-zero overlaps with <code>genes</code>.
+Each object contains:</p>
+<ul>
+<li><code>id</code>: the ID of the set in <a href="global.html#fetchAllSets"><code>fetchAllSets</code></a>.</li>
+<li><code>count</code>: the number of genes in the set that overlap with genes in <code>genes</code>.</li>
+<li><code>size</code>: the size of each set.
+Only included if <code>includeSize = true</code>.</li>
+</ul>
+</div>
+
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Array</span>
+
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="intersect"><span class="type-signature"></span>intersect<span class="signature">(Array)</span><span class="type-signature"> &rarr; {Array}</span></h4>
+
+    
+
+
+
+
+<dl class="details">
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="utils.js.html">utils.js</a>, <a href="utils.js.html#line139">line 139</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <h5 class="h5-parameters">Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>Array</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>of arrays over which to compute the intersection.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5 class="h5-returns">Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>Intersection of all arrays in {arrays}.</p>
+</div>
+
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Array</span>
+
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="mapGenesByEnsembl"><span class="type-signature type-signature-async">(async) </span>mapGenesByEnsembl<span class="signature">()</span><span class="type-signature"> &rarr; {Map}</span></h4>
+
+    
+
+
+
+
+<dl class="details">
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="mapGenesByEnsembl.js.html">mapGenesByEnsembl.js</a>, <a href="mapGenesByEnsembl.js.html#line11">line 11</a>
     </li></ul></dd>
     
 
@@ -783,7 +2047,7 @@ i.e., an index into the array returned by <a href="global.html#fetchAllGenes"><c
 
     
 
-    <h4 class="name" id="fetchGenesByEntrez"><span class="type-signature type-signature-async">(async) </span>fetchGenesByEntrez<span class="signature">()</span><span class="type-signature"> &rarr; {Map}</span></h4>
+    <h4 class="name" id="mapGenesByEntrez"><span class="type-signature type-signature-async">(async) </span>mapGenesByEntrez<span class="signature">()</span><span class="type-signature"> &rarr; {Map}</span></h4>
 
     
 
@@ -796,7 +2060,7 @@ i.e., an index into the array returned by <a href="global.html#fetchAllGenes"><c
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="fetchGenesByEntrez.js.html">fetchGenesByEntrez.js</a>, <a href="fetchGenesByEntrez.js.html#line12">line 12</a>
+        <a href="mapGenesByEntrez.js.html">mapGenesByEntrez.js</a>, <a href="mapGenesByEntrez.js.html#line12">line 12</a>
     </li></ul></dd>
     
 
@@ -889,7 +2153,7 @@ Each array contains the <strong>gesel</strong> gene IDs associated with that Ent
 
     
 
-    <h4 class="name" id="fetchGenesBySymbol"><span class="type-signature type-signature-async">(async) </span>fetchGenesBySymbol<span class="signature">(options<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Map}</span></h4>
+    <h4 class="name" id="mapGenesBySymbol"><span class="type-signature type-signature-async">(async) </span>mapGenesBySymbol<span class="signature">(options<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Map}</span></h4>
 
     
 
@@ -902,7 +2166,7 @@ Each array contains the <strong>gesel</strong> gene IDs associated with that Ent
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="fetchGenesBySymbol.js.html">fetchGenesBySymbol.js</a>, <a href="fetchGenesBySymbol.js.html#line18">line 18</a>
+        <a href="mapGenesBySymbol.js.html">mapGenesBySymbol.js</a>, <a href="mapGenesBySymbol.js.html#line18">line 18</a>
     </li></ul></dd>
     
 
@@ -1135,7 +2399,7 @@ Each array contains the <strong>gesel</strong> gene IDs associated with that sym
 
     
 
-    <h4 class="name" id="fetchGenesForSet"><span class="type-signature type-signature-async">(async) </span>fetchGenesForSet<span class="signature">(set)</span><span class="type-signature"> &rarr; {Array}</span></h4>
+    <h4 class="name" id="numberOfCollections"><span class="type-signature"></span>numberOfCollections<span class="signature">()</span><span class="type-signature"> &rarr; {number}</span></h4>
 
     
 
@@ -1144,15 +2408,11 @@ Each array contains the <strong>gesel</strong> gene IDs associated with that sym
 
 <dl class="details">
     
-    <dt class="tag-description">Description:</dt>
-    <dd class="tag-description"><ul class="dummy"><li><p>Get all genes within a set.
-This assumes that the promise returned by <a href="global.html#initializeMappings"><code>initializeMappings</code></a> has been resolved.</p></li></ul></dd>
-    
 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="mappings.js.html">mappings.js</a>, <a href="mappings.js.html#line230">line 230</a>
+        <a href="fetchSingleCollection.js.html">fetchSingleCollection.js</a>, <a href="fetchSingleCollection.js.html#line48">line 48</a>
     </li></ul></dd>
     
 
@@ -1199,90 +2459,39 @@ This assumes that the promise returned by <a href="global.html#initializeMapping
 
 
 
-    <h5 class="h5-parameters">Parameters:</h5>
-    
 
-<table class="params">
-    <thead>
-    <tr>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5 class="h5-returns">Returns:</h5>
+
         
-        <th>Name</th>
+<div class="param-desc">
+    <p>Total number of collections.</p>
+</div>
+
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
         
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>set</code></td>
-            
-
-            <td class="type">
-            
-                
 <span class="param-type">number</span>
 
 
 
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Index of a set, referencing an element in <a href="global.html#sets"><code>sets</code></a>.</p></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5 class="h5-returns">Returns:</h5>
-
-        
-<div class="param-desc">
-    <p>An array of integers containing the indices for all genes within the set.
-Indices refer to elements in <code>genes</code>.</p>
-</div>
-
-
-
-<dl class="param-type">
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Array</span>
-
-
-
     </dd>
 </dl>
 
@@ -1295,7 +2504,7 @@ Indices refer to elements in <code>genes</code>.</p>
 
     
 
-    <h4 class="name" id="fetchSetDetails"><span class="type-signature type-signature-async">(async) </span>fetchSetDetails<span class="signature">(set)</span><span class="type-signature"> &rarr; {object}</span></h4>
+    <h4 class="name" id="numberOfSets"><span class="type-signature"></span>numberOfSets<span class="signature">()</span><span class="type-signature"> &rarr; {number}</span></h4>
 
     
 
@@ -1304,15 +2513,11 @@ Indices refer to elements in <code>genes</code>.</p>
 
 <dl class="details">
     
-    <dt class="tag-description">Description:</dt>
-    <dd class="tag-description"><ul class="dummy"><li><p>Obtain the details for a set.
-This assumes that the promise returned by <a href="global.html#initializeMappings"><code>initializeMappings</code></a> has been resolved.</p></li></ul></dd>
-    
 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="mappings.js.html">mappings.js</a>, <a href="mappings.js.html#line272">line 272</a>
+        <a href="fetchSingleSet.js.html">fetchSingleSet.js</a>, <a href="fetchSingleSet.js.html#line61">line 61</a>
     </li></ul></dd>
     
 
@@ -1359,96 +2564,39 @@ This assumes that the promise returned by <a href="global.html#initializeMapping
 
 
 
-    <h5 class="h5-parameters">Parameters:</h5>
-    
 
-<table class="params">
-    <thead>
-    <tr>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5 class="h5-returns">Returns:</h5>
+
         
-        <th>Name</th>
+<div class="param-desc">
+    <p>Total number of sets.</p>
+</div>
+
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
         
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>set</code></td>
-            
-
-            <td class="type">
-            
-                
 <span class="param-type">number</span>
 
 
 
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Index of a set.</p></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5 class="h5-returns">Returns:</h5>
-
-        
-<div class="param-desc">
-    <p>Object containing the details of the set, with the following properties:</p>
-<ul>
-<li><code>name</code>, the name of the set.</li>
-<li><code>description</code>, the description of the set.</li>
-<li><code>size</code>, the number of genes in the set.</li>
-<li><code>collection</code>, the index of the collection containing the set.</li>
-<li><code>number</code>, the number of the set within the collection.</li>
-</ul>
-</div>
-
-
-
-<dl class="param-type">
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">object</span>
-
-
-
     </dd>
 </dl>
 
@@ -1461,7 +2609,7 @@ This assumes that the promise returned by <a href="global.html#initializeMapping
 
     
 
-    <h4 class="name" id="fetchSetsForGene"><span class="type-signature type-signature-async">(async) </span>fetchSetsForGene<span class="signature">(gene)</span><span class="type-signature"> &rarr; {Array}</span></h4>
+    <h4 class="name" id="searchGenes"><span class="type-signature type-signature-async">(async) </span>searchGenes<span class="signature">(queries, species<span class="signature-attributes">nullable</span>, options<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Array}</span></h4>
 
     
 
@@ -1470,175 +2618,11 @@ This assumes that the promise returned by <a href="global.html#initializeMapping
 
 <dl class="details">
     
-    <dt class="tag-description">Description:</dt>
-    <dd class="tag-description"><ul class="dummy"><li><p>Get all sets containing a gene.
-This assumes that the promise returned by <a href="global.html#initializeMappings"><code>initializeMappings</code></a> has been resolved.</p></li></ul></dd>
-    
 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="mappings.js.html">mappings.js</a>, <a href="mappings.js.html#line207">line 207</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <h5 class="h5-parameters">Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>gene</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Index of a gene, referencing an element in <code>genes</code>.</p></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5 class="h5-returns">Returns:</h5>
-
-        
-<div class="param-desc">
-    <p>An array of integers containing the indices for all sets containing the gene.
-Indices refer to elements in <a href="global.html#sets"><code>sets</code></a>.</p>
-</div>
-
-
-
-<dl class="param-type">
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Array</span>
-
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-        
-            
-
-    
-
-    <h4 class="name" id="findOverlappingSets"><span class="type-signature type-signature-async">(async) </span>findOverlappingSets<span class="signature">(genes, options<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Array}</span></h4>
-
-    
-
-
-
-
-<dl class="details">
-    
-    <dt class="tag-description">Description:</dt>
-    <dd class="tag-description"><ul class="dummy"><li><p>Search for sets with overlaps with the user-supplied set of genes.
-This function assumes that <a href="global.html#initialize"><code>initialize</code></a> (or all components theoref) has already been run.</p></li></ul></dd>
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="search.js.html">search.js</a>, <a href="search.js.html#line23">line 23</a>
+        <a href="searchGenes.js.html">searchGenes.js</a>, <a href="searchGenes.js.html#line56">line 56</a>
     </li></ul></dd>
     
 
@@ -1714,883 +2698,7 @@ This function assumes that <a href="global.html#initialize"><code>initialize</co
 
         <tr>
             
-                <td class="name"><code>genes</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Array</span>
-
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                </td>
-            
-
-            <td class="description last"><p>Array of integers containing indices of genes in the user-supplied set.</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>options</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">object</span>
-
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                    <code>{}</code>
-                
-                </td>
-            
-
-            <td class="description last"><p>Optional parameters.</p>
-                <h6>Properties</h6>
-                
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-        <th>Attributes</th>
-        
-
-        
-        <th>Default</th>
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>sort</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">boolean</span>
-
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                    <code>false</code>
-                
-                </td>
-            
-
-            <td class="description last"><p>Whether to sort the found sets by overlap percentage.</p></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-            </td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5 class="h5-returns">Returns:</h5>
-
-        
-<div class="param-desc">
-    <p>An array of objects, where each object corresponds to a set with non-zero overlaps.
-Each object contains:</p>
-<ul>
-<li><code>id</code>, the index of the set in <a href="global.html#sets"><code>sets</code></a>.</li>
-<li><code>count</code>, the number of genes in the set that overlap with genes in <code>genes</code>.</li>
-</ul>
-<p>In the array, objects are sorted by decreasing percentage of overlapping genes in the corresponding set.
-This favors sets with a stronger relative overlap.
-However, sets with only one overlapping gene are downweighted as these are not particularly interesting.</p>
-</div>
-
-
-
-<dl class="param-type">
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Array</span>
-
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-        
-            
-
-    
-
-    <h4 class="name" id="initialize"><span class="type-signature type-signature-async">(async) </span>initialize<span class="signature">(options<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {boolean}</span></h4>
-
-    
-
-
-
-
-<dl class="details">
-    
-    <dt class="tag-description">Description:</dt>
-    <dd class="tag-description"><ul class="dummy"><li><p>Initialize all <strong>gesel</strong> assets.</p></li></ul></dd>
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="index.js.html">index.js</a>, <a href="index.js.html#line28">line 28</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <h5 class="h5-parameters">Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-        <th>Attributes</th>
-        
-
-        
-        <th>Default</th>
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>options</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">object</span>
-
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                    <code>{}</code>
-                
-                </td>
-            
-
-            <td class="description last"><p>Optional parameters.</p>
-                <h6>Properties</h6>
-                
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-        <th>Attributes</th>
-        
-
-        
-        <th>Default</th>
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>includeSets</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">boolean</span>
-
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                    <code>false</code>
-                
-                </td>
-            
-
-            <td class="description last"><p>Whether or not to call <a href="global.html#initializeSets"><code>initializeSets</code></a>.
-This is set to <code>false</code> to reduce data transfer if <a href="global.html#sets"><code>sets</code></a> and <a href="global.html#collections"><code>collections</code></a> are not going to be called.</p></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-            </td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5 class="h5-returns">Returns:</h5>
-
-        
-<div class="param-desc">
-    <p><code>true</code> once all components are initialized,
-by calling the individual initializers for each component (i.e., <code>initializeGenes</code>, <a href="global.html#initializeSets"><code>initializeSets</code></a> and <a href="global.html#initializeMappings"><code>initializeMappings</code></a>).
-If everything was already initialized, <code>false</code> is returned instead.</p>
-</div>
-
-
-
-<dl class="param-type">
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">boolean</span>
-
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-        
-            
-
-    
-
-    <h4 class="name" id="initializeMappings"><span class="type-signature type-signature-async">(async) </span>initializeMappings<span class="signature">()</span><span class="type-signature"> &rarr; {boolean}</span></h4>
-
-    
-
-
-
-
-<dl class="details">
-    
-    <dt class="tag-description">Description:</dt>
-    <dd class="tag-description"><ul class="dummy"><li><p>Initialize all <strong>gesel</strong> mapping assets.</p></li></ul></dd>
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="mappings.js.html">mappings.js</a>, <a href="mappings.js.html#line128">line 128</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5 class="h5-returns">Returns:</h5>
-
-        
-<div class="param-desc">
-    <p><code>true</code> when mapping assets are downloaded and initialized.
-If the assets were already downloaded, <code>false</code> is returned instead.</p>
-</div>
-
-
-
-<dl class="param-type">
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">boolean</span>
-
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-        
-            
-
-    
-
-    <h4 class="name" id="initializeSets"><span class="type-signature type-signature-async">(async) </span>initializeSets<span class="signature">()</span><span class="type-signature"> &rarr; {boolean}</span></h4>
-
-    
-
-
-
-
-<dl class="details">
-    
-    <dt class="tag-description">Description:</dt>
-    <dd class="tag-description"><ul class="dummy"><li><p>Initialize all set-related <strong>gesel</strong> assets.</p></li></ul></dd>
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="sets.js.html">sets.js</a>, <a href="sets.js.html#line15">line 15</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5 class="h5-returns">Returns:</h5>
-
-        
-<div class="param-desc">
-    <p><code>true</code> once the set and collection information is initialized.
-If it was already initialized, <code>false</code> is returned instead.</p>
-</div>
-
-
-
-<dl class="param-type">
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">boolean</span>
-
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-        
-            
-
-    
-
-    <h4 class="name" id="lowerCaseSetDetails"><span class="type-signature"></span>lowerCaseSetDetails<span class="signature">()</span><span class="type-signature"> &rarr; {Array}</span></h4>
-
-    
-
-
-
-
-<dl class="details">
-    
-    <dt class="tag-description">Description:</dt>
-    <dd class="tag-description"><ul class="dummy"><li><p>Retrieve lower-case information about each gene set known to <strong>gesel</strong>,
-primarily intended for use with case-insensitive text searches.
-This function assumes that the promise returned by <a href="global.html#initializeSets"><code>initializeSets</code></a> has already been resolved.</p></li></ul></dd>
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="sets.js.html">sets.js</a>, <a href="sets.js.html#line100">line 100</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5 class="h5-returns">Returns:</h5>
-
-        
-<div class="param-desc">
-    <p>Array of objects where each entry corresponds to a set.
-Each object contains:</p>
-<ul>
-<li><code>name</code>, the lower-case name of the set.</li>
-<li><code>description</code>, the lower-case description of the set.</li>
-</ul>
-</div>
-
-
-
-<dl class="param-type">
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Array</span>
-
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-        
-            
-
-    
-
-    <h4 class="name" id="mapMultipleGenes"><span class="type-signature type-signature-async">(async) </span>mapMultipleGenes<span class="signature">(searches, species<span class="signature-attributes">nullable</span>, options<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Array}</span></h4>
-
-    
-
-
-
-
-<dl class="details">
-    
-    <dt class="tag-description">Description:</dt>
-    <dd class="tag-description"><ul class="dummy"><li><p>Find genes based on their Ensembl IDs or symbols.</p></li></ul></dd>
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="mapMultipleGenes.js.html">mapMultipleGenes.js</a>, <a href="mapMultipleGenes.js.html#line58">line 58</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <h5 class="h5-parameters">Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-        <th>Attributes</th>
-        
-
-        
-        <th>Default</th>
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>searches</code></td>
+                <td class="name"><code>queries</code></td>
             
 
             <td class="type">
@@ -2803,7 +2911,7 @@ any other string or <code>null</code> is ignored.</p></td>
                 </td>
             
 
-            <td class="description last"><p>Whether strings in <code>searches</code> might be symbols.</p></td>
+            <td class="description last"><p>Whether strings in <code>queries</code> might be symbols.</p></td>
         </tr>
 
     
@@ -2843,7 +2951,7 @@ any other string or <code>null</code> is ignored.</p></td>
                 </td>
             
 
-            <td class="description last"><p>Whether strings in <code>searches</code> might be Entrez IDs.</p></td>
+            <td class="description last"><p>Whether strings in <code>queries</code> might be Entrez IDs.</p></td>
         </tr>
 
     
@@ -2876,7 +2984,7 @@ any other string or <code>null</code> is ignored.</p></td>
 
         
 <div class="param-desc">
-    <p>An array of length equal to <code>searches</code>.
+    <p>An array of length equal to <code>queries</code>.
 Each element of the array is an array containing the <strong>gesel</strong> gene IDs that match the corresponding search string.
 Each gene ID is an index into the array returned by <a href="global.html#fetchAllGenes"><code>fetchAllGenes</code></a>.</p>
 </div>
@@ -2914,15 +3022,11 @@ Each gene ID is an index into the array returned by <a href="global.html#fetchAl
 
 <dl class="details">
     
-    <dt class="tag-description">Description:</dt>
-    <dd class="tag-description"><ul class="dummy"><li><p>Performs a simple search of the name and description text for each set.
-This function assumes that <a href="global.html#initialize"><code>initialize</code></a> (or all components theoref) has already been run.</p></li></ul></dd>
-    
 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="search.js.html">search.js</a>, <a href="search.js.html#line99">line 99</a>
+        <a href="searchSetText.js.html">searchSetText.js</a>, <a href="searchSetText.js.html#line66">line 66</a>
     </li></ul></dd>
     
 
@@ -3244,7 +3348,7 @@ A set's name and/or description must contain all words to be considered a match.
     <dt class="tag-description">Description:</dt>
     <dd class="tag-description"><ul class="dummy"><li><p>Set the global download function to fetch pre-built indices.
 By default, it uses the indices from <a href="https://github.com/LTLA/gesel-feedstock">the feedstock repository</a>.
-Applications may specify a different function, e.g., to point to another set of indices; this should be done before calling any <a href="global.html#initialize"><code>initialize</code></a> functions.</p></li></ul></dd>
+Applications may specify a different function, e.g., to point to another set of indices; this should be done before calling any other <strong>gesel</strong> functions.</p></li></ul></dd>
     
 
     
@@ -3396,333 +3500,6 @@ If only the first argument is supplied, the function should download the entire 
 
 
         
-            
-
-    
-
-    <h4 class="name" id="sets"><span class="type-signature"></span>sets<span class="signature">()</span><span class="type-signature"> &rarr; {Array}</span></h4>
-
-    
-
-
-
-
-<dl class="details">
-    
-    <dt class="tag-description">Description:</dt>
-    <dd class="tag-description"><ul class="dummy"><li><p>Retrieve information about each gene set known to <strong>gesel</strong>.
-This function assumes that the promise returned by <a href="global.html#initializeSets"><code>initializeSets</code></a> has already been resolved.</p></li></ul></dd>
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="sets.js.html">sets.js</a>, <a href="sets.js.html#line82">line 82</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5 class="h5-returns">Returns:</h5>
-
-        
-<div class="param-desc">
-    <p>Array of objects where each entry corresponds to a set and contains the details about that set.
-Each object can be expected to contain:</p>
-<ul>
-<li><code>name</code>, the name of the set.</li>
-<li><code>description</code>, the description of the set.</li>
-<li><code>size</code>, the number of genes in the set.</li>
-<li><code>collection</code>, the index of the collection containing the set.</li>
-<li><code>number</code>, the number of the set within the collection.</li>
-</ul>
-</div>
-
-
-
-<dl class="param-type">
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Array</span>
-
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-        
-            
-
-    
-
-    <h4 class="name" id="totalCollections"><span class="type-signature"></span>totalCollections<span class="signature">()</span><span class="type-signature"> &rarr; {number}</span></h4>
-
-    
-
-
-
-
-<dl class="details">
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="mappings.js.html">mappings.js</a>, <a href="mappings.js.html#line252">line 252</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5 class="h5-returns">Returns:</h5>
-
-        
-<div class="param-desc">
-    <p>Total number of collections.</p>
-</div>
-
-
-
-<dl class="param-type">
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">number</span>
-
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-        
-            
-
-    
-
-    <h4 class="name" id="totalSets"><span class="type-signature"></span>totalSets<span class="signature">()</span><span class="type-signature"> &rarr; {number}</span></h4>
-
-    
-
-
-
-
-<dl class="details">
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="mappings.js.html">mappings.js</a>, <a href="mappings.js.html#line245">line 245</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5 class="h5-returns">Returns:</h5>
-
-        
-<div class="param-desc">
-    <p>Total number of sets.</p>
-</div>
-
-
-
-<dl class="param-type">
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">number</span>
-
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-        
     
 
     
@@ -3742,7 +3519,7 @@ Each object can be expected to contain:</p>
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.11</a> on Fri Mar 03 2023 18:01:14 GMT+0000 (Coordinated Universal Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.11</a> on Fri Mar 03 2023 22:02:51 GMT+0000 (Coordinated Universal Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>
