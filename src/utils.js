@@ -133,8 +133,8 @@ export function convertToUint32Array(txt) { // Building back the indices from th
 }
 
 /**
- * @param {Array} Array of arrays over which to compute the intersection.
- * @return {Array} Intersection of all arrays in {arrays}.
+ * @param {Array} arrays - Array of arrays over which to compute the intersection.
+ * @return {Array} Intersection of all arrays in `arrays`.
  */
 export function intersect(arrays) {
     if (arrays.length == 0) {

@@ -45,7 +45,7 @@ function add_mapping(gene_data, key) {
  * - `entrez`: array containing strings with the Entrez IDs.
  *   This is only guaranteed to exist if `mapping = "entrez"` or `mapping = "both"`.
  *
- * In the context of **gesel**, the identifier for each gene is encoded as its index in this output array.
+ * In the context of **gesel**, the identifier for each gene (i.e., the "gene ID") is encoded as its index in this output array.
  *
  * @async
  */
