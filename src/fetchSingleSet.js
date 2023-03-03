@@ -33,6 +33,7 @@ async function initialize() {
         throw new Error("discrepancy between number of sets and sum of collection sizes");
     }
 
+    init = true;
     return true;
 }
 
