@@ -66,45 +66,72 @@
 <h2>Overview</h2>
 <p>Search for interesting gene sets, client-side.
 This uses Javascript to do the queries in the browser, improving latency and avoiding the need for a back-end service.
-The queries rely on prebuilt indices for gene sets of interest, e.g., <a href="https://github.com/LTLA/gesel-feedstock">here</a>.</p>
-<h2>Quick start</h2>
+The queries rely on prebuilt references for gene sets of interest, e.g., <a href="https://github.com/LTLA/gesel-feedstock">here</a>.</p>
+<h2>Installation</h2>
 <p><a href="https://www.npmjs.com/package/gesel"><strong>gesel</strong></a> can be installed with the usual commands:</p>
 <pre class="prettyprint source lang-sh"><code>npm i gesel
 </code></pre>
 <p><strong>gesel</strong> is implemented as an ES6 module, so importing is as simple as:</p>
 <pre class="prettyprint source lang-js"><code>import * as gesel from &quot;gesel&quot;;
 </code></pre>
-<p>Before use, make sure to initialize the module first - this will download all necessary files.</p>
-<pre class="prettyprint source lang-js"><code>await gesel.initialize();
-</code></pre>
-<p>After that, most <strong>gesel</strong> functions can be called freely.</p>
-<h2>Basic usage</h2>
-<p>Information about genes, sets and collections are immediately available by calling the relevant getters:</p>
-<pre class="prettyprint source lang-js"><code>let gene_info = gesel.genes();
+<p>See the <a href="https://ltla.github.io/gesel.js">API documentation</a> for all functions.</p>
+<h2>Example usage</h2>
+<p>Given a user-supplied set of genes, what are the overlapping gene sets in our references?
+First, we need to map our user-supplied genes to <strong>gesel</strong>'s internal identifiers.</p>
+<pre class="prettyprint source lang-js"><code>let user_supplied = [ &quot;SNAP25&quot;, &quot;NEUROD6&quot;, &quot;ENSG00000123307&quot;, &quot;TSPAN6&quot; ];
 
-// If 'includeSets = true' in initialize():
-let set_info = gesel.sets();
-let collection_info = gesel.collections();
-</code></pre>
-<p>The mapping functions will accept and return <em>indices</em> into these arrays.</p>
-<pre class="prettyprint source lang-js"><code>// All sets involving the first gene.
-let first_set = await gesel.fetchSetsForGene(0);
+// Seeing if the user-supplied symbols/IDs are found.
+let user_supplied_ids = await gesel.searchGenes(user_supplied, &quot;Homo sapiens&quot;);
 
-// All genes in the first set.
-let first_set = await gesel.fetchGenesForSet(0);
+// Taking the first match. Applications may prefer to print warnings/errors
+// if there are multiple matching genes for a symbol.
+let user_supplied_union = [];
+for (const x of user_supplied_ids) {
+    if (x.length >= 1) {
+        user_supplied_union.push(x[0]);
+    }
+}
 </code></pre>
-<p>Alternatively, given an index, we can determine the identity of the set/collection by querying the indices:</p>
-<pre class="prettyprint source lang-js"><code>let first_set_info = await gesel.fetchSetDetails(0); // first set
-let first_collection_info = await gesel.fetchCollectionDetails(0); // first collection
+<p>Then, we can search for the overlapping sets.
+This returns an array of objects with the set IDs as well as the number of overlapping genes (and optionally the size of each set).</p>
+<pre class="prettyprint source lang-js"><code>let overlaps = await gesel.findOverlappingSets(user_supplied_union, { includeSize: true });
 </code></pre>
-<p>Applications can use the search functions to perform more complex queries:</p>
-<pre class="prettyprint source lang-js"><code>// Find all sets that contain one or more of the supplied gene indices.
-let sets_with_gene = await gesel.findOverlappingGenes([1, 10, 1000]); 
+<p>Once we have a set ID, we can query the references to obtain that set's details:</p>
+<pre class="prettyprint source lang-js"><code>console.log(await gesel.fetchSingleSet(overlaps[0].id));
+</code></pre>
+<p>Each set also has some associated free text in its name and description.
+We can do some simple queries via <strong>gesel</strong>:</p>
+<pre class="prettyprint source lang-js"><code>let hits = await gesel.searchSetText(&quot;B immune&quot;);
+console.log(await gesel.fetchSingleSet(hits[0]));
+</code></pre>
+<p>This can be combined with the output of <code>findOverlappingSets</code> to find all gene sets that overlap the user-supplied set <em>and</em> contain the desired keywords.</p>
+<pre class="prettyprint source lang-js"><code>let combined = gesel.intersect([ hits, overlaps.map(x => x.id) ]);
+</code></pre>
+<h2>Overriding the downloader</h2>
+<p>By default, we use the reference gene sets collated in the <a href="https://github.com/LTLA/gesel-feedstock">feedstock repository</a>.
+However, users can point <strong>gesel</strong> to their own references by overriding the downloader before calling any <strong>gesel</strong> functions.
+For example, if our prebuilt references are hosted on some other URL:</p>
+<pre class="prettyprint source lang-js"><code>const baseUrl = &quot;https://some.company.com/prebuilt-gesel&quot;;
 
-// Find all sets where the name matches a query string.
-let sets_with_text = await gesel.searchSetText(&quot;KEGG immune&quot;);
+setDownload(async (file, start = null, end = null) => {
+    const url = baseUrl + &quot;/&quot; + file;
+    if (start == null) {
+        return fetch(url, { headers: { Authorization: &quot;Bearer XXX&quot; } });
+    } else {
+        let range_text = &quot;bytes=&quot; + String(start) + &quot;-&quot; + String(end);
+        return fetch(url, { headers: { Authorization: &quot;Bearer XXX&quot;, Range: range_text } });
+    }
+});
 </code></pre>
-<p>See the <a href="https://ltla.github.io/gesel.js">API documentation</a> for more details.</p></article>
+<h2>Implementation details</h2>
+<p><strong>gesel</strong> uses HTTP range requests to efficiently extract slices of data from the pre-built references.
+This allows us to obtain the identities of genes belonging to a particular gene set,
+or the identities of the sets containing a particular gene,
+or the details of a particular gene set or collection,
+without downloading the entirety of the associated refences files.
+Only the range indices need to be transferred to the client - as of time of writing, this amounts to an acceptably small payload (&lt; 2 MB).</p>
+<p><strong>gesel</strong> will automatically cache responses in memory to reduce network traffic across the lifetime of a single session.
+Note that no caching is done across sessions, though users can add their own (e.g., with IndexedDB or the Cache API) by overriding the downloader.</p></article>
     </section>
 
 
@@ -119,7 +146,7 @@ let sets_with_text = await gesel.searchSetText(&quot;KEGG immune&quot;);
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.11</a> on Fri Mar 03 2023 22:02:51 GMT+0000 (Coordinated Universal Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.11</a> on Fri Mar 03 2023 23:40:48 GMT+0000 (Coordinated Universal Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>
