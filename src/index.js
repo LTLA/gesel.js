@@ -1,4 +1,3 @@
-export * from "./sets.js";
 export * from "./mappings.js";
 export * from "./search.js";
 export { setDownload } from "./utils.js";
@@ -9,7 +8,9 @@ export * from "./fetchGenesByEntrez.js";
 export * from "./fetchGenesByEnsembl.js";
 export * from "./mapMultipleGenes.js";
 
-import { initializeSets } from "./sets.js";
+export { fetchAllSets } from "./fetchAllSets.js";
+export { fetchAllCollections } from "./fetchAllCollections.js";
+
 import { initializeMappings } from "./mappings.js";
 
 /**
@@ -27,9 +28,6 @@ import { initializeMappings } from "./mappings.js";
  */
 export async function initialize({ includeSets = false } = {}) {
     let promises = [initializeMappings()];
-    if (includeSets) {
-        promises.push(initializeSets());
-    }
 
     var out = await Promise.all(promises);
     for (const i of out) {
