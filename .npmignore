@@ -1,6 +1,8 @@
 tests/
 docs/
-assets/
+files/
 *.html
 *.R
 .gitignore
+.github
+blah.js
