@@ -16,3 +16,7 @@ test("fetchSingleCollection works as expected", async () => {
     expect(c[last]).toEqual(await gesel.fetchSingleCollection(last, { forceRequest: false }));
 })
 
+test("numberOfCollections works as expected", async () => {
+    expect(await gesel.numberOfCollections()).toEqual((await gesel.fetchAllCollections()).length);
+})
+

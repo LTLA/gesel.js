@@ -37,6 +37,19 @@ async function initialize() {
 }
 
 /**
+ * @return {number} Total number of sets.
+ */
+export async function numberOfSets() {
+    if (!init) {
+        if (full.init) {
+            return (await full.fetchAllSets()).length;
+        }
+        await initialize();
+    }
+    return sizes.length;
+}
+
+/**
  * @param {number} set - Set ID, see {@linkcode fetchAllSets} for details.
  * @param {object} [options={}] - Optional parameters.
  * @param {boolean} [options.forceRequest=false] - Whether to force a request to the server.

@@ -16,3 +16,7 @@ test("fetchSingleSet works as expected", async () => {
     expect(c[last]).toEqual(await gesel.fetchSingleSet(last, { forceRequest: false }));
 })
 
+test("numberOfSets works as expected", async () => {
+    expect(await gesel.numberOfSets()).toEqual((await gesel.fetchAllSets()).length);
+})
+

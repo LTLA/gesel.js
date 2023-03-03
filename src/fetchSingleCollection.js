@@ -43,6 +43,19 @@ export async function fetchCollectionSizes() {
 }
 
 /**
+ * @return {number} Total number of collections.
+ */
+export async function numberOfCollections() {
+    if (!init) {
+        if (full.init) {
+            return (await full.fetchAllCollections()).length;
+        }
+        await initialize();
+    }
+    return sizes.length;
+}
+
+/**
  * @param {number} collection - Collection ID, see {@linkcode fetchAllCollections} for details.
  * @param {object} [options={}] - Optional parameters.
  * @param {boolean} [options.forceRequest=false] - Whether to force a request to the server.
