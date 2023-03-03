@@ -1,0 +1,38 @@
+on:
+  push:
+    branches:
+      - master
+
+      
+name: Build documentation
+
+jobs:
+  doxygenator:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Set up Node
+      uses: actions/setup-node@v3
+      with:
+        node-version: 16
+
+    - name: Restore the node modules
+      uses: actions/cache@v3
+      with:
+        path: '**/node_modules'
+        key: modules-${{ hashFiles('**/package.json') }}
+
+    - name: Install dependencies
+      run: npm i --include-dev
+
+    - name: Run JSDoc
+      run: npm run jsdoc
+
+    - name: GH Pages Deployment
+      uses: JamesIves/github-pages-deploy-action@v4
+      with:
+        branch: gh-pages # The branch the action should deploy to.
+        folder: docs/built
+        target-folder: docs
+        clean: true # Automatically remove deleted files from the deploy branch

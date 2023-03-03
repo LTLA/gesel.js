@@ -1,0 +1,27 @@
+on: [push]
+
+name: Run tests
+
+jobs:
+  test-js:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Set up Node
+      uses: actions/setup-node@v3
+      with:
+        node-version: 16
+
+    - name: Restore the node modules
+      uses: actions/cache@v3
+      with:
+        path: '**/node_modules'
+        key: modules-${{ hashFiles('**/package.json') }}
+
+    - name: Install packages
+      run: npm i --include-dev
+
+    - name: Run tests
+      run: npm run test
+      timeout-minutes: 15
