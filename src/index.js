@@ -9,7 +9,9 @@ export * from "./fetchGenesByEnsembl.js";
 export * from "./mapMultipleGenes.js";
 
 export { fetchAllSets } from "./fetchAllSets.js";
+export { fetchSingleSet } from "./fetchSingleSet.js";
 export { fetchAllCollections } from "./fetchAllCollections.js";
+export { fetchSingleCollection } from "./fetchSingleCollection.js";
 
 import { initializeMappings } from "./mappings.js";
 

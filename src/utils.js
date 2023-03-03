@@ -45,3 +45,89 @@ export function decompressLines(buffer) {
         return lines;
     }
 }
+
+export async function retrieveRanges(resource) {
+    var res = await downloader(resource + ".ranges.gz");
+    if (!res.ok) {
+        throw "failed to fetch ranges for '" + resource + "'";
+    }
+
+    var buffer = await res.arrayBuffer();
+    var lengths = decompressLines(buffer);
+
+    var ranges = [0];
+    for (var i = 0; i < lengths.length; i++) { 
+        ranges.push(ranges[i] + Number(lengths[i]) + 1);
+    }
+    return ranges;
+}
+
+export async function retrieveNamedRanges(resource) {
+    var res = await downloader(resource + ".ranges.gz");
+    if (!res.ok) {
+        throw "failed to fetch ranges for '" + resource + "'";
+    }
+
+    var buffer = await res.arrayBuffer();
+    var lines = decompressLines(buffer);
+
+    var last = 0;
+    var output = new Map; 
+    for (var i = 0; i < lines.length; i++) { 
+        let split = lines[i].split("\t");
+        let next = last + Number(split[1]) + 1; // +1 for the newline.
+        output.set(split[0], [last, next]);
+        last = next;
+    }
+
+    return output;
+}
+
+export async function retrieveRangesWithExtras(resource) {
+    var res = await downloader(resource + ".ranges.gz");
+    if (!res.ok) {
+        throw "failed to fetch ranges for '" + resource + "'";
+    }
+
+    var buffer = await res.arrayBuffer();
+    var lines = decompressLines(buffer);
+
+    var ranges = [0];
+    var extra = [];
+    for (var i = 0; i < lines.length; i++) {
+        let split = lines[i].split("\t");
+        ranges.push(ranges[i] + Number(split[0]) + 1); // +1 for the newline.
+        extra.push(Number(split[1]));
+    }
+
+    return { ranges, extra };
+}
+
+export function retrieveBytesByIndex(resource, ranges, index) {
+    var start = ranges[index];
+    var end = ranges[index + 1];
+    return retrieveBytes(resource, start, end);
+}
+
+export async function retrieveBytes(resource, start, end) {
+    end--; // ignore the newline.
+
+    var res = await downloader(resource, start, end);
+    if (!res.ok) {
+        throw "failed to fetch ranges for '" + resource + "'";
+    }
+
+    var txt = await res.text();
+    return txt.slice(0, end - start); // make sure we limit it to the requested length.
+}
+
+export function convertToUint32Array(txt) { // Building back the indices from the diffs.
+    var output = [];
+    var last = 0;
+    txt.split("\t").forEach(x => {
+        var y = Number(x) + last;
+        output.push(y);
+        last = y;
+    });
+    return new Uint32Array(output);
+}
