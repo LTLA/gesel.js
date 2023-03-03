@@ -15,6 +15,15 @@ const tokens_descriptions_cache = new Map;
 const sets_cache = new Map;
 const collections_cache = new Map;
 
+export var sets_sizes;
+var sets_parents;
+var sets_internal_number;
+var collections_sizes;
+var collections_starts;
+
+/***************************************************
+ ***************************************************/
+
 async function retrieveRanges(resource) {
     var res = await fetch(baseUrl+ "/" + resource + ".ranges.gz");
     if (!res.ok) {
@@ -52,6 +61,30 @@ async function retrieveNamedRanges(resource) {
     return output;
 }
 
+async function retrieveRangesWithExtras(resource) {
+    var res = await fetch(baseUrl+ "/" + resource + ".ranges.gz");
+    if (!res.ok) {
+        throw "failed to fetch ranges for '" + resource + "'";
+    }
+
+    var buffer = await res.arrayBuffer();
+    var lines = decompressLines(buffer);
+
+    var last = 0;
+    var ranges = [0];
+    var extra = [];
+    for (var i = 1; i < lines.length - 1; i++) { // ignore the empty string due to the trailing newline.
+        let split = lines[i].split("\t");
+        ranges.push(ranges[i] + Number(split[0]) + 1);
+        extra.push(Number(split[1]));
+    }
+
+    return { ranges, extra };
+}
+
+/***************************************************
+ ***************************************************/
+
 function retrieveBytesByIndex(resource, ranges, index) {
     var start = ranges[index];
     var end = ranges[index + 1];
@@ -87,6 +120,9 @@ function convertToUint32Array(txt) {
     return new Uint32Array(output);
 }
 
+/***************************************************
+ ***************************************************/
+
 /**
  * Initialize all **gesel** mapping assets.
  *
@@ -113,15 +149,17 @@ export async function initializeMappings() {
                 return true;
             }),
 
-        retrieveRanges("sets.tsv")
+        retrieveRangesWithExtras("sets.tsv")
             .then(res => {
-                sets_ranges = res;
+                sets_ranges = res.ranges;
+                sets_sizes = res.extra;
                 return true;
             }),
 
-        retrieveRanges("collections.tsv")
+        retrieveRangesWithExtras("collections.tsv")
             .then(res => {
-                collections_ranges = res;
+                collections_ranges = res.ranges;
+                collections_sizes = res.extra;
                 return true;
             }),
 
@@ -137,6 +175,25 @@ export async function initializeMappings() {
                 return true;
             })
     ]);
+
+    sets_parents = [];
+    sets_internal_number = [];
+    collections_starts = [];
+    var first_set = 0;
+
+    for (var i = 0; i < collections_sizes.length; i++) {
+        let colsize = collections_sizes[i];
+        for (var j = 0; j < colsize; j++) {
+            sets_parents.push(i);
+            sets_internal_number.push(j);
+        }
+        collections_starts.push(first_set);
+        first_set += colsize;
+    }
+
+    if (first_set != sets_sizes.length) {
+        throw new Error("discrepancy between number of sets and sum of collection sizes");
+    }
 
     init = true;
     return true;
@@ -229,12 +286,12 @@ export async function fetchSetDetails(set) {
     let output = {
         name: split[0],
         description: split[1],
-        size: Number(split[2]),
-        collection: Number(split[3]),
-        number: Number(split[4])
+        size: sets_sizes[set],
+        collection: sets_parents[set],
+        number: sets_internal_number[set]
     };
 
-    set2gene_cache.set(set, output);
+    sets_cache.set(set, output);
     return output;
 }
 
@@ -257,24 +314,23 @@ export async function fetchSetDetails(set) {
  *
  * @async
  */
-export async function fetchCollectionDetails(set) {
-    let cached = collections_cache.get(set);
+export async function fetchCollectionDetails(collection) {
+    let cached = collections_cache.get(collection);
     if (typeof cached !== "undefined") {
         return cached;
     }
 
-    let text = await retrieveBytesByIndex("collections.tsv", collections_ranges, set);
+    let text = await retrieveBytesByIndex("collections.tsv", collections_ranges, collection);
     let split = text.split("\t");
     let output = {
-        id: split[0],
-        start: Number(split[1]),
-        size: Number(split[2]),
-        title: split[3],
-        description: split[4],
-        species: split[5]
+        title: split[0],
+        description: split[1],
+        species: split[2],
+        start: collections_starts[collection],
+        size: collections_sizes[collection]
     };
 
-    set2gene_cache.set(set, output);
+    collections_cache.set(collection, output);
     return output;
 }
 
