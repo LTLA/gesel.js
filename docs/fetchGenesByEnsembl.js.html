@@ -3,7 +3,7 @@
 <head>
     
     <meta charset="utf-8">
-    <title>index.js - Documentation</title>
+    <title>fetchGenesByEnsembl.js - Documentation</title>
     
     
     <script src="scripts/prettify/prettify.js"></script>
@@ -37,7 +37,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">index.js</h1>
+    <h1 class="page-title">fetchGenesByEnsembl.js</h1>
     
 
     
@@ -47,46 +47,28 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>export * from "./sets.js";
-export * from "./mappings.js";
-export * from "./search.js";
-export { setDownload } from "./utils.js";
+            <pre class="prettyprint source linenums"><code>import { fetchAllGenes } from "./fetchAllGenes.js";
 
-export * from "./fetchAllGenes.js";
-export * from "./fetchGenesBySymbol.js";
-export * from "./fetchGenesByEntrez.js";
-export * from "./fetchGenesByEnsembl.js";
-export * from "./mapMultipleGenes.js";
-
-import { initializeSets } from "./sets.js";
-import { initializeMappings } from "./mappings.js";
+var by_ens_init = false;
+var by_ens = new Map;
 
 /**
- * Initialize all **gesel** assets.
- *
- * @param {object} [options={}] - Optional parameters.
- * @param {boolean} [options.includeSets=false] - Whether or not to call {@linkcode initializeSets}.
- * This is set to `false` to reduce data transfer if {@linkcode sets} and {@linkcode collections} are not going to be called.
- *
- * @return {boolean} `true` once all components are initialized,
- * by calling the individual initializers for each component (i.e., {@linkcode initializeGenes}, {@linkcode initializeSets} and {@linkcode initializeMappings}).
- * If everything was already initialized, `false` is returned instead.
- *
+ * @return {Map} Map where each key is a string containing the Ensembl ID for a gene, and each value is an integer containing the **gesel** gene ID, 
+ * i.e., an index into the array returned by {@linkcode fetchAllGenes}.
  * @async
  */
-export async function initialize({ includeSets = false } = {}) {
-    let promises = [initializeMappings()];
-    if (includeSets) {
-        promises.push(initializeSets());
+export async function fetchGenesByEnsembl() {
+    if (by_ens_init) {
+        return by_ens;
     }
 
-    var out = await Promise.all(promises);
-    for (const i of out) {
-        if (i) {
-            return true;
-        }
+    let _genes = await fetchAllGenes();
+    for (var i = 0; i &lt; _genes.length; i++) {
+        by_ens.set(_genes[i].ensembl, i);
     }
-    return false;
+
+    by_ens_init = true;
+    return by_ens;
 }
 </code></pre>
         </article>

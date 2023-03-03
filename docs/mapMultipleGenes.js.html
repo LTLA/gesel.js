@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>mapMultipleGenes.js - Documentation</title>
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <script src="scripts/nav.js" defer></script>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav >
+    
+    <input type="text" id="nav-search" placeholder="Search" />
+    
+    
+    <h2><a href="index.html">Home</a></h2><h2><a href="https://github.roche.com/GP/gesel" target="_blank" class="menu-item" id="repository" >Github repo</a></h2><h3>Global</h3><ul><li><a href="global.html#collections">collections</a></li><li><a href="global.html#fetchAllGenes">fetchAllGenes</a></li><li><a href="global.html#fetchCollectionDetails">fetchCollectionDetails</a></li><li><a href="global.html#fetchGenesByEnsembl">fetchGenesByEnsembl</a></li><li><a href="global.html#fetchGenesByEntrez">fetchGenesByEntrez</a></li><li><a href="global.html#fetchGenesBySymbol">fetchGenesBySymbol</a></li><li><a href="global.html#fetchGenesForSet">fetchGenesForSet</a></li><li><a href="global.html#fetchSetDetails">fetchSetDetails</a></li><li><a href="global.html#fetchSetsForGene">fetchSetsForGene</a></li><li><a href="global.html#findOverlappingSets">findOverlappingSets</a></li><li><a href="global.html#initialize">initialize</a></li><li><a href="global.html#initializeMappings">initializeMappings</a></li><li><a href="global.html#initializeSets">initializeSets</a></li><li><a href="global.html#lowerCaseSetDetails">lowerCaseSetDetails</a></li><li><a href="global.html#mapMultipleGenes">mapMultipleGenes</a></li><li><a href="global.html#searchSetText">searchSetText</a></li><li><a href="global.html#setDownload">setDownload</a></li><li><a href="global.html#sets">sets</a></li><li><a href="global.html#totalCollections">totalCollections</a></li><li><a href="global.html#totalSets">totalSets</a></li></ul>
+    
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">mapMultipleGenes.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import { fetchAllGenes } from "./fetchAllGenes.js";
+import { fetchGenesByEnsembl } from "./fetchGenesByEnsembl.js";
+import { fetchGenesBySymbol } from "./fetchGenesBySymbol.js";
+import { fetchGenesByEntrez } from "./fetchGenesByEntrez.js";
+
+function define_prefix(species) {
+    var prefix = null;
+    if (species !== null) {
+        switch(species) {
+            case "Homo sapiens":
+                prefix = "ENSG";
+                break;
+            case "Mus musculus":
+                prefix = "ENSMUSG";
+                break;
+            case "Macaca fascicularis":
+                prefix = "ENSMFAG";
+                break;
+            case "Rattus norvegicus":
+                prefix = "ENSRNOG";
+                break;
+            case "Caenorhabditis elegans":
+                prefix = "WBGene";
+                break;
+            case "Drosophila melanogaster":
+                prefix = "FBgn";
+                break;
+            case "Pan troglodytes":
+                prefix = "ENSPTRG";
+                break;
+            case "Danio rerio":
+                prefix = "ENSDARG";
+                break;
+        }
+    }
+    return prefix;
+}
+
+/**
+ * Find genes based on their Ensembl IDs or symbols. 
+ *
+ * @param {Array} searches - Array of strings containing gene identifiers of some kind (e.g., Ensembl, symbol, Entrez).
+ * @param {?string} species - String specifying the species of interest.
+ * This is used to filter the matching genes to the indicated species.
+ * We currently support `"Homo sapiens"`, `"Mus musculus"`, `"Macaca fascicularis"`, `"Rattus norvegicus"`, `"Caenorhabditis elegans"`, `"Drosophila melanogaster"`, `"Pan troglodytes"` and `"Danio rerio"`;
+ * any other string or `null` is ignored.
+ * @param {object} [options={}] - Optional parameters.
+ * @param {boolean} [options.ignoreCase=true] - Whether to ignore case in the search query.
+ * @param {boolean} [options.allowSymbol=true] - Whether strings in `searches` might be symbols.
+ * @param {boolean} [options.allowEntrez=false] - Whether strings in `searches` might be Entrez IDs.
+ *
+ * @return {Array} An array of length equal to `searches`.
+ * Each element of the array is an array containing the **gesel** gene IDs that match the corresponding search string.
+ * Each gene ID is an index into the array returned by {@linkcode fetchAllGenes}.
+ *
+ * @async
+ */
+export async function mapMultipleGenes(searches, species, { ignoreCase = true, allowSymbol = true, allowEntrez = false } ={}) {
+    var by_ens = await fetchGenesByEnsembl();
+    var by_sym = (allowSymbol ? await fetchGenesBySymbol({ lowerCase: ignoreCase }) : new Map);
+    var by_ent = (allowEntrez ? await fetchGenesByEntrez() : new Map);
+    var mapping = [];
+
+    // Adding all the mapped entries first.
+    for (var i = 0; i &lt; searches.length; i++) {
+        let current = searches[i];
+        if (current.length == 0) {
+            mapping.push([]);
+            continue;
+        }
+
+        {
+            let proper = (ignoreCase ? current.toUpperCase() : current);
+            let in_ens = by_ens.get(proper);
+            if (typeof in_ens !== "undefined") {
+                mapping.push([in_ens]);
+                continue;
+            }
+        }
+
+        if (allowSymbol) {
+            let proper = (ignoreCase ? current.toLowerCase() : current);
+            let in_sym = by_sym.get(proper);
+            if (typeof in_sym !== "undefined") {
+                mapping.push(in_sym);
+                continue;
+            }
+        }
+
+        if (allowEntrez) {
+            let in_ent = by_ent.get(current);
+            if (typeof in_ent !== "undefined") {
+                mapping.push(in_ent);
+                continue;
+            }
+        }
+
+        mapping.push([]);
+    }
+
+    // Pruning them to the desired species.
+    var prefix = define_prefix(species);
+    if (prefix !== null) {
+        let ginfo = await fetchAllGenes();
+        for (var i = 0; i &lt; mapping.length; i++) {
+            let replacement = [];
+            for (const y of mapping[i]) {
+                if (ginfo[y].ensembl.startsWith(prefix)) {
+                    replacement.push(y);
+                }
+            }
+            mapping[i] = replacement
+        }
+    }
+
+    return mapping;
+}
+
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+    
+    
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.11</a> on Fri Mar 03 2023 18:00:24 GMT+0000 (Coordinated Universal Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+<script src="scripts/search.js" defer></script>
+
+
+<script src="scripts/collapse.js" defer></script>
+
+
+</body>
+</html>

@@ -3,7 +3,7 @@
 <head>
     
     <meta charset="utf-8">
-    <title>index.js - Documentation</title>
+    <title>fetchAllGenes.js - Documentation</title>
     
     
     <script src="scripts/prettify/prettify.js"></script>
@@ -37,7 +37,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">index.js</h1>
+    <h1 class="page-title">fetchAllGenes.js</h1>
     
 
     
@@ -47,46 +47,83 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>export * from "./sets.js";
-export * from "./mappings.js";
-export * from "./search.js";
-export { setDownload } from "./utils.js";
+            <pre class="prettyprint source linenums"><code>import { downloader, decompressLines } from "./utils.js";
 
-export * from "./fetchAllGenes.js";
-export * from "./fetchGenesBySymbol.js";
-export * from "./fetchGenesByEntrez.js";
-export * from "./fetchGenesByEnsembl.js";
-export * from "./mapMultipleGenes.js";
+var gene_symbol_init = false;
+var gene_entrez_init = false;
+var _genes = null;
 
-import { initializeSets } from "./sets.js";
-import { initializeMappings } from "./mappings.js";
+function add_mapping(gene_data, key) {
+    if (_genes == null) {
+        _genes = [];
+        for (const x of gene_data) {
+            let details = x.split("\t");
+            let obj = { ensembl: details[0] };
+            obj[key] = details.slice(1);
+            _genes.push(obj);
+        }
+    } else {
+        if (gene_data.length !== _genes.length) {
+            throw new Error("discrepancy between length of symbol and entrez mappings");
+        }
+
+        for (var i = 0; i &lt; gene_data.length; i++) {
+            let x = gene_data[i];
+            let existing = _genes[i];
+
+            let details = x.split("\t");
+            if (details[0] !== existing.ensembl) {
+                throw new Error("discrepancy between symbol and entrez mappings for " + details[0]);
+            }
+ 
+            existing[key] = details.slice(1);
+        }
+    }
+}
 
 /**
- * Initialize all **gesel** assets.
- *
  * @param {object} [options={}] - Optional parameters.
- * @param {boolean} [options.includeSets=false] - Whether or not to call {@linkcode initializeSets}.
- * This is set to `false` to reduce data transfer if {@linkcode sets} and {@linkcode collections} are not going to be called.
+ * @param {string} [options.mapping="symbol"] - Which mappings from Ensembl IDs should be retrived.
+ * This may be `"symbol"`, `"entrez"` or `"both"`.
  *
- * @return {boolean} `true` once all components are initialized,
- * by calling the individual initializers for each component (i.e., {@linkcode initializeGenes}, {@linkcode initializeSets} and {@linkcode initializeMappings}).
- * If everything was already initialized, `false` is returned instead.
+ * @return {Array} Array of objects where each object corresponds to a gene and contains the following properties:
+ *
+ * - `ensembl`: string containing the Ensembl ID for the gene.
+ * - `symbol`: array containing strings with the gene symbols.
+ *   This is only guaranteed to exist if `mapping = "symbol"` or `mapping = "both"`.
+ * - `entrez`: array containing strings with the Entrez IDs.
+ *   This is only guaranteed to exist if `mapping = "entrez"` or `mapping = "both"`.
+ *
+ * In the context of **gesel**, the identifier for each gene is encoded as its index in this output array.
  *
  * @async
  */
-export async function initialize({ includeSets = false } = {}) {
-    let promises = [initializeMappings()];
-    if (includeSets) {
-        promises.push(initializeSets());
+export async function fetchAllGenes({ mapping = "symbol" } = {}) {
+    let symbol = (mapping == "symbol" || mapping == "both");
+    if (symbol &amp;&amp; !gene_symbol_init) {
+        var res = await downloader("symbol2gene.tsv.gz")
+        if (!res.ok) {
+            throw "failed to fetch symbol information for genes";
+        }
+        var buffer = await res.arrayBuffer();
+        let gene_data = decompressLines(buffer);
+        add_mapping(gene_data, "symbol");
+        gene_symbol_init = true;
     }
 
-    var out = await Promise.all(promises);
-    for (const i of out) {
-        if (i) {
-            return true;
+    let entrez = (mapping == "entrez" || mapping == "both");
+    if (entrez &amp;&amp; !gene_entrez_init) {
+        var res = await downloader("entrez2gene.tsv.gz")
+        if (!res.ok) {
+            throw "failed to fetch Entrez information for genes";
         }
+        var buffer = await res.arrayBuffer();
+        let gene_data = decompressLines(buffer);
+        add_mapping(gene_data, "entrez");
+        gene_entrez_init = true;
     }
-    return false;
+
+    return _genes;
 }
 </code></pre>
         </article>
