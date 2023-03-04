@@ -72,15 +72,17 @@ export async function retrieveNamedRanges(resource) {
     var lines = decompressLines(buffer);
 
     var last = 0;
-    var output = new Map; 
+    var ranges = new Map; 
+    var order = [];
     for (var i = 0; i < lines.length; i++) { 
         let split = lines[i].split("\t");
         let next = last + Number(split[1]) + 1; // +1 for the newline.
-        output.set(split[0], [last, next]);
+        ranges.set(split[0], [last, next]);
+        order.push(split[0]);
         last = next;
     }
 
-    return output;
+    return { ranges, order };
 }
 
 export async function retrieveRangesWithExtras(resource) {

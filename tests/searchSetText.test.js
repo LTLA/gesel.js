@@ -1,4 +1,5 @@
 import * as gesel from "../src/index.js";
+import * as search from "../src/searchSetText.js";
 import * as utils from "./utils.js";
 import "isomorphic-fetch"
 
@@ -30,6 +31,62 @@ test("searching by text works as expected", async () => {
             let deets = await gesel.fetchSingleSet(results[i]);
             expect(deets.description).toMatch(/T.*immune/i);
         }
+    }
+})
+
+test("binary search works as expected", async () => {
+    let ref = [ "A", "B", "C", "D", "E" ];
+    expect(search.binarySearch("A", ref)).toEqual(0);
+    expect(search.binarySearch("0", ref)).toEqual(0);
+    expect(search.binarySearch("AB", ref)).toEqual(1);
+    expect(search.binarySearch("C", ref)).toEqual(2);
+    expect(search.binarySearch("CD", ref)).toEqual(3);
+    expect(search.binarySearch("E", ref)).toEqual(4);
+    expect(search.binarySearch("E0", ref)).toEqual(5);
+    expect(search.binarySearch("F", ref)).toEqual(5);
+})
+
+test("searching by text works with wildcards", async () => {
+    let everything = await gesel.fetchAllSets();
+
+    // Single word search.
+    {
+        let results = await gesel.searchSetText("immun*");
+        expect(results.length).toBeGreaterThan(0);
+
+        let has_immunity = 0;
+        let has_immune = 0;
+        let is_okay = 0;
+        for (var i = 0; i < results.length; i++) {
+            let deets = await gesel.fetchSingleSet(results[i]);
+            has_immune += deets.description.match("immune") !== null;
+            has_immunity += deets.description.match("immunity") !== null;
+            is_okay += deets.description.match("immun") !== null;
+        }
+
+        expect(has_immune).toBeGreaterThan(0);
+        expect(has_immunity).toBeGreaterThan(0);
+        expect(is_okay).toBe(results.length);
+    }
+
+    // Multiword search.
+    {
+        let results = await gesel.searchSetText("B immun*");
+        expect(results.length).toBeGreaterThan(0);
+
+        let has_immunity = 0;
+        let has_immune = 0;
+        let is_okay = 0;
+        for (var i = 0; i < results.length; i++) {
+            let deets = await gesel.fetchSingleSet(results[i]);
+            has_immune += deets.description.match(/B.*immune/) !== null;
+            has_immunity += deets.description.match(/B.*immunity/) !== null;
+            is_okay += deets.description.match(/B/) !== null && deets.description.match(/immun.*/) !== null;
+        }
+
+        expect(has_immune).toBeGreaterThan(0);
+        expect(has_immunity).toBeGreaterThan(0);
+        expect(is_okay).toBe(results.length);
     }
 })
 

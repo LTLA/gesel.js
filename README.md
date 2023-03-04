@@ -62,6 +62,10 @@ We can do some simple queries via **gesel**:
 ```js
 let hits = await gesel.searchSetText("B immune");
 console.log(await gesel.fetchSingleSet(hits[0]));
+
+// '*' and '?' wildcards are also supported.
+let hits2 = await gesel.searchSetText("B immun*");
+console.log(await gesel.fetchSingleSet(hits2[0]));
 ```
 
 This can be combined with the output of `findOverlappingSets` to find all gene sets that overlap the user-supplied set _and_ contain the desired keywords.
