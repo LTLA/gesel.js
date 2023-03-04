@@ -30,11 +30,12 @@ First, we need to map our user-supplied genes to **gesel**'s internal identifier
 ```js
 let user_supplied = [ "SNAP25", "NEUROD6", "ENSG00000123307", "TSPAN6" ];
 
-// Seeing if the user-supplied symbols/IDs are found.
+/* Seeing if the user-supplied symbols/IDs are found in the reference. */
 let user_supplied_ids = await gesel.searchGenes(user_supplied, "Homo sapiens");
 
-// Taking the first match. Applications may prefer to print warnings/errors
-// if there are multiple matching genes for a symbol.
+/* Taking the first matching ID for each user-supplied gene name. Applications
+ * may prefer to print warnings/errors if there are multiple matches.
+ */
 let user_supplied_union = [];
 for (const x of user_supplied_ids) {
     if (x.length >= 1) {
@@ -53,7 +54,7 @@ let overlaps = await gesel.findOverlappingSets(user_supplied_union, { includeSiz
 Once we have a set ID, we can query the references to obtain that set's details:
 
 ```js
-console.log(await gesel.fetchSingleSet(overlaps[0].id));
+let set_details = await gesel.fetchSingleSet(overlaps[0].id);
 ```
 
 Each set also has some associated free text in its name and description.
@@ -61,11 +62,11 @@ We can do some simple queries via **gesel**:
 
 ```js
 let hits = await gesel.searchSetText("B immune");
-console.log(await gesel.fetchSingleSet(hits[0]));
+let first_hit = await gesel.fetchSingleSet(hits[0]);
 
 // '*' and '?' wildcards are also supported.
 let hits2 = await gesel.searchSetText("B immun*");
-console.log(await gesel.fetchSingleSet(hits2[0]));
+let first_hit2 = await gesel.fetchSingleSet(hits2[0]);
 ```
 
 This can be combined with the output of `findOverlappingSets` to find all gene sets that overlap the user-supplied set _and_ contain the desired keywords.
