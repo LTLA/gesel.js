@@ -752,7 +752,7 @@ Each object can be expected to contain:</p>
 
     
 
-    <h4 class="name" id="fetchGenesForSet"><span class="type-signature type-signature-async">(async) </span>fetchGenesForSet<span class="signature">(species, set)</span><span class="type-signature"> &rarr; {Uint32Array}</span></h4>
+    <h4 class="name" id="fetchGenesForSet"><span class="type-signature type-signature-async">(async) </span>fetchGenesForSet<span class="signature">(species, set<span class="signature-attributes">nullable</span>)</span><span class="type-signature"> &rarr; {Uint32Array}</span></h4>
 
     
 
@@ -765,7 +765,7 @@ Each object can be expected to contain:</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="fetchGenesForSet.js.html">fetchGenesForSet.js</a>, <a href="fetchGenesForSet.js.html#line15">line 15</a>
+        <a href="fetchGenesForSet.js.html">fetchGenesForSet.js</a>, <a href="fetchGenesForSet.js.html#line19">line 19</a>
     </li></ul></dd>
     
 
@@ -825,6 +825,8 @@ Each object can be expected to contain:</p>
         <th>Type</th>
 
         
+        <th>Attributes</th>
+        
 
         
 
@@ -851,6 +853,14 @@ Each object can be expected to contain:</p>
             </td>
 
             
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
 
             
 
@@ -875,10 +885,22 @@ Each object can be expected to contain:</p>
             </td>
 
             
+                <td class="attributes">
+                
+
+                
+                    &lt;nullable><br>
+                
+
+                
+                </td>
+            
 
             
 
-            <td class="description last"><p>Set ID, see <a href="global.html#fetchAllSets"><code>fetchAllSets</code></a> for details.</p></td>
+            <td class="description last"><p>Set ID, see <a href="global.html#fetchAllSets"><code>fetchAllSets</code></a> for details.</p>
+<p>If <code>null</code>, no request is performed, but various internal caches are initialized for subsequent calls to this function.
+This is useful for guaranteeing that caches are available in concurrent calls.</p></td>
         </tr>
 
     
@@ -906,6 +928,7 @@ Each object can be expected to contain:</p>
 <div class="param-desc">
     <p>Array of integers containing the IDs for all genes belonging to the set.
 Gene IDs refer to indices in <a href="global.html#fetchAllGenes"><code>fetchAllGenes</code></a>.</p>
+<p>If <code>set = null</code>, no return value is provided.</p>
 </div>
 
 
@@ -945,7 +968,7 @@ Gene IDs refer to indices in <a href="global.html#fetchAllGenes"><code>fetchAllG
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="fetchSetsForGene.js.html">fetchSetsForGene.js</a>, <a href="fetchSetsForGene.js.html#line18">line 18</a>
+        <a href="fetchSetsForGene.js.html">fetchSetsForGene.js</a>, <a href="fetchSetsForGene.js.html#line20">line 20</a>
     </li></ul></dd>
     
 
@@ -1108,6 +1131,7 @@ This is useful for guaranteeing that caches are available in concurrent calls.</
 <div class="param-desc">
     <p>Array of integers containing the IDs of all sets containing the gene.
 IDs are treated as indices into the return value of <a href="global.html#fetchAllSets"><code>fetchAllSets</code></a> or as input to <a href="global.html#fetchSingleSet"><code>fetchSingleSet</code></a>.</p>
+<p>If <code>gene = null</code>, no return value is provided.</p>
 </div>
 
 
@@ -1134,7 +1158,7 @@ IDs are treated as indices into the return value of <a href="global.html#fetchAl
 
     
 
-    <h4 class="name" id="fetchSingleCollection"><span class="type-signature type-signature-async">(async) </span>fetchSingleCollection<span class="signature">(species, collection, options<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {object}</span></h4>
+    <h4 class="name" id="fetchSingleCollection"><span class="type-signature type-signature-async">(async) </span>fetchSingleCollection<span class="signature">(species, collection<span class="signature-attributes">nullable</span>, options<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {object}</span></h4>
 
     
 
@@ -1147,7 +1171,7 @@ IDs are treated as indices into the return value of <a href="global.html#fetchAl
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="fetchSingleCollection.js.html">fetchSingleCollection.js</a>, <a href="fetchSingleCollection.js.html#line51">line 51</a>
+        <a href="fetchSingleCollection.js.html">fetchSingleCollection.js</a>, <a href="fetchSingleCollection.js.html#line55">line 55</a>
     </li></ul></dd>
     
 
@@ -1277,6 +1301,8 @@ IDs are treated as indices into the return value of <a href="global.html#fetchAl
                 
 
                 
+                    &lt;nullable><br>
+                
 
                 
                 </td>
@@ -1288,7 +1314,9 @@ IDs are treated as indices into the return value of <a href="global.html#fetchAl
                 </td>
             
 
-            <td class="description last"><p>Collection ID, see <a href="global.html#fetchAllCollections"><code>fetchAllCollections</code></a> for details.</p></td>
+            <td class="description last"><p>Collection ID, see <a href="global.html#fetchAllCollections"><code>fetchAllCollections</code></a> for details.</p>
+<p>If <code>null</code>, no request is performed, but various internal caches are initialized for subsequent calls to this function.
+This is useful for guaranteeing that caches are available in concurrent calls.</p></td>
         </tr>
 
     
@@ -1428,6 +1456,7 @@ Setting this to <code>true</code> is only useful for testing.</p></td>
 <div class="param-desc">
     <p>Object containing the details of the collection.
 This should be identical to the corresponding entry of the array returned by <a href="global.html#fetchAllCollections"><code>fetchAllCollections</code></a>.</p>
+<p>If <code>collection = null</code>, no return value is provided.</p>
 </div>
 
 
@@ -1454,7 +1483,7 @@ This should be identical to the corresponding entry of the array returned by <a 
 
     
 
-    <h4 class="name" id="fetchSingleSet"><span class="type-signature type-signature-async">(async) </span>fetchSingleSet<span class="signature">(species, set, options<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {object}</span></h4>
+    <h4 class="name" id="fetchSingleSet"><span class="type-signature type-signature-async">(async) </span>fetchSingleSet<span class="signature">(species, set<span class="signature-attributes">nullable</span>, options<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {object}</span></h4>
 
     
 
@@ -1467,7 +1496,7 @@ This should be identical to the corresponding entry of the array returned by <a 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="fetchSingleSet.js.html">fetchSingleSet.js</a>, <a href="fetchSingleSet.js.html#line67">line 67</a>
+        <a href="fetchSingleSet.js.html">fetchSingleSet.js</a>, <a href="fetchSingleSet.js.html#line71">line 71</a>
     </li></ul></dd>
     
 
@@ -1597,6 +1626,8 @@ This should be identical to the corresponding entry of the array returned by <a 
                 
 
                 
+                    &lt;nullable><br>
+                
 
                 
                 </td>
@@ -1608,7 +1639,9 @@ This should be identical to the corresponding entry of the array returned by <a 
                 </td>
             
 
-            <td class="description last"><p>Set ID, see <a href="global.html#fetchAllSets"><code>fetchAllSets</code></a> for details.</p></td>
+            <td class="description last"><p>Set ID, see <a href="global.html#fetchAllSets"><code>fetchAllSets</code></a> for details.</p>
+<p>If <code>null</code>, no request is performed, but various internal caches are initialized for subsequent calls to this function.
+This is useful for guaranteeing that caches are available in concurrent calls.</p></td>
         </tr>
 
     
@@ -1748,6 +1781,7 @@ Setting this to <code>true</code> is only useful for testing.</p></td>
 <div class="param-desc">
     <p>Object containing the details of the set.
 This should be identical to the corresponding entry of the array returned by <a href="global.html#fetchAllSets"><code>fetchAllSets</code></a>.</p>
+<p>If <code>set = null</code>, no return value is provided.</p>
 </div>
 
 
@@ -3603,7 +3637,7 @@ See <a href="global.html#fetchAllGenes"><code>fetchAllGenes</code></a> for more 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="searchSetText.js.html">searchSetText.js</a>, <a href="searchSetText.js.html#line119">line 119</a>
+        <a href="searchSetText.js.html">searchSetText.js</a>, <a href="searchSetText.js.html#line123">line 123</a>
     </li></ul></dd>
     
 
@@ -4298,7 +4332,7 @@ If only the first argument is supplied, the function should download the entire 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.11</a> on Thu Mar 09 2023 18:56:13 GMT+0000 (Coordinated Universal Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.11</a> on Thu Mar 09 2023 20:59:41 GMT+0000 (Coordinated Universal Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>
