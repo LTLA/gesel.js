@@ -2,29 +2,26 @@ import * as utils from "./utils.js";
 import * as full from "./fetchAllSets.js";
 import { fetchCollectionSizes } from "./fetchSingleCollection.js";
 
-var init = false;
-const cache = new Map;
-
-var ranges = new Map;
-var sizes = new Map;
-var starts = new Map;
-
-var parents = new Map;
-var internal_number = new Map;
+const _cache = new Map;
+const _ranges = new Map;
+const _sizes = new Map;
+const _starts = new Map;
+const _parents = new Map;
+const _internal_number = new Map;
 
 async function initialize(species) {
     const [ sres, csizes ] = await Promise.all([ utils.retrieveRangesWithExtras(species + "_sets.tsv"), fetchCollectionSizes() ]);
-    ranges.set(species, sres.ranges);
-    sizes.set(species, sres.extra);
+    _ranges.set(species, sres.ranges);
+    _sizes.set(species, sres.extra);
 
-    let _parents = [];
-    let _internal_number = [];
+    let parents = [];
+    let internal_number = [];
     var totals = 0;
     for (var i = 0; i < csizes.length; i++) {
         let colsize = csizes[i];
         for (var j = 0; j < colsize; j++) {
-            _parents.push(i);
-            _internal_number.push(j);
+            parents.push(i);
+            internal_number.push(j);
         }
         totals += colsize;
     }
@@ -33,15 +30,15 @@ async function initialize(species) {
         throw new Error("discrepancy between number of sets and sum of collection sizes");
     }
 
-    parents.set(species, _parents);
-    internal_number.set(species, _internal_number);
-    cache.set(species, new Map);
+    _parents.set(species, parents);
+    _internal_number.set(species, internal_number);
+    _cache.set(species, new Map);
     return;
 }
 
 export async function fetchSetSizes(species) {
-    let _sizes = sizes.get(species);
-    if (typeof _sizes == "undefined") {
+    let sizes = _sizes.get(species);
+    if (typeof sizes == "undefined") {
         let found = full.already_initialized(species);
 
         if (found !== null) {
@@ -50,25 +47,30 @@ export async function fetchSetSizes(species) {
             for (const x of found) {
                 tmp_sizes.push(x.size);
             }
-            sizes.set(species, tmp_sizes);
+            _sizes.set(species, tmp_sizes);
             return tmp_sizes;
         }
 
         await initialize(species);
     }
 
-    return _sizes;
+    return sizes;
 }
 
 /**
- * @return {number} Total number of sets.
+ * @param {string} species - The taxonomy ID of the species of interest, e.g., `"9606"` for human.
+ * @return {number} Total number of sets for this species.
  */
-export async function numberOfSets() {
-    if (!init) {
-        if (full.init) {
-            return (await full.fetchAllSets()).length;
+export async function numberOfSets(species) {
+    let sizes = _sizes.get(species);
+    if (typeof sizes == "undefined") {
+        let found = full.already_initialized(species);
+        if (found !== null) {
+            return found.length;
         }
-        await initialize();
+
+        await initialize(species);
+        sizes = _sizes.get(species);
     }
     return sizes.length;
 }
@@ -92,10 +94,10 @@ export async function fetchSingleSet(species, set, { forceRequest = false } = {}
         return ffound[set];
     }
 
-    let cached = cache.get(species);
+    let cached = _cache.get(species);
     if (typeof cached === "undefined") {
         await initialize();
-        cached = cache.get(species);
+        cached = _cache.get(species);
     }
 
     let sfound = cached.get(set);
@@ -103,14 +105,14 @@ export async function fetchSingleSet(species, set, { forceRequest = false } = {}
         return sfound;
     }
 
-    let text = await utils.retrieveBytesByIndex("sets.tsv", ranges.get(species), set);
+    let text = await utils.retrieveBytesByIndex("sets.tsv", _ranges.get(species), set);
     let split = text.split("\t");
     let output = {
         name: split[0],
         description: split[1],
         size: sizes[set],
-        collection: parents.get(species)[set],
-        number: internal_number.get(species)[set]
+        collection: _parents.get(species)[set],
+        number: _internal_number.get(species)[set]
     };
 
     cached.set(set, output);

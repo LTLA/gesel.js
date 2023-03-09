@@ -1,61 +1,42 @@
-import * as utils from "./utils.js";
+simport * as utils from "./utils.js";
 import * as full from "./fetchAllCollections.js";
 
-var init = false;
-const cache = new Map;
+const _cache = new Map;
+const _ranges = new Map;
+const _sizes = new Map;
+const _starts = new Map;
 
-var ranges;
-var sizes;
-var starts;
-
-async function initialize() {
-    let res = await utils.retrieveRangesWithExtras("collections.tsv");
-    ranges = res.ranges;
-    sizes = res.extra;
+async function initialize(species) {
+    let res = await utils.retrieveRangesWithExtras(species + "_collections.tsv");
+    _ranges.set(species, res.ranges);
+    _sizes.set(species, res.extra);
 
     let first = 0;
-    starts = [];
+    let starts = [];
     for (const s of sizes) {
         starts.push(first);
         first += s;
     }
+    _starts.set(species, starts);
 
-    init = true;
+    _cache.set(species, new Map);
     return;
 }
 
-export async function fetchCollectionSizes() {
-    if (!init) {
-        if (full.init) {
-            // Pulling it from the full info instead, if we already got it.
-            let tmp_sizes = [];
-            let meta = await full.fetchAllCollections();
-            for (const x of meta) {
-                tmp_sizes.push(x.size);
-            }
-            return tmp_sizes;
-        }
-
-        await initialize();
-    }
-
-    return sizes;
+export async function fetchCollectionSizes(species) {
+    return utils.fetch_sizes(species, _sizes, full, initialize);
 }
 
 /**
- * @return {number} Total number of collections.
+ * @param {string} species - The taxonomy ID of the species of interest, e.g., `"9606"` for human.
+ * @return {number} Total number of collections for this species.
  */
 export async function numberOfCollections() {
-    if (!init) {
-        if (full.init) {
-            return (await full.fetchAllCollections()).length;
-        }
-        await initialize();
-    }
-    return sizes.length;
+    return utils.fetch_number(species, _sizes, full, initialize);
 }
 
 /**
+ * @param {string} species - The taxonomy ID of the species of interest, e.g., `"9606"` for human.
  * @param {number} collection - Collection ID, see {@linkcode fetchAllCollections} for details.
  * @param {object} [options={}] - Optional parameters.
  * @param {boolean} [options.forceRequest=false] - Whether to force a request to the server.
@@ -67,21 +48,24 @@ export async function numberOfCollections() {
  *
  * @async
  */
-export async function fetchSingleCollection(collection, { forceRequest = false } = {}) {
-    if (full.init && !forceRequest) {
-        return (await full.fetchAllCollections())[collection];
+export async function fetchSingleCollection(species, collection, { forceRequest = false } = {}) {
+    let ffound = full.already_initialized(species);
+    if (ffound !== null && !forceRequest) {
+        return ffound[collection];
     }
 
-    let cached = cache.get(collection);
-    if (typeof cached !== "undefined") {
-        return cached;
+    let cached = _cache.get(species);
+    if (typeof cached === "undefined") {
+        await initialize(species);
+        cached = _cache.get(species);
     }
 
-    if (!init) {
-        await initialize();
+    let cfound = cached.get(collection);
+    if (typeof cfound !== "undefined") {
+        return cfound;
     }
 
-    let text = await utils.retrieveBytesByIndex("collections.tsv", ranges, collection);
+    let text = await utils.retrieveBytesByIndex(species + "_collections.tsv", _ranges.get(species), collection);
     let split = text.split("\t");
     let output = {
         title: split[0],
@@ -89,11 +73,11 @@ export async function fetchSingleCollection(collection, { forceRequest = false }
         species: split[2],
         maintainer: split[3],
         source: split[4],
-        start: starts[collection],
-        size: sizes[collection]
+        start: _starts.get(species)[collection],
+        size: _sizes.get(species)[collection]
     };
 
-    cache.set(collection, output);
+    cached.set(collection, output);
     return output;
 }
 

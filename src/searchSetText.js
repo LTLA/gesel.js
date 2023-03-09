@@ -1,10 +1,5 @@
 import * as utils from "./utils.js";
 
-var n_init = false;
-const n_cache = new Map;
-var n_ranges;
-var n_ordered;
-
 export function binarySearch(query, vector) {
     let left = 0;
     let right = vector.length;
@@ -23,9 +18,23 @@ export function binarySearch(query, vector) {
     return left;
 }
 
-async function fetchSetsByToken(token, file, ranges, ordered, cache) {
-    let output;
+async function fetchSetsByToken(token, file, all_ranges, all_ordered, all_cache) {
+    let cached = cache.get(species);
+    if (typeof cached === "undefined") {
+        const { ranges, order } = await utils.retrieveNamedRanges("tokens-names.tsv")
+        all_ranges.set(species, ranges);
+        all_ordered.set(species, order);
+        cached = new Map;
+        all_cache.set(species, cached);
+    }
 
+    let tfound = cached.get(token);
+    if (typeof tfound !== "undefined") {
+        return tfound;
+    }
+
+    let ranges = all_ranges.get(species);
+    let output;
     if (token.includes("*") || token.includes("?")) {
         // Wildcard handling.
         let initstub = token.replace(/[*?].*/, "")
@@ -33,6 +42,8 @@ async function fetchSetsByToken(token, file, ranges, ordered, cache) {
         let regex = new RegExp(token.replace(/[*]/g, ".*").replace(/[?]/g, "."));
 
         let collected = [];
+        let ordered = all_ordered.get(species);
+
         while (pos < ordered.length) {
             if (initstub != "" && !ordered[pos].startsWith(initstub)) {
                 break;
@@ -64,48 +75,28 @@ async function fetchSetsByToken(token, file, ranges, ordered, cache) {
         output = utils.convertToUint32Array(text);
     }
 
-    cache.set(token, output);
+    cached.set(token, output);
     return output;
 }
 
-async function fetchSetsByNameToken(token) {
-    let cached = n_cache.get(token);
-    if (typeof cached !== "undefined") {
-        return cached;
-    }
+const n_cache = new Map;
+const n_ranges = new Map;
+const n_ordered = new Map;
 
-    if (!n_init) {
-        const { ranges, order } = await utils.retrieveNamedRanges("tokens-names.tsv")
-        n_ranges = ranges;
-        n_ordered = order;
-        n_init = true;
-    }
-
-    return fetchSetsByToken(token, "tokens-names.tsv", n_ranges, n_ordered, n_cache);
+async function fetchSetsByNameToken(species, token) {
+    return fetchSetsByToken(token, species + "_tokens-names.tsv", n_ranges, n_ordered, n_cache);
 }
 
-var d_init = false;
 const d_cache = new Map;
-var d_ranges;
-var d_ordered;
+const d_ranges = new Map;
+const d_ordered = new Map;
 
 async function fetchSetsByDescriptionToken(token) {
-    let cached = d_cache.get(token);
-    if (typeof cached !== "undefined") {
-        return cached;
-    }
-
-    if (!d_init) {
-        const { ranges, order } = await utils.retrieveNamedRanges("tokens-descriptions.tsv")
-        d_ranges = ranges;
-        d_ordered = order;
-        d_init = true;
-    }
-
-    return fetchSetsByToken(token, "tokens-descriptions.tsv", d_ranges, d_ordered, d_cache);
+    return fetchSetsByToken(token, species + "_tokens-descriptions.tsv", d_ranges, d_ordered, d_cache);
 }
 
 /**
+ * @param {string} species - The taxonomy ID of the species of interest, e.g., `"9606"` for human.
  * @param {string} query - Query string containing multiple words to search in the names and/or descriptions of each set.
  *
  * Each stretch of alphanumeric characters and dashes is treated as a single word.
@@ -122,7 +113,7 @@ async function fetchSetsByDescriptionToken(token) {
  * @return {Array} Array of indices of the sets with names and/or descriptions that match `query`.
  * @async
  */
-export async function searchSetText(query, { inName = true, inDescription = true } = {}) {
+export async function searchSetText(species, query, { inName = true, inDescription = true } = {}) {
     // Tokenizing the query using the same logic as in the feedstock repository,
     // but preserving our wildcards for special handling later.
     let processed = query.toLowerCase().replace(/[^a-zA-Z0-9-?*]/g, " ");
@@ -132,14 +123,14 @@ export async function searchSetText(query, { inName = true, inDescription = true
     let gathered_names = [];
     if (inName) {
         for (const tok of tokens) {
-            gathered_names.push(fetchSetsByNameToken(tok));
+            gathered_names.push(fetchSetsByNameToken(species, tok));
         }
     }
 
     let gathered_descriptions = [];
     if (inDescription) {
         for (const tok of tokens) {
-            gathered_descriptions.push(fetchSetsByDescriptionToken(tok));
+            gathered_descriptions.push(fetchSetsByDescriptionToken(species, tok));
         }
     }
 

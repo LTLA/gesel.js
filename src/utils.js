@@ -159,4 +159,50 @@ export function intersect(arrays) {
     return Array.from(ref);
 }
 
+async function fetch_sizes_internal(species, _sizes, full, initialize, funSizes, funFound) {
+    let sizes = _sizes.get(species);
+    if (typeof sizes == "undefined") {
+        let found = full.already_initialized(species);
+
+        if (found !== null) {
+            // Pulling it from the full info instead, if we already got it.
+            return funFound(found);
+        }
+
+        await initialize(species);
+        sizes = _sizes.get(species);
+    }
+
+    return funSizes(sizes);
+}
+
+export function fetch_sizes(species, _sizes, full, initialize) {
+    return fetch_sizes_internal(
+        species, 
+        _sizes, 
+        full, 
+        initialize, 
+        x => x, 
+        x => {
+            let tmp_sizes = [];
+            for (const x of found) {
+                tmp_sizes.push(x.size);
+            }
+            _sizes.set(species, tmp_sizes);
+            return tmp_sizes;
+        }
+    );
+}
+
+export function fetch_number(species, _sizes, full, initialize) {
+    return fetch_sizes_internal(
+        species,
+        _sizes,
+        full,
+        initialize,
+        x => x.length,
+        x => x.length
+    );
+}
+
 
