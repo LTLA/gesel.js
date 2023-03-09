@@ -78,13 +78,14 @@ let combined = gesel.intersect([ hits, overlaps.map(x => x.id) ]);
 ## Overriding the downloader
 
 By default, we use the reference gene sets collated in the [feedstock repository](https://github.com/LTLA/gesel-feedstock).
-However, users can point **gesel** to their own references by overriding the downloader before calling any **gesel** functions.
+However, users can point **gesel** to their own references by overriding the downloaders before calling any **gesel** functions.
 For example, if our prebuilt references are hosted on some other URL:
 
 ```js
 const baseUrl = "https://some.company.com/prebuilt-gesel";
 
-gesel.setDownload(async (file, start = null, end = null) => {
+// To set the downloader for the reference files.
+gesel.setReferenceDownload(async (file, start = null, end = null) => {
     const url = baseUrl + "/" + file;
     if (start == null) {
         return fetch(url, { headers: { Authorization: "Bearer XXX" } });
@@ -92,6 +93,12 @@ gesel.setDownload(async (file, start = null, end = null) => {
         let range_text = "bytes=" + String(start) + "-" + String(end);
         return fetch(url, { headers: { Authorization: "Bearer XXX", Range: range_text } });
     }
+});
+
+// To set the downloader for gene information.
+gesel.setGeneDownload(file => {
+    const url = baseUrl + "/" + file;
+    return fetch(url, { headers: { Authorization: "Bearer XXX" } });
 });
 ```
 
