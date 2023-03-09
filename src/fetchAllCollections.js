@@ -1,4 +1,4 @@
-import { downloader, decompressLines } from "./utils.js";
+import { reference_download, decompressLines } from "./utils.js";
 
 var _collections = new Map;
 
@@ -37,7 +37,7 @@ export async function fetchAllCollections(species) {
     target = [];
     _collections.set(species, target);
 
-    var cres = await downloader(species + "_collections.tsv.gz");
+    var cres = await reference_download(species + "_collections.tsv.gz");
     if (!cres.ok) {
         throw new Error("failed to fetch collection information for species '" + species + "'");
     }

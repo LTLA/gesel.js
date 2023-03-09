@@ -1,4 +1,4 @@
-simport * as utils from "./utils.js";
+import * as utils from "./utils.js";
 import * as full from "./fetchAllCollections.js";
 
 const _cache = new Map;
@@ -13,7 +13,7 @@ async function initialize(species) {
 
     let first = 0;
     let starts = [];
-    for (const s of sizes) {
+    for (const s of res.extra) {
         starts.push(first);
         first += s;
     }
@@ -24,15 +24,15 @@ async function initialize(species) {
 }
 
 export async function fetchCollectionSizes(species) {
-    return utils.fetch_sizes(species, _sizes, full, initialize);
+    return utils.fetchSizes(species, _sizes, full, initialize);
 }
 
 /**
  * @param {string} species - The taxonomy ID of the species of interest, e.g., `"9606"` for human.
  * @return {number} Total number of collections for this species.
  */
-export async function numberOfCollections() {
-    return utils.fetch_number(species, _sizes, full, initialize);
+export async function numberOfCollections(species) {
+    return utils.fetchNumber(species, _sizes, full, initialize);
 }
 
 /**

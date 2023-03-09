@@ -28,9 +28,9 @@ export async function mapGenesByIdentifier(species, type, { lowerCase = false } 
         tfound = new Map;
         sfound.set(type, tfound);
 
-        let _genes = await fetchAllGenes(species, { types: [ type ] }).get(type);
+        let _genes = (await fetchAllGenes(species, { types: [ type ] })).get(type);
         for (var i = 0; i < _genes.length; i++) {
-            for (let y of _genes[i].symbol) {
+            for (let y of _genes[i]) {
                 if (lowerCase) {
                     y = y.toLowerCase();
                 }
@@ -45,9 +45,9 @@ export async function mapGenesByIdentifier(species, type, { lowerCase = false } 
         }
 
         for (const [key, val] of tfound) {
-            thing.set(key, Array.from(val));
+            tfound.set(key, Array.from(val));
         }
     }
 
-    return thing;
+    return tfound;
 }

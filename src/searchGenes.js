@@ -7,10 +7,8 @@ import { mapGenesByIdentifier } from "./mapGenesByIdentifier.js";
  * @param {object} [options={}] - Optional parameters.
  * @param {?Array} [options.types=null] - Array of strings specifying the identifier types to use for searching.
  * The exact choice of strings depends on how the references were constructed.
- * If `null`, it defaults to an array containing `"entrez"` and `"ensembl"`.
- * @param {boolean} [options.ignoreCaseTypes=true] - Array of strings specifying the identifier types to use for case-insensitive searching.
- * The exact choice of strings depends on how the references were constructed.
- * If `null`, it defaults to an array containing `"symbol"`.
+ * If `null`, it defaults to an array containing `"entrez"`, `"ensembl"` and `"symbol"`.
+ * @param {boolean} [options.ignoreCase=true] - Whether to perform case-insensitive matching.
  *
  * @return {Array} An array of length equal to `queries`.
  * Each element of the array is an array containing the **gesel** gene IDs with any identifiers that match the corresponding search string.
@@ -18,23 +16,16 @@ import { mapGenesByIdentifier } from "./mapGenesByIdentifier.js";
  *
  * @async
  */
-export async function searchGenes(species, queries, { types = null, ignoreCaseTypes = null } ={}) {
+export async function searchGenes(species, queries, { types = null, ignoreCase = true } ={}) {
     if (types === null) {
-        types = [ "entrez", "ensembl" ];
-    }
-    if (ignoreCaseTypes === null) {
-        ignoreCaseTypes = [ "symbol" ];
+        types = [ "entrez", "ensembl", "symbol" ];
     }
 
     let promises = [];
     for (const t of types) {
-        promises.push(mapGeneByIdentifier(species, t));
+        promises.push(mapGenesByIdentifier(species, t, { lowerCase: ignoreCase }));
     }
-    let ipromises = [];
-    for (const t of ignoreCaseTypes) {
-        ipromises.push(mapGeneByIdentifier(species, t, { lowerCase: true }));
-    }
-    let [ resolved, iresolved ] = await Promise.all([ Promise.all(promises), Promise.all(ipromises) ]);
+    let resolved = await Promise.all(promises);
 
     let mapping = [];
     for (var i = 0; i < queries.length; i++) {
@@ -44,8 +35,11 @@ export async function searchGenes(species, queries, { types = null, ignoreCaseTy
             continue;
         }
 
-        let findings = [];
+        if (ignoreCase) {
+            current = current.toLowerCase();
+        }
 
+        let findings = [];
         for (var j = 0; j < types.length; j++) {
             let val = resolved[j].get(current);
             if (typeof val !== "undefined") {
@@ -55,15 +49,7 @@ export async function searchGenes(species, queries, { types = null, ignoreCaseTy
             }
         }
 
-        current = current.toLowerCase();
-        for (var j = 0; j < ignoreCaseTypes.length; j++) {
-            let val = resolved[j].get(current);
-            if (typeof val !== "undefined") {
-                for (const v of val) {
-                    findings.push(v);
-                }
-            }
-        }
+        mapping.push(findings);
     }
 
     return mapping;

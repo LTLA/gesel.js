@@ -10,7 +10,10 @@ const _parents = new Map;
 const _internal_number = new Map;
 
 async function initialize(species) {
-    const [ sres, csizes ] = await Promise.all([ utils.retrieveRangesWithExtras(species + "_sets.tsv"), fetchCollectionSizes() ]);
+    const [ sres, csizes ] = await Promise.all([ 
+        utils.retrieveRangesWithExtras(species + "_sets.tsv"), 
+        fetchCollectionSizes(species) 
+    ]);
     _ranges.set(species, sres.ranges);
     _sizes.set(species, sres.extra);
 
@@ -26,7 +29,7 @@ async function initialize(species) {
         totals += colsize;
     }
 
-    if (totals != sizes.length) {
+    if (totals != sres.extra.length) {
         throw new Error("discrepancy between number of sets and sum of collection sizes");
     }
 
@@ -37,24 +40,7 @@ async function initialize(species) {
 }
 
 export async function fetchSetSizes(species) {
-    let sizes = _sizes.get(species);
-    if (typeof sizes == "undefined") {
-        let found = full.already_initialized(species);
-
-        if (found !== null) {
-            // Pulling it from the full info instead, if we already got it.
-            let tmp_sizes = [];
-            for (const x of found) {
-                tmp_sizes.push(x.size);
-            }
-            _sizes.set(species, tmp_sizes);
-            return tmp_sizes;
-        }
-
-        await initialize(species);
-    }
-
-    return sizes;
+    return utils.fetchSizes(species, _sizes, full, initialize);
 }
 
 /**
@@ -62,17 +48,7 @@ export async function fetchSetSizes(species) {
  * @return {number} Total number of sets for this species.
  */
 export async function numberOfSets(species) {
-    let sizes = _sizes.get(species);
-    if (typeof sizes == "undefined") {
-        let found = full.already_initialized(species);
-        if (found !== null) {
-            return found.length;
-        }
-
-        await initialize(species);
-        sizes = _sizes.get(species);
-    }
-    return sizes.length;
+    return utils.fetchNumber(species, _sizes, full, initialize);
 }
 
 /**
@@ -96,7 +72,7 @@ export async function fetchSingleSet(species, set, { forceRequest = false } = {}
 
     let cached = _cache.get(species);
     if (typeof cached === "undefined") {
-        await initialize();
+        await initialize(species);
         cached = _cache.get(species);
     }
 
@@ -105,12 +81,12 @@ export async function fetchSingleSet(species, set, { forceRequest = false } = {}
         return sfound;
     }
 
-    let text = await utils.retrieveBytesByIndex("sets.tsv", _ranges.get(species), set);
+    let text = await utils.retrieveBytesByIndex(species + "_sets.tsv", _ranges.get(species), set);
     let split = text.split("\t");
     let output = {
         name: split[0],
         description: split[1],
-        size: sizes[set],
+        size: _sizes.get(species)[set],
         collection: _parents.get(species)[set],
         number: _internal_number.get(species)[set]
     };

@@ -18,6 +18,7 @@ import { fetchSetsForGene } from "./fetchSetsForGene.js";
  * @async
  */
 export async function findOverlappingSets(species, genes, { includeSize = false } = {}) {
+    await fetchSetsForGene(species, null);
     var collected = await Promise.all(genes.map(x => fetchSetsForGene(species, x)));
     var sets_sizes = (includeSize ? await fetchSetSizes(species) : null);
 

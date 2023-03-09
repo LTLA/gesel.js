@@ -18,10 +18,12 @@ export function binarySearch(query, vector) {
     return left;
 }
 
-async function fetchSetsByToken(token, file, all_ranges, all_ordered, all_cache) {
-    let cached = cache.get(species);
+async function fetchSetsByToken(species, token, file, all_ranges, all_ordered, all_cache) {
+    let actual_file = species + "_" + file;
+
+    let cached = all_cache.get(species);
     if (typeof cached === "undefined") {
-        const { ranges, order } = await utils.retrieveNamedRanges("tokens-names.tsv")
+        const { ranges, order } = await utils.retrieveNamedRanges(actual_file);
         all_ranges.set(species, ranges);
         all_ordered.set(species, order);
         cached = new Map;
@@ -36,13 +38,14 @@ async function fetchSetsByToken(token, file, all_ranges, all_ordered, all_cache)
     let ranges = all_ranges.get(species);
     let output;
     if (token.includes("*") || token.includes("?")) {
+        let ordered = all_ordered.get(species);
+
         // Wildcard handling.
         let initstub = token.replace(/[*?].*/, "")
         let pos = (initstub == "" ? 0 : binarySearch(initstub, ordered));
         let regex = new RegExp(token.replace(/[*]/g, ".*").replace(/[?]/g, "."));
 
         let collected = [];
-        let ordered = all_ordered.get(species);
 
         while (pos < ordered.length) {
             if (initstub != "" && !ordered[pos].startsWith(initstub)) {
@@ -50,7 +53,7 @@ async function fetchSetsByToken(token, file, all_ranges, all_ordered, all_cache)
             }
             if (ordered[pos].match(regex)) {
                 let rr = ranges.get(ordered[pos]);
-                collected.push(utils.retrieveBytes(file, rr[0], rr[1]).then(utils.convertToUint32Array));
+                collected.push(utils.retrieveBytes(actual_file, rr[0], rr[1]).then(utils.convertToUint32Array));
             }
             pos++;
         }
@@ -71,7 +74,7 @@ async function fetchSetsByToken(token, file, all_ranges, all_ordered, all_cache)
         if (typeof rr === "undefined") {
             return new Uint8Array;
         }
-        let text = await utils.retrieveBytes(file, rr[0], rr[1]);
+        let text = await utils.retrieveBytes(actual_file, rr[0], rr[1]);
         output = utils.convertToUint32Array(text);
     }
 
@@ -84,15 +87,15 @@ const n_ranges = new Map;
 const n_ordered = new Map;
 
 async function fetchSetsByNameToken(species, token) {
-    return fetchSetsByToken(token, species + "_tokens-names.tsv", n_ranges, n_ordered, n_cache);
+    return fetchSetsByToken(species, token, "tokens-names.tsv", n_ranges, n_ordered, n_cache);
 }
 
 const d_cache = new Map;
 const d_ranges = new Map;
 const d_ordered = new Map;
 
-async function fetchSetsByDescriptionToken(token) {
-    return fetchSetsByToken(token, species + "_tokens-descriptions.tsv", d_ranges, d_ordered, d_cache);
+async function fetchSetsByDescriptionToken(species, token) {
+    return fetchSetsByToken(species, token, "tokens-descriptions.tsv", d_ranges, d_ordered, d_cache);
 }
 
 /**

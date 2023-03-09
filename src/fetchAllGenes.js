@@ -1,4 +1,4 @@
-import { downloader, decompressLines } from "./utils.js";
+import { gene_download, decompressLines } from "./utils.js";
 
 var _genes = new Map;
 
@@ -35,7 +35,7 @@ export async function fetchAllGenes(species, { types = null } = {}) {
     for (const t of types) {
         let found = target.get(t);
         if (typeof found == "undefined") {
-            promises.push(downloader(species + "_" + t + ".tsv.gz"));
+            promises.push(gene_download(species + "_" + t + ".tsv.gz"));
             processing.push(t);
         } else {
             output.set(t, found);

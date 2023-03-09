@@ -1,4 +1,4 @@
-import { downloader, decompressLines } from "./utils.js";
+import { reference_download, decompressLines } from "./utils.js";
 import { fetchAllCollections } from "./fetchAllCollections.js";
 
 var _sets = new Map;
@@ -35,7 +35,7 @@ export async function fetchAllSets(species) {
     found = [];
     _sets.set(species, found);
 
-    var [ sres, _collections ] = await Promise.all([downloader(species + "_sets.tsv.gz"), fetchAllCollections(species)]);
+    var [ sres, _collections ] = await Promise.all([reference_download(species + "_sets.tsv.gz"), fetchAllCollections(species)]);
     if (!sres.ok) {
         throw new Error("failed to fetch set information for species '" + species + "'");
     }
