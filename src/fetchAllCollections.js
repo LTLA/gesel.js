@@ -1,9 +1,9 @@
 import { downloader, decompressLines } from "./utils.js";
 
-export var init = false;
-var _collections = [];
+var _collections = new Map;
 
 /**
+ * @param {string} species - The taxonomy ID of the species of interest, e.g., `"9606"` for human.
  * @return {Array} Array of objects where each entry corresponds to a set collection and contains details about that collection.
  * Each object can be expected to contain:
  * 
@@ -20,14 +20,17 @@ var _collections = [];
  * In a **gesel** context, the identifier for a collection (i.e., the "collection ID") is defined as the index of the collection in this array.
  * @async
  */
-export async function fetchAllCollections() {
-    if (init) {
-        return _collections;
+export async function fetchAllCollections(species) {
+    let target = _collections.get(species);
+    if (typeof target != "undefined") {
+        return target;
     }
+    target = [];
+    _collections.set(species, target);
 
-    var cres = await downloader("collections.tsv.gz");
+    var cres = await downloader(species + "_collections.tsv.gz");
     if (!cres.ok) {
-        throw "failed to fetch collection information";
+        throw new Error("failed to fetch collection information for species '" + species + "'");
     }
     var coll_data = decompressLines(await cres.arrayBuffer());
 
@@ -36,7 +39,7 @@ export async function fetchAllCollections() {
         let x = coll_data[i];
         var details = x.split("\t");
         var len = Number(details[5]);
-        _collections.push({
+        target.push({
             "title": details[0],
             "description": details[1],
             "species": details[2],
@@ -48,6 +51,5 @@ export async function fetchAllCollections() {
         start += len;
     }
 
-    init = true;
-    return _collections;
+    return target;
 }

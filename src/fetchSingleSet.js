@@ -5,26 +5,26 @@ import { fetchCollectionSizes } from "./fetchSingleCollection.js";
 var init = false;
 const cache = new Map;
 
-var ranges;
-var sizes;
-var starts;
+var ranges = new Map;
+var sizes = new Map;
+var starts = new Map;
 
-var parents;
-var internal_number;
+var parents = new Map;
+var internal_number = new Map;
 
-async function initialize() {
-    const [ sres, csizes ] = await Promise.all([ utils.retrieveRangesWithExtras("sets.tsv"), fetchCollectionSizes() ]);
-    ranges = sres.ranges;
-    sizes = sres.extra;
+async function initialize(species) {
+    const [ sres, csizes ] = await Promise.all([ utils.retrieveRangesWithExtras(species + "_sets.tsv"), fetchCollectionSizes() ]);
+    ranges.set(species, sres.ranges);
+    sizes.set(species, sres.extra);
 
-    parents = [];
-    internal_number = [];
+    let _parents = [];
+    let _internal_number = [];
     var totals = 0;
     for (var i = 0; i < csizes.length; i++) {
         let colsize = csizes[i];
         for (var j = 0; j < colsize; j++) {
-            parents.push(i);
-            internal_number.push(j);
+            _parents.push(i);
+            _internal_number.push(j);
         }
         totals += colsize;
     }
@@ -33,26 +33,31 @@ async function initialize() {
         throw new Error("discrepancy between number of sets and sum of collection sizes");
     }
 
-    init = true;
-    return true;
+    parents.set(species, _parents);
+    internal_number.set(species, _internal_number);
+    cache.set(species, new Map);
+    return;
 }
 
-export async function fetchSetSizes() {
-    if (!init) {
-        if (full.init) {
+export async function fetchSetSizes(species) {
+    let _sizes = sizes.get(species);
+    if (typeof _sizes == "undefined") {
+        let found = full.already_initialized(species);
+
+        if (found !== null) {
             // Pulling it from the full info instead, if we already got it.
             let tmp_sizes = [];
-            let meta = await full.fetchAllSets();
-            for (const x of meta) {
+            for (const x of found) {
                 tmp_sizes.push(x.size);
             }
+            sizes.set(species, tmp_sizes);
             return tmp_sizes;
         }
 
-        await initialize();
+        await initialize(species);
     }
 
-    return sizes;
+    return _sizes;
 }
 
 /**
@@ -69,6 +74,7 @@ export async function numberOfSets() {
 }
 
 /**
+ * @param {string} species - The taxonomy ID of the species of interest, e.g., `"9606"` for human.
  * @param {number} set - Set ID, see {@linkcode fetchAllSets} for details.
  * @param {object} [options={}] - Optional parameters.
  * @param {boolean} [options.forceRequest=false] - Whether to force a request to the server.
@@ -80,31 +86,34 @@ export async function numberOfSets() {
  *
  * @async
  */
-export async function fetchSingleSet(set, { forceRequest = false } = {}) {
-    if (full.init && !forceRequest) {
-        return (await full.fetchAllSets())[set];
+export async function fetchSingleSet(species, set, { forceRequest = false } = {}) {
+    let ffound = full.already_initialized(species);
+    if (ffound !== null && !forceRequest) {
+        return ffound[set];
     }
 
-    let cached = cache.get(set);
-    if (typeof cached !== "undefined") {
-        return cached;
-    }
-
-    if (!init) {
+    let cached = cache.get(species);
+    if (typeof cached === "undefined") {
         await initialize();
+        cached = cache.get(species);
     }
 
-    let text = await utils.retrieveBytesByIndex("sets.tsv", ranges, set);
+    let sfound = cached.get(set);
+    if (typeof sfound !== "undefined") {
+        return sfound;
+    }
+
+    let text = await utils.retrieveBytesByIndex("sets.tsv", ranges.get(species), set);
     let split = text.split("\t");
     let output = {
         name: split[0],
         description: split[1],
         size: sizes[set],
-        collection: parents[set],
-        number: internal_number[set]
+        collection: parents.get(species)[set],
+        number: internal_number.get(species)[set]
     };
 
-    cache.set(set, output);
+    cached.set(set, output);
     return output;
 }
 
