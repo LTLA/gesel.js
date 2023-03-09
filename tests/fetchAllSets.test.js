@@ -2,9 +2,9 @@ import * as utils from "./utils.js";
 import * as gesel from "../src/index.js";
 
 test("fetchAllSets works as expected", async () => {
-    let sets = await gesel.fetchAllSets();
+    let sets = await gesel.fetchAllSets("7227");
     expect(sets.length).toBeGreaterThan(0);
-    let coll = await gesel.fetchAllCollections();
+    let coll = await gesel.fetchAllCollections("7227");
 
     let is_okay = 0;
     for (const x of sets) {

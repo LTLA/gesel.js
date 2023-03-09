@@ -30,8 +30,8 @@ First, we need to map our user-supplied genes to **gesel**'s internal identifier
 ```js
 let user_supplied = [ "SNAP25", "NEUROD6", "ENSG00000123307", "TSPAN6" ];
 
-/* Seeing if the user-supplied symbols/IDs are found in the reference. */
-let user_supplied_ids = await gesel.searchGenes(user_supplied, "Homo sapiens");
+/* Seeing if the user-supplied symbols/IDs are found in the human reference. */
+let user_supplied_ids = await gesel.searchGenes("9606", user_supplied);
 
 /* Taking the first matching ID for each user-supplied gene name. Applications
  * may prefer to print warnings/errors if there are multiple matches.
@@ -48,24 +48,24 @@ Then, we can search for the overlapping sets.
 This returns an array of objects with the set IDs as well as the number of overlapping genes (and optionally the size of each set).
 
 ```js
-let overlaps = await gesel.findOverlappingSets(user_supplied_union, { includeSize: true });
+let overlaps = await gesel.findOverlappingSets("9606", user_supplied_union);
 ```
 
 Once we have a set ID, we can query the references to obtain that set's details:
 
 ```js
-let set_details = await gesel.fetchSingleSet(overlaps[0].id);
+let set_details = await gesel.fetchSingleSet("9606", overlaps[0].id);
 ```
 
 Each set also has some associated free text in its name and description.
 We can do some simple queries via **gesel**:
 
 ```js
-let hits = await gesel.searchSetText("B immune");
+let hits = await gesel.searchSetText("9606", "B immune");
 let first_hit = await gesel.fetchSingleSet(hits[0]);
 
 // '*' and '?' wildcards are also supported.
-let hits2 = await gesel.searchSetText("B immun*");
+let hits2 = await gesel.searchSetText("9606", "B immun*");
 let first_hit2 = await gesel.fetchSingleSet(hits2[0]);
 ```
 
@@ -78,13 +78,14 @@ let combined = gesel.intersect([ hits, overlaps.map(x => x.id) ]);
 ## Overriding the downloader
 
 By default, we use the reference gene sets collated in the [feedstock repository](https://github.com/LTLA/gesel-feedstock).
-However, users can point **gesel** to their own references by overriding the downloader before calling any **gesel** functions.
+However, users can point **gesel** to their own references by overriding the downloaders before calling any **gesel** functions.
 For example, if our prebuilt references are hosted on some other URL:
 
 ```js
 const baseUrl = "https://some.company.com/prebuilt-gesel";
 
-gesel.setDownload(async (file, start = null, end = null) => {
+// To set the downloader for the reference files.
+gesel.setReferenceDownload(async (file, start = null, end = null) => {
     const url = baseUrl + "/" + file;
     if (start == null) {
         return fetch(url, { headers: { Authorization: "Bearer XXX" } });
@@ -92,6 +93,12 @@ gesel.setDownload(async (file, start = null, end = null) => {
         let range_text = "bytes=" + String(start) + "-" + String(end);
         return fetch(url, { headers: { Authorization: "Bearer XXX", Range: range_text } });
     }
+});
+
+// To set the downloader for gene information.
+gesel.setGeneDownload(file => {
+    const url = baseUrl + "/" + file;
+    return fetch(url, { headers: { Authorization: "Bearer XXX" } });
 });
 ```
 

@@ -2,21 +2,21 @@ import * as utils from "./utils.js";
 import * as gesel from "../src/index.js";
 
 test("fetchSingleCollection works as expected", async () => {
-    let c = await gesel.fetchAllCollections();
+    let c = await gesel.fetchAllCollections("9606");
 
     // Same result as fetchSingleCollection.
     let jump = Math.max(1, Math.trunc(c.length / 10));
     for (var i = 0; i < c.length; i += jump) {
-        expect(c[i]).toEqual(await gesel.fetchSingleCollection(i, { forceRequest: true }));
-        expect(c[i]).toEqual(await gesel.fetchSingleCollection(i, { forceRequest: false }));
+        expect(c[i]).toEqual(await gesel.fetchSingleCollection("9606", i, { forceRequest: true }));
+        expect(c[i]).toEqual(await gesel.fetchSingleCollection("9606", i, { forceRequest: false }));
     }
 
     let last = c.length - 1;
-    expect(c[last]).toEqual(await gesel.fetchSingleCollection(last, { forceRequest: true }));
-    expect(c[last]).toEqual(await gesel.fetchSingleCollection(last, { forceRequest: false }));
+    expect(c[last]).toEqual(await gesel.fetchSingleCollection("9606", last, { forceRequest: true }));
+    expect(c[last]).toEqual(await gesel.fetchSingleCollection("9606", last, { forceRequest: false }));
 })
 
 test("numberOfCollections works as expected", async () => {
-    expect(await gesel.numberOfCollections()).toEqual((await gesel.fetchAllCollections()).length);
+    expect(await gesel.numberOfCollections("9606")).toEqual((await gesel.fetchAllCollections("9606")).length);
 })
 

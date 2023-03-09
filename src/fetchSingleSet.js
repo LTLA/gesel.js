@@ -2,23 +2,23 @@ import * as utils from "./utils.js";
 import * as full from "./fetchAllSets.js";
 import { fetchCollectionSizes } from "./fetchSingleCollection.js";
 
-var init = false;
-const cache = new Map;
+const _cache = new Map;
+const _ranges = new Map;
+const _sizes = new Map;
+const _starts = new Map;
+const _parents = new Map;
+const _internal_number = new Map;
 
-var ranges;
-var sizes;
-var starts;
+async function initialize(species) {
+    const [ sres, csizes ] = await Promise.all([ 
+        utils.retrieveRangesWithExtras(species + "_sets.tsv"), 
+        fetchCollectionSizes(species) 
+    ]);
+    _ranges.set(species, sres.ranges);
+    _sizes.set(species, sres.extra);
 
-var parents;
-var internal_number;
-
-async function initialize() {
-    const [ sres, csizes ] = await Promise.all([ utils.retrieveRangesWithExtras("sets.tsv"), fetchCollectionSizes() ]);
-    ranges = sres.ranges;
-    sizes = sres.extra;
-
-    parents = [];
-    internal_number = [];
+    let parents = [];
+    let internal_number = [];
     var totals = 0;
     for (var i = 0; i < csizes.length; i++) {
         let colsize = csizes[i];
@@ -29,46 +29,30 @@ async function initialize() {
         totals += colsize;
     }
 
-    if (totals != sizes.length) {
+    if (totals != sres.extra.length) {
         throw new Error("discrepancy between number of sets and sum of collection sizes");
     }
 
-    init = true;
-    return true;
+    _parents.set(species, parents);
+    _internal_number.set(species, internal_number);
+    _cache.set(species, new Map);
+    return;
 }
 
-export async function fetchSetSizes() {
-    if (!init) {
-        if (full.init) {
-            // Pulling it from the full info instead, if we already got it.
-            let tmp_sizes = [];
-            let meta = await full.fetchAllSets();
-            for (const x of meta) {
-                tmp_sizes.push(x.size);
-            }
-            return tmp_sizes;
-        }
-
-        await initialize();
-    }
-
-    return sizes;
+export async function fetchSetSizes(species) {
+    return utils.fetchSizes(species, _sizes, full, initialize);
 }
 
 /**
- * @return {number} Total number of sets.
+ * @param {string} species - The taxonomy ID of the species of interest, e.g., `"9606"` for human.
+ * @return {number} Total number of sets for this species.
  */
-export async function numberOfSets() {
-    if (!init) {
-        if (full.init) {
-            return (await full.fetchAllSets()).length;
-        }
-        await initialize();
-    }
-    return sizes.length;
+export async function numberOfSets(species) {
+    return utils.fetchNumber(species, _sizes, full, initialize);
 }
 
 /**
+ * @param {string} species - The taxonomy ID of the species of interest, e.g., `"9606"` for human.
  * @param {number} set - Set ID, see {@linkcode fetchAllSets} for details.
  * @param {object} [options={}] - Optional parameters.
  * @param {boolean} [options.forceRequest=false] - Whether to force a request to the server.
@@ -80,31 +64,34 @@ export async function numberOfSets() {
  *
  * @async
  */
-export async function fetchSingleSet(set, { forceRequest = false } = {}) {
-    if (full.init && !forceRequest) {
-        return (await full.fetchAllSets())[set];
+export async function fetchSingleSet(species, set, { forceRequest = false } = {}) {
+    let ffound = full.already_initialized(species);
+    if (ffound !== null && !forceRequest) {
+        return ffound[set];
     }
 
-    let cached = cache.get(set);
-    if (typeof cached !== "undefined") {
-        return cached;
+    let cached = _cache.get(species);
+    if (typeof cached === "undefined") {
+        await initialize(species);
+        cached = _cache.get(species);
     }
 
-    if (!init) {
-        await initialize();
+    let sfound = cached.get(set);
+    if (typeof sfound !== "undefined") {
+        return sfound;
     }
 
-    let text = await utils.retrieveBytesByIndex("sets.tsv", ranges, set);
+    let text = await utils.retrieveBytesByIndex(species + "_sets.tsv", _ranges.get(species), set);
     let split = text.split("\t");
     let output = {
         name: split[0],
         description: split[1],
-        size: sizes[set],
-        collection: parents[set],
-        number: internal_number[set]
+        size: _sizes.get(species)[set],
+        collection: _parents.get(species)[set],
+        number: _internal_number.get(species)[set]
     };
 
-    cache.set(set, output);
+    cached.set(set, output);
     return output;
 }
 

@@ -1,65 +1,33 @@
 import { fetchAllGenes } from "./fetchAllGenes.js";
-import { mapGenesByEnsembl } from "./mapGenesByEnsembl.js";
-import { mapGenesBySymbol } from "./mapGenesBySymbol.js";
-import { mapGenesByEntrez } from "./mapGenesByEntrez.js";
-
-function define_prefix(species) {
-    var prefix = null;
-    if (species !== null) {
-        switch(species) {
-            case "Homo sapiens":
-                prefix = "ENSG";
-                break;
-            case "Mus musculus":
-                prefix = "ENSMUSG";
-                break;
-            case "Macaca fascicularis":
-                prefix = "ENSMFAG";
-                break;
-            case "Rattus norvegicus":
-                prefix = "ENSRNOG";
-                break;
-            case "Caenorhabditis elegans":
-                prefix = "WBGene";
-                break;
-            case "Drosophila melanogaster":
-                prefix = "FBgn";
-                break;
-            case "Pan troglodytes":
-                prefix = "ENSPTRG";
-                break;
-            case "Danio rerio":
-                prefix = "ENSDARG";
-                break;
-        }
-    }
-    return prefix;
-}
+import { mapGenesByIdentifier } from "./mapGenesByIdentifier.js";
 
 /**
+ * @param {string} species - Taxonomy ID of the species of interest, e.g., `"9606"` for human.
  * @param {Array} queries - Array of strings containing gene identifiers of some kind (e.g., Ensembl, symbol, Entrez).
- * @param {?string} species - String specifying the species of interest.
- * This is used to filter the matching genes to the indicated species.
- * We currently support `"Homo sapiens"`, `"Mus musculus"`, `"Macaca fascicularis"`, `"Rattus norvegicus"`, `"Caenorhabditis elegans"`, `"Drosophila melanogaster"`, `"Pan troglodytes"` and `"Danio rerio"`;
- * any other string or `null` is ignored.
  * @param {object} [options={}] - Optional parameters.
- * @param {boolean} [options.ignoreCase=true] - Whether to ignore case in the search query.
- * @param {boolean} [options.allowSymbol=true] - Whether strings in `queries` might be symbols.
- * @param {boolean} [options.allowEntrez=false] - Whether strings in `queries` might be Entrez IDs.
+ * @param {?Array} [options.types=null] - Array of strings specifying the identifier types to use for searching.
+ * The exact choice of strings depends on how the references were constructed.
+ * If `null`, it defaults to an array containing `"entrez"`, `"ensembl"` and `"symbol"`.
+ * @param {boolean} [options.ignoreCase=true] - Whether to perform case-insensitive matching.
  *
  * @return {Array} An array of length equal to `queries`.
- * Each element of the array is an array containing the **gesel** gene IDs that match the corresponding search string.
- * Each gene ID is an index into the array returned by {@linkcode fetchAllGenes}.
+ * Each element of the array is an array containing the **gesel** gene IDs with any identifiers that match the corresponding search string.
+ * See {@linkcode fetchAllGenes} for more details on the interpretation of these IDs.
  *
  * @async
  */
-export async function searchGenes(queries, species, { ignoreCase = true, allowSymbol = true, allowEntrez = false } ={}) {
-    var by_ens = await mapGenesByEnsembl();
-    var by_sym = (allowSymbol ? await mapGenesBySymbol({ lowerCase: ignoreCase }) : new Map);
-    var by_ent = (allowEntrez ? await mapGenesByEntrez() : new Map);
-    var mapping = [];
+export async function searchGenes(species, queries, { types = null, ignoreCase = true } ={}) {
+    if (types === null) {
+        types = [ "entrez", "ensembl", "symbol" ];
+    }
 
-    // Adding all the mapped entries first.
+    let promises = [];
+    for (const t of types) {
+        promises.push(mapGenesByIdentifier(species, t, { lowerCase: ignoreCase }));
+    }
+    let resolved = await Promise.all(promises);
+
+    let mapping = [];
     for (var i = 0; i < queries.length; i++) {
         let current = queries[i];
         if (current.length == 0) {
@@ -67,48 +35,21 @@ export async function searchGenes(queries, species, { ignoreCase = true, allowSy
             continue;
         }
 
-        {
-            let proper = (ignoreCase ? current.toUpperCase() : current);
-            let in_ens = by_ens.get(proper);
-            if (typeof in_ens !== "undefined") {
-                mapping.push([in_ens]);
-                continue;
-            }
+        if (ignoreCase) {
+            current = current.toLowerCase();
         }
 
-        if (allowSymbol) {
-            let proper = (ignoreCase ? current.toLowerCase() : current);
-            let in_sym = by_sym.get(proper);
-            if (typeof in_sym !== "undefined") {
-                mapping.push(in_sym);
-                continue;
-            }
-        }
-
-        if (allowEntrez) {
-            let in_ent = by_ent.get(current);
-            if (typeof in_ent !== "undefined") {
-                mapping.push(in_ent);
-                continue;
-            }
-        }
-
-        mapping.push([]);
-    }
-
-    // Pruning them to the desired species.
-    var prefix = define_prefix(species);
-    if (prefix !== null) {
-        let ginfo = await fetchAllGenes();
-        for (var i = 0; i < mapping.length; i++) {
-            let replacement = [];
-            for (const y of mapping[i]) {
-                if (ginfo[y].ensembl.startsWith(prefix)) {
-                    replacement.push(y);
+        let findings = [];
+        for (var j = 0; j < types.length; j++) {
+            let val = resolved[j].get(current);
+            if (typeof val !== "undefined") {
+                for (const v of val) {
+                    findings.push(v);
                 }
             }
-            mapping[i] = replacement
         }
+
+        mapping.push(findings);
     }
 
     return mapping;

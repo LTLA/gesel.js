@@ -1,10 +1,10 @@
 import * as utils from "./utils.js";
 
-var init = false;
-var ranges;
-const cache = new Map;
+const _ranges = new Map;
+const _cache = new Map;
 
 /**
+ * @param {string} species - The taxonomy ID of the species of interest, e.g., `"9606"` for human.
  * @param {number} set - Set ID, see {@linkcode fetchAllSets} for details.
  *
  * @return {Uint32Array} Array of integers containing the IDs for all genes belonging to the set.
@@ -12,19 +12,22 @@ const cache = new Map;
  *
  * @async
  */
-export async function fetchGenesForSet(set) {
-    let cached = cache.get(set);
-    if (typeof cached !== "undefined") {
-        return cached;
+export async function fetchGenesForSet(species, set) {
+    let spfound = _cache.get(species);
+    if (typeof spfound == "undefined") {
+        spfound = new Map;
+        _cache.set(species, spfound);
+        _ranges.set(species, await utils.retrieveRanges(species + "_set2gene.tsv"));
     }
 
-    if (!init) {
-        ranges = await utils.retrieveRanges("set2gene.tsv");
-        init = true;
+    let sefound = spfound.get(set);
+    if (typeof sefound !== "undefined") {
+        return sefound;
     }
 
-    let text = await utils.retrieveBytesByIndex("set2gene.tsv", ranges, set);
+    let ranges = _ranges.get(species);
+    let text = await utils.retrieveBytesByIndex(species + "_set2gene.tsv", ranges, set);
     let output = utils.convertToUint32Array(text);
-    cache.set(set, output);
+    spfound.set(set, output);
     return output;
 }
