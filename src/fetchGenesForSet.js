@@ -5,11 +5,15 @@ const _cache = new Map;
 
 /**
  * @param {string} species - The taxonomy ID of the species of interest, e.g., `"9606"` for human.
- * @param {number} set - Set ID, see {@linkcode fetchAllSets} for details.
+ * @param {?number} set - Set ID, see {@linkcode fetchAllSets} for details.
+ *
+ * If `null`, no request is performed, but various internal caches are initialized for subsequent calls to this function.
+ * This is useful for guaranteeing that caches are available in concurrent calls.
  *
  * @return {Uint32Array} Array of integers containing the IDs for all genes belonging to the set.
  * Gene IDs refer to indices in {@linkcode fetchAllGenes}.
  *
+ * If `set = null`, no return value is provided.
  * @async
  */
 export async function fetchGenesForSet(species, set) {
@@ -18,6 +22,10 @@ export async function fetchGenesForSet(species, set) {
         spfound = new Map;
         _cache.set(species, spfound);
         _ranges.set(species, await utils.retrieveRanges(species + "_set2gene.tsv"));
+    }
+
+    if (set == null) {
+        return;
     }
 
     let sefound = spfound.get(set);

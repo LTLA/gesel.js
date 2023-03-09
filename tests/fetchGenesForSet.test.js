@@ -13,3 +13,8 @@ test("fetching genes for sets works correctly, more or less", async () => {
     var val = await gesel.fetchGenesForSet("9606", last);
     expect(val.length > 0).toBe(true);
 });
+
+test("fetching genes for sets works correctly with initialization", async () => {
+    expect(await gesel.fetchGenesForSet("9606", null)).toBeUndefined();
+})
+

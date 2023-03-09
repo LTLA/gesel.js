@@ -16,6 +16,11 @@ test("fetchSingleCollection works as expected", async () => {
     expect(c[last]).toEqual(await gesel.fetchSingleCollection("9606", last, { forceRequest: false }));
 })
 
+test("fetchSingleCollection works correctly with initialization", async () => {
+    expect(await gesel.fetchSingleCollection("9606", null, { forceRequest: true })).toBeUndefined();
+    expect(await gesel.fetchSingleCollection("9606", null, { forceRequest: false })).toBeUndefined();
+})
+
 test("numberOfCollections works as expected", async () => {
     expect(await gesel.numberOfCollections("9606")).toEqual((await gesel.fetchAllCollections("9606")).length);
 })

@@ -16,6 +16,11 @@ test("fetchSingleSet works as expected", async () => {
     expect(c[last]).toEqual(await gesel.fetchSingleSet("10090", last, { forceRequest: false }));
 })
 
+test("fetchSingleSet works correctly with initialization", async () => {
+    expect(await gesel.fetchSingleSet("9606", null, { forceRequest: true })).toBeUndefined();
+    expect(await gesel.fetchSingleSet("9606", null, { forceRequest: false })).toBeUndefined();
+})
+
 test("numberOfSets works as expected", async () => {
     expect(await gesel.numberOfSets("10090")).toEqual((await gesel.fetchAllSets("10090")).length);
 })

@@ -53,7 +53,10 @@ export async function numberOfSets(species) {
 
 /**
  * @param {string} species - The taxonomy ID of the species of interest, e.g., `"9606"` for human.
- * @param {number} set - Set ID, see {@linkcode fetchAllSets} for details.
+ * @param {?number} set - Set ID, see {@linkcode fetchAllSets} for details.
+ *
+ * If `null`, no request is performed, but various internal caches are initialized for subsequent calls to this function.
+ * This is useful for guaranteeing that caches are available in concurrent calls.
  * @param {object} [options={}] - Optional parameters.
  * @param {boolean} [options.forceRequest=false] - Whether to force a request to the server.
  * By default, the cached collection information is used if {@linkcode fetchAllSets} has previously been called.
@@ -62,18 +65,27 @@ export async function numberOfSets(species) {
  * @return {object} Object containing the details of the set.
  * This should be identical to the corresponding entry of the array returned by {@linkcode fetchAllSets}.
  *
+ * If `set = null`, no return value is provided.
  * @async
  */
 export async function fetchSingleSet(species, set, { forceRequest = false } = {}) {
     let ffound = full.already_initialized(species);
     if (ffound !== null && !forceRequest) {
-        return ffound[set];
+        if (set !== null) {
+            return ffound[set];
+        } else {
+            return;
+        }
     }
 
     let cached = _cache.get(species);
     if (typeof cached === "undefined") {
         await initialize(species);
         cached = _cache.get(species);
+    }
+
+    if (set == null) {
+        return;
     }
 
     let sfound = cached.get(set);

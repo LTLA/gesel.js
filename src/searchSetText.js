@@ -30,6 +30,10 @@ async function fetchSetsByToken(species, token, file, all_ranges, all_ordered, a
         all_cache.set(species, cached);
     }
 
+    if (token == null) {
+        return;
+    }
+
     let tfound = cached.get(token);
     if (typeof tfound !== "undefined") {
         return tfound;
@@ -122,6 +126,15 @@ export async function searchSetText(species, query, { inName = true, inDescripti
     let processed = query.toLowerCase().replace(/[^a-zA-Z0-9-?*]/g, " ");
     let tokens = processed.split(/\s+/);
     tokens = tokens.filter(x => x !== "" || x !== "-");
+
+    let init = [];
+    if (inName) {
+        init.push(fetchSetsByNameToken(species, null));
+    }
+    if (inDescription) {
+        init.push(fetchSetsByDescriptionToken(species, null));
+    }
+    await Promise.all(init); // force initialization of all caches.
 
     let gathered_names = [];
     if (inName) {

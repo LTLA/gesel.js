@@ -12,6 +12,8 @@ const _cache = new Map;
  *
  * @return {Uint32Array} Array of integers containing the IDs of all sets containing the gene.
  * IDs are treated as indices into the return value of {@linkcode fetchAllSets} or as input to {@linkcode fetchSingleSet}.
+ *
+ * If `gene = null`, no return value is provided.
  * 
  * @async
  */

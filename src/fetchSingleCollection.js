@@ -37,7 +37,10 @@ export async function numberOfCollections(species) {
 
 /**
  * @param {string} species - The taxonomy ID of the species of interest, e.g., `"9606"` for human.
- * @param {number} collection - Collection ID, see {@linkcode fetchAllCollections} for details.
+ * @param {?number} collection - Collection ID, see {@linkcode fetchAllCollections} for details.
+ * 
+ * If `null`, no request is performed, but various internal caches are initialized for subsequent calls to this function.
+ * This is useful for guaranteeing that caches are available in concurrent calls.
  * @param {object} [options={}] - Optional parameters.
  * @param {boolean} [options.forceRequest=false] - Whether to force a request to the server.
  * By default, the cached collection information is used if {@linkcode fetchAllCollections} has previously been called.
@@ -46,18 +49,27 @@ export async function numberOfCollections(species) {
  * @return {object} Object containing the details of the collection.
  * This should be identical to the corresponding entry of the array returned by {@linkcode fetchAllCollections}.
  *
+ * If `collection = null`, no return value is provided.
  * @async
  */
 export async function fetchSingleCollection(species, collection, { forceRequest = false } = {}) {
     let ffound = full.already_initialized(species);
     if (ffound !== null && !forceRequest) {
-        return ffound[collection];
+        if (collection !== null) {
+            return ffound[collection];
+        } else {
+            return;
+        }
     }
 
     let cached = _cache.get(species);
     if (typeof cached === "undefined") {
         await initialize(species);
         cached = _cache.get(species);
+    }
+
+    if (collection == null) {
+        return;
     }
 
     let cfound = cached.get(collection);
