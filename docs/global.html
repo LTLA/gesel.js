@@ -31,7 +31,7 @@
     <input type="text" id="nav-search" placeholder="Search" />
     
     
-    <h2><a href="index.html">Home</a></h2><h2><a href="https://github.roche.com/GP/gesel" target="_blank" class="menu-item" id="repository" >Github repo</a></h2><h3>Global</h3><ul><li><a href="global.html#fetchAllCollections">fetchAllCollections</a></li><li><a href="global.html#fetchAllGenes">fetchAllGenes</a></li><li><a href="global.html#fetchAllSets">fetchAllSets</a></li><li><a href="global.html#fetchGenesForSet">fetchGenesForSet</a></li><li><a href="global.html#fetchSetsForGene">fetchSetsForGene</a></li><li><a href="global.html#fetchSingleCollection">fetchSingleCollection</a></li><li><a href="global.html#fetchSingleSet">fetchSingleSet</a></li><li><a href="global.html#findOverlappingSets">findOverlappingSets</a></li><li><a href="global.html#intersect">intersect</a></li><li><a href="global.html#mapGenesByEnsembl">mapGenesByEnsembl</a></li><li><a href="global.html#mapGenesByEntrez">mapGenesByEntrez</a></li><li><a href="global.html#mapGenesBySymbol">mapGenesBySymbol</a></li><li><a href="global.html#numberOfCollections">numberOfCollections</a></li><li><a href="global.html#numberOfSets">numberOfSets</a></li><li><a href="global.html#searchGenes">searchGenes</a></li><li><a href="global.html#searchSetText">searchSetText</a></li><li><a href="global.html#setDownload">setDownload</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h2><a href="https://github.roche.com/GP/gesel" target="_blank" class="menu-item" id="repository" >Github repo</a></h2><h3>Global</h3><ul><li><a href="global.html#fetchAllCollections">fetchAllCollections</a></li><li><a href="global.html#fetchAllGenes">fetchAllGenes</a></li><li><a href="global.html#fetchAllSets">fetchAllSets</a></li><li><a href="global.html#fetchGenesForSet">fetchGenesForSet</a></li><li><a href="global.html#fetchSetsForGene">fetchSetsForGene</a></li><li><a href="global.html#fetchSingleCollection">fetchSingleCollection</a></li><li><a href="global.html#fetchSingleSet">fetchSingleSet</a></li><li><a href="global.html#findOverlappingSets">findOverlappingSets</a></li><li><a href="global.html#geneBaseUrl">geneBaseUrl</a></li><li><a href="global.html#intersect">intersect</a></li><li><a href="global.html#mapGenesByIdentifier">mapGenesByIdentifier</a></li><li><a href="global.html#numberOfCollections">numberOfCollections</a></li><li><a href="global.html#numberOfSets">numberOfSets</a></li><li><a href="global.html#referenceBaseUrl">referenceBaseUrl</a></li><li><a href="global.html#searchGenes">searchGenes</a></li><li><a href="global.html#searchSetText">searchSetText</a></li><li><a href="global.html#setGeneDownload">setGeneDownload</a></li><li><a href="global.html#setReferenceDownload">setReferenceDownload</a></li></ul>
     
 </nav>
 
@@ -132,7 +132,7 @@
 
     
 
-    <h4 class="name" id="fetchAllCollections"><span class="type-signature type-signature-async">(async) </span>fetchAllCollections<span class="signature">()</span><span class="type-signature"> &rarr; {Array}</span></h4>
+    <h4 class="name" id="fetchAllCollections"><span class="type-signature type-signature-async">(async) </span>fetchAllCollections<span class="signature">(species)</span><span class="type-signature"> &rarr; {Array}</span></h4>
 
     
 
@@ -145,7 +145,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="fetchAllCollections.js.html">fetchAllCollections.js</a>, <a href="fetchAllCollections.js.html#line23">line 23</a>
+        <a href="fetchAllCollections.js.html">fetchAllCollections.js</a>, <a href="fetchAllCollections.js.html#line32">line 32</a>
     </li></ul></dd>
     
 
@@ -190,6 +190,56 @@
 
 
 
+
+
+    <h5 class="h5-parameters">Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>species</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The taxonomy ID of the species of interest, e.g., <code>&quot;9606&quot;</code> for human.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
 
 
 
@@ -250,7 +300,7 @@ All sets from the same collection are stored contiguously.</li>
 
     
 
-    <h4 class="name" id="fetchAllGenes"><span class="type-signature type-signature-async">(async) </span>fetchAllGenes<span class="signature">(options<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Array}</span></h4>
+    <h4 class="name" id="fetchAllGenes"><span class="type-signature type-signature-async">(async) </span>fetchAllGenes<span class="signature">(species, options<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Map}</span></h4>
 
     
 
@@ -263,7 +313,7 @@ All sets from the same collection are stored contiguously.</li>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="fetchAllGenes.js.html">fetchAllGenes.js</a>, <a href="fetchAllGenes.js.html#line52">line 52</a>
+        <a href="fetchAllGenes.js.html">fetchAllGenes.js</a>, <a href="fetchAllGenes.js.html#line20">line 20</a>
     </li></ul></dd>
     
 
@@ -339,6 +389,42 @@ All sets from the same collection are stored contiguously.</li>
 
         <tr>
             
+                <td class="name"><code>species</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>The taxonomy ID of the species of interest, e.g., <code>&quot;9606&quot;</code> for human.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
                 <td class="name"><code>options</code></td>
             
 
@@ -402,13 +488,13 @@ All sets from the same collection are stored contiguously.</li>
 
         <tr>
             
-                <td class="name"><code>mapping</code></td>
+                <td class="name"><code>types</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">string</span>
+<span class="param-type">Array</span>
 
 
 
@@ -422,6 +508,8 @@ All sets from the same collection are stored contiguously.</li>
                 
 
                 
+                    &lt;nullable><br>
+                
 
                 
                 </td>
@@ -430,13 +518,14 @@ All sets from the same collection are stored contiguously.</li>
             
                 <td class="default">
                 
-                    <code>"symbol"</code>
+                    <code>null</code>
                 
                 </td>
             
 
-            <td class="description last"><p>Which mappings from Ensembl IDs should be retrived.
-This may be <code>&quot;symbol&quot;</code>, <code>&quot;entrez&quot;</code> or <code>&quot;both&quot;</code>.</p></td>
+            <td class="description last"><p>Array of strings specifying the identifier types to be retrieved.
+The exact choice of strings depends on how the references were constructed.
+If <code>null</code>, it defaults to an array containing <code>&quot;symbol&quot;</code>, <code>&quot;entrez&quot;</code> and <code>&quot;ensembl&quot;</code>.</p></td>
         </tr>
 
     
@@ -469,15 +558,10 @@ This may be <code>&quot;symbol&quot;</code>, <code>&quot;entrez&quot;</code> or 
 
         
 <div class="param-desc">
-    <p>Array of objects where each object corresponds to a gene and contains the following properties:</p>
-<ul>
-<li><code>ensembl</code>: string containing the Ensembl ID for the gene.</li>
-<li><code>symbol</code>: array containing strings with the gene symbols.
-This is only guaranteed to exist if <code>mapping = &quot;symbol&quot;</code> or <code>mapping = &quot;both&quot;</code>.</li>
-<li><code>entrez</code>: array containing strings with the Entrez IDs.
-This is only guaranteed to exist if <code>mapping = &quot;entrez&quot;</code> or <code>mapping = &quot;both&quot;</code>.</li>
-</ul>
-<p>In the context of <strong>gesel</strong>, the identifier for each gene (i.e., the &quot;gene ID&quot;) is encoded as its index in this output array.</p>
+    <p>Object where each key is named after an identifier type in <code>types</code>.
+Each value is an array where each element corresponds to a gene and is itself an array of strings containing all identifiers of the current type for that gene.</p>
+<p>The arrays for different identifier types are all of the same length, and corresponding elements across these arrays describe the same gene.
+<strong>gesel</strong>'s identifier for each gene (i.e., the &quot;gene ID&quot;) is defined as the index of that gene in any of these arrays.</p>
 </div>
 
 
@@ -488,7 +572,7 @@ This is only guaranteed to exist if <code>mapping = &quot;entrez&quot;</code> or
     </dt>
     <dd>
         
-<span class="param-type">Array</span>
+<span class="param-type">Map</span>
 
 
 
@@ -504,7 +588,7 @@ This is only guaranteed to exist if <code>mapping = &quot;entrez&quot;</code> or
 
     
 
-    <h4 class="name" id="fetchAllSets"><span class="type-signature type-signature-async">(async) </span>fetchAllSets<span class="signature">()</span><span class="type-signature"> &rarr; {Array}</span></h4>
+    <h4 class="name" id="fetchAllSets"><span class="type-signature type-signature-async">(async) </span>fetchAllSets<span class="signature">(species)</span><span class="type-signature"> &rarr; {Array}</span></h4>
 
     
 
@@ -517,7 +601,7 @@ This is only guaranteed to exist if <code>mapping = &quot;entrez&quot;</code> or
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="fetchAllSets.js.html">fetchAllSets.js</a>, <a href="fetchAllSets.js.html#line20">line 20</a>
+        <a href="fetchAllSets.js.html">fetchAllSets.js</a>, <a href="fetchAllSets.js.html#line30">line 30</a>
     </li></ul></dd>
     
 
@@ -562,6 +646,56 @@ This is only guaranteed to exist if <code>mapping = &quot;entrez&quot;</code> or
 
 
 
+
+
+    <h5 class="h5-parameters">Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>species</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The taxonomy ID of the species of interest, e.g., <code>&quot;9606&quot;</code> for human.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
 
 
 
@@ -618,7 +752,7 @@ Each object can be expected to contain:</p>
 
     
 
-    <h4 class="name" id="fetchGenesForSet"><span class="type-signature type-signature-async">(async) </span>fetchGenesForSet<span class="signature">(set)</span><span class="type-signature"> &rarr; {Uint32Array}</span></h4>
+    <h4 class="name" id="fetchGenesForSet"><span class="type-signature type-signature-async">(async) </span>fetchGenesForSet<span class="signature">(species, set)</span><span class="type-signature"> &rarr; {Uint32Array}</span></h4>
 
     
 
@@ -703,6 +837,30 @@ Each object can be expected to contain:</p>
 
         <tr>
             
+                <td class="name"><code>species</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The taxonomy ID of the species of interest, e.g., <code>&quot;9606&quot;</code> for human.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
                 <td class="name"><code>set</code></td>
             
 
@@ -774,7 +932,7 @@ Gene IDs refer to indices in <a href="global.html#fetchAllGenes"><code>fetchAllG
 
     
 
-    <h4 class="name" id="fetchSetsForGene"><span class="type-signature type-signature-async">(async) </span>fetchSetsForGene<span class="signature">(gene)</span><span class="type-signature"> &rarr; {Uint32Array}</span></h4>
+    <h4 class="name" id="fetchSetsForGene"><span class="type-signature type-signature-async">(async) </span>fetchSetsForGene<span class="signature">(species, gene<span class="signature-attributes">nullable</span>)</span><span class="type-signature"> &rarr; {Uint32Array}</span></h4>
 
     
 
@@ -787,7 +945,7 @@ Gene IDs refer to indices in <a href="global.html#fetchAllGenes"><code>fetchAllG
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="fetchSetsForGene.js.html">fetchSetsForGene.js</a>, <a href="fetchSetsForGene.js.html#line15">line 15</a>
+        <a href="fetchSetsForGene.js.html">fetchSetsForGene.js</a>, <a href="fetchSetsForGene.js.html#line18">line 18</a>
     </li></ul></dd>
     
 
@@ -847,6 +1005,8 @@ Gene IDs refer to indices in <a href="global.html#fetchAllGenes"><code>fetchAllG
         <th>Type</th>
 
         
+        <th>Attributes</th>
+        
 
         
 
@@ -855,6 +1015,38 @@ Gene IDs refer to indices in <a href="global.html#fetchAllGenes"><code>fetchAllG
     </thead>
 
     <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>species</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>The taxonomy ID of the species of interest, e.g., <code>&quot;9606&quot;</code> for human.</p></td>
+        </tr>
+
     
 
         <tr>
@@ -873,10 +1065,22 @@ Gene IDs refer to indices in <a href="global.html#fetchAllGenes"><code>fetchAllG
             </td>
 
             
+                <td class="attributes">
+                
+
+                
+                    &lt;nullable><br>
+                
+
+                
+                </td>
+            
 
             
 
-            <td class="description last"><p>Gene ID, see <a href="global.html#fetchAllGenes"><code>fetchAllGenes</code></a> for details.</p></td>
+            <td class="description last"><p>Gene ID, see <a href="global.html#fetchAllGenes"><code>fetchAllGenes</code></a> for details.</p>
+<p>If <code>null</code>, no request is performed, but various internal caches are initialized for subsequent calls to this function.
+This is useful for guaranteeing that caches are available in concurrent calls.</p></td>
         </tr>
 
     
@@ -930,7 +1134,7 @@ IDs are treated as indices into the return value of <a href="global.html#fetchAl
 
     
 
-    <h4 class="name" id="fetchSingleCollection"><span class="type-signature type-signature-async">(async) </span>fetchSingleCollection<span class="signature">(collection, options<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {object}</span></h4>
+    <h4 class="name" id="fetchSingleCollection"><span class="type-signature type-signature-async">(async) </span>fetchSingleCollection<span class="signature">(species, collection, options<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {object}</span></h4>
 
     
 
@@ -943,7 +1147,7 @@ IDs are treated as indices into the return value of <a href="global.html#fetchAl
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="fetchSingleCollection.js.html">fetchSingleCollection.js</a>, <a href="fetchSingleCollection.js.html#line70">line 70</a>
+        <a href="fetchSingleCollection.js.html">fetchSingleCollection.js</a>, <a href="fetchSingleCollection.js.html#line51">line 51</a>
     </li></ul></dd>
     
 
@@ -1015,6 +1219,42 @@ IDs are treated as indices into the return value of <a href="global.html#fetchAl
     </thead>
 
     <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>species</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>The taxonomy ID of the species of interest, e.g., <code>&quot;9606&quot;</code> for human.</p></td>
+        </tr>
+
     
 
         <tr>
@@ -1214,7 +1454,7 @@ This should be identical to the corresponding entry of the array returned by <a 
 
     
 
-    <h4 class="name" id="fetchSingleSet"><span class="type-signature type-signature-async">(async) </span>fetchSingleSet<span class="signature">(set, options<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {object}</span></h4>
+    <h4 class="name" id="fetchSingleSet"><span class="type-signature type-signature-async">(async) </span>fetchSingleSet<span class="signature">(species, set, options<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {object}</span></h4>
 
     
 
@@ -1227,7 +1467,7 @@ This should be identical to the corresponding entry of the array returned by <a 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="fetchSingleSet.js.html">fetchSingleSet.js</a>, <a href="fetchSingleSet.js.html#line83">line 83</a>
+        <a href="fetchSingleSet.js.html">fetchSingleSet.js</a>, <a href="fetchSingleSet.js.html#line67">line 67</a>
     </li></ul></dd>
     
 
@@ -1299,6 +1539,42 @@ This should be identical to the corresponding entry of the array returned by <a 
     </thead>
 
     <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>species</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>The taxonomy ID of the species of interest, e.g., <code>&quot;9606&quot;</code> for human.</p></td>
+        </tr>
+
     
 
         <tr>
@@ -1498,7 +1774,7 @@ This should be identical to the corresponding entry of the array returned by <a 
 
     
 
-    <h4 class="name" id="findOverlappingSets"><span class="type-signature type-signature-async">(async) </span>findOverlappingSets<span class="signature">(genes, options<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Array}</span></h4>
+    <h4 class="name" id="findOverlappingSets"><span class="type-signature type-signature-async">(async) </span>findOverlappingSets<span class="signature">(species, genes, options<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Array}</span></h4>
 
     
 
@@ -1511,7 +1787,7 @@ This should be identical to the corresponding entry of the array returned by <a 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="findOverlappingSets.js.html">findOverlappingSets.js</a>, <a href="findOverlappingSets.js.html#line19">line 19</a>
+        <a href="findOverlappingSets.js.html">findOverlappingSets.js</a>, <a href="findOverlappingSets.js.html#line20">line 20</a>
     </li></ul></dd>
     
 
@@ -1583,6 +1859,42 @@ This should be identical to the corresponding entry of the array returned by <a 
     </thead>
 
     <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>species</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>The taxonomy ID of the species of interest, e.g., <code>&quot;9606&quot;</code> for human.</p></td>
+        </tr>
+
     
 
         <tr>
@@ -1786,6 +2098,179 @@ Only included if <code>includeSize = true</code>.</li>
 
     
 
+    <h4 class="name" id="geneBaseUrl"><span class="type-signature"></span>geneBaseUrl<span class="signature">(url<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {string}</span></h4>
+
+    
+
+
+
+
+<dl class="details">
+    
+    <dt class="tag-description">Description:</dt>
+    <dd class="tag-description"><ul class="dummy"><li><p>Get or set the base URL for the gene information.
+By default, it uses the <code>genes-*</code> release files from <a href="https://github.com/LTLA/gesel-feedstock">the feedstock repository</a>.
+Setters should call this function before calling any other <strong>gesel</strong> functions that might fetch resources.</p></li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="utils.js.html">utils.js</a>, <a href="utils.js.html#line73">line 73</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <h5 class="h5-parameters">Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>url</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>Base URL to use for the gene informatin.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5 class="h5-returns">Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>If <code>url</code> is not supplied, the current base URL is returned.</p>
+<p>If <code>url</code> is supplied, it is set as the base URL, and the previous base URL is returned.</p>
+</div>
+
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">string</span>
+
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
     <h4 class="name" id="intersect"><span class="type-signature"></span>intersect<span class="signature">(arrays)</span><span class="type-signature"> &rarr; {Array}</span></h4>
 
     
@@ -1799,7 +2284,7 @@ Only included if <code>includeSize = true</code>.</li>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="utils.js.html">utils.js</a>, <a href="utils.js.html#line141">line 141</a>
+        <a href="utils.js.html">utils.js</a>, <a href="utils.js.html#line205">line 205</a>
     </li></ul></dd>
     
 
@@ -1941,7 +2426,7 @@ Only included if <code>includeSize = true</code>.</li>
 
     
 
-    <h4 class="name" id="mapGenesByEnsembl"><span class="type-signature type-signature-async">(async) </span>mapGenesByEnsembl<span class="signature">()</span><span class="type-signature"> &rarr; {Map}</span></h4>
+    <h4 class="name" id="mapGenesByIdentifier"><span class="type-signature type-signature-async">(async) </span>mapGenesByIdentifier<span class="signature">(species, type, options<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Map}</span></h4>
 
     
 
@@ -1954,219 +2439,7 @@ Only included if <code>includeSize = true</code>.</li>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="mapGenesByEnsembl.js.html">mapGenesByEnsembl.js</a>, <a href="mapGenesByEnsembl.js.html#line11">line 11</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5 class="h5-returns">Returns:</h5>
-
-        
-<div class="param-desc">
-    <p>Map where each key is a string containing the Ensembl ID for a gene, and each value is an integer containing the <strong>gesel</strong> gene ID,
-i.e., an index into the array returned by <a href="global.html#fetchAllGenes"><code>fetchAllGenes</code></a>.</p>
-</div>
-
-
-
-<dl class="param-type">
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Map</span>
-
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-        
-            
-
-    
-
-    <h4 class="name" id="mapGenesByEntrez"><span class="type-signature type-signature-async">(async) </span>mapGenesByEntrez<span class="signature">()</span><span class="type-signature"> &rarr; {Map}</span></h4>
-
-    
-
-
-
-
-<dl class="details">
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="mapGenesByEntrez.js.html">mapGenesByEntrez.js</a>, <a href="mapGenesByEntrez.js.html#line12">line 12</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5 class="h5-returns">Returns:</h5>
-
-        
-<div class="param-desc">
-    <p>Map where each key is a string containing a Entrez ID and each value is an array.
-Each array contains the <strong>gesel</strong> gene IDs associated with that Entrez ID, where gene IDs are defined as indices into the array returned by <a href="global.html#fetchAllGenes"><code>fetchAllGenes</code></a>.</p>
-</div>
-
-
-
-<dl class="param-type">
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Map</span>
-
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-        
-            
-
-    
-
-    <h4 class="name" id="mapGenesBySymbol"><span class="type-signature type-signature-async">(async) </span>mapGenesBySymbol<span class="signature">(options<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Map}</span></h4>
-
-    
-
-
-
-
-<dl class="details">
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="mapGenesBySymbol.js.html">mapGenesBySymbol.js</a>, <a href="mapGenesBySymbol.js.html#line18">line 18</a>
+        <a href="mapGenesByIdentifier.js.html">mapGenesByIdentifier.js</a>, <a href="mapGenesByIdentifier.js.html#line17">line 17</a>
     </li></ul></dd>
     
 
@@ -2238,6 +2511,78 @@ Each array contains the <strong>gesel</strong> gene IDs associated with that Ent
     </thead>
 
     <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>species</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>The taxonomy ID of the species of interest, e.g., <code>&quot;9606&quot;</code> for human.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>type</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>Type of the identifier to use as the key of the map, e.g., <code>&quot;ensembl&quot;</code>.</p></td>
+        </tr>
+
     
 
         <tr>
@@ -2338,7 +2683,7 @@ Each array contains the <strong>gesel</strong> gene IDs associated with that Ent
                 </td>
             
 
-            <td class="description last"><p>Whether to use lower-case gene symbols.</p></td>
+            <td class="description last"><p>Whether to use lower-case keys in the map.</p></td>
         </tr>
 
     
@@ -2371,8 +2716,8 @@ Each array contains the <strong>gesel</strong> gene IDs associated with that Ent
 
         
 <div class="param-desc">
-    <p>Map where each key is a string containing a (possibly lower-cased) gene symbol and each value is an array.
-Each array contains the <strong>gesel</strong> gene IDs associated with that symbol, where gene IDs are defined as indices into the array returned by <a href="global.html#fetchAllGenes"><code>fetchAllGenes</code></a>.</p>
+    <p>Map where each key is a string containing a (possibly lower-cased) identifier of the specified <code>type</code> and each value is an array.
+Each array contains the <strong>gesel</strong> gene IDs associated with the <code>type</code> identifier, see <a href="global.html#fetchAllGenes"><code>fetchAllGenes</code></a> for ore details.</p>
 </div>
 
 
@@ -2399,7 +2744,7 @@ Each array contains the <strong>gesel</strong> gene IDs associated with that sym
 
     
 
-    <h4 class="name" id="numberOfCollections"><span class="type-signature"></span>numberOfCollections<span class="signature">()</span><span class="type-signature"> &rarr; {number}</span></h4>
+    <h4 class="name" id="numberOfCollections"><span class="type-signature"></span>numberOfCollections<span class="signature">(species)</span><span class="type-signature"> &rarr; {number}</span></h4>
 
     
 
@@ -2412,7 +2757,7 @@ Each array contains the <strong>gesel</strong> gene IDs associated with that sym
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="fetchSingleCollection.js.html">fetchSingleCollection.js</a>, <a href="fetchSingleCollection.js.html#line48">line 48</a>
+        <a href="fetchSingleCollection.js.html">fetchSingleCollection.js</a>, <a href="fetchSingleCollection.js.html#line34">line 34</a>
     </li></ul></dd>
     
 
@@ -2459,6 +2804,56 @@ Each array contains the <strong>gesel</strong> gene IDs associated with that sym
 
 
 
+    <h5 class="h5-parameters">Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>species</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The taxonomy ID of the species of interest, e.g., <code>&quot;9606&quot;</code> for human.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
 
 
 
@@ -2477,7 +2872,7 @@ Each array contains the <strong>gesel</strong> gene IDs associated with that sym
 
         
 <div class="param-desc">
-    <p>Total number of collections.</p>
+    <p>Total number of collections for this species.</p>
 </div>
 
 
@@ -2504,7 +2899,7 @@ Each array contains the <strong>gesel</strong> gene IDs associated with that sym
 
     
 
-    <h4 class="name" id="numberOfSets"><span class="type-signature"></span>numberOfSets<span class="signature">()</span><span class="type-signature"> &rarr; {number}</span></h4>
+    <h4 class="name" id="numberOfSets"><span class="type-signature"></span>numberOfSets<span class="signature">(species)</span><span class="type-signature"> &rarr; {number}</span></h4>
 
     
 
@@ -2517,7 +2912,7 @@ Each array contains the <strong>gesel</strong> gene IDs associated with that sym
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="fetchSingleSet.js.html">fetchSingleSet.js</a>, <a href="fetchSingleSet.js.html#line61">line 61</a>
+        <a href="fetchSingleSet.js.html">fetchSingleSet.js</a>, <a href="fetchSingleSet.js.html#line50">line 50</a>
     </li></ul></dd>
     
 
@@ -2564,6 +2959,56 @@ Each array contains the <strong>gesel</strong> gene IDs associated with that sym
 
 
 
+    <h5 class="h5-parameters">Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>species</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The taxonomy ID of the species of interest, e.g., <code>&quot;9606&quot;</code> for human.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
 
 
 
@@ -2582,7 +3027,7 @@ Each array contains the <strong>gesel</strong> gene IDs associated with that sym
 
         
 <div class="param-desc">
-    <p>Total number of sets.</p>
+    <p>Total number of sets for this species.</p>
 </div>
 
 
@@ -2609,7 +3054,180 @@ Each array contains the <strong>gesel</strong> gene IDs associated with that sym
 
     
 
-    <h4 class="name" id="searchGenes"><span class="type-signature type-signature-async">(async) </span>searchGenes<span class="signature">(queries, species<span class="signature-attributes">nullable</span>, options<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Array}</span></h4>
+    <h4 class="name" id="referenceBaseUrl"><span class="type-signature"></span>referenceBaseUrl<span class="signature">(url<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {string}</span></h4>
+
+    
+
+
+
+
+<dl class="details">
+    
+    <dt class="tag-description">Description:</dt>
+    <dd class="tag-description"><ul class="dummy"><li><p>Get or set the base URL for the pre-built references.
+By default, it uses the <code>indices-*</code> release files from <a href="https://github.com/LTLA/gesel-feedstock">the feedstock repository</a>.
+Setters should call this function before calling any <strong>gesel</strong> functions that might fetch resources.</p></li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="utils.js.html">utils.js</a>, <a href="utils.js.html#line25">line 25</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <h5 class="h5-parameters">Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>url</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>Base URL to use for the prebuilt references.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5 class="h5-returns">Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>If <code>url</code> is not supplied, the current base URL is returned.</p>
+<p>If <code>url</code> is supplied, it is set as the base URL, and the previous base URL is returned.</p>
+</div>
+
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">string</span>
+
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="searchGenes"><span class="type-signature type-signature-async">(async) </span>searchGenes<span class="signature">(species, queries, options<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Array}</span></h4>
 
     
 
@@ -2622,7 +3240,7 @@ Each array contains the <strong>gesel</strong> gene IDs associated with that sym
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="searchGenes.js.html">searchGenes.js</a>, <a href="searchGenes.js.html#line56">line 56</a>
+        <a href="searchGenes.js.html">searchGenes.js</a>, <a href="searchGenes.js.html#line19">line 19</a>
     </li></ul></dd>
     
 
@@ -2698,6 +3316,42 @@ Each array contains the <strong>gesel</strong> gene IDs associated with that sym
 
         <tr>
             
+                <td class="name"><code>species</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>Taxonomy ID of the species of interest, e.g., <code>&quot;9606&quot;</code> for human.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
                 <td class="name"><code>queries</code></td>
             
 
@@ -2728,47 +3382,6 @@ Each array contains the <strong>gesel</strong> gene IDs associated with that sym
             
 
             <td class="description last"><p>Array of strings containing gene identifiers of some kind (e.g., Ensembl, symbol, Entrez).</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>species</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-
-                
-                    &lt;nullable><br>
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                </td>
-            
-
-            <td class="description last"><p>String specifying the species of interest.
-This is used to filter the matching genes to the indicated species.
-We currently support <code>&quot;Homo sapiens&quot;</code>, <code>&quot;Mus musculus&quot;</code>, <code>&quot;Macaca fascicularis&quot;</code>, <code>&quot;Rattus norvegicus&quot;</code>, <code>&quot;Caenorhabditis elegans&quot;</code>, <code>&quot;Drosophila melanogaster&quot;</code>, <code>&quot;Pan troglodytes&quot;</code> and <code>&quot;Danio rerio&quot;</code>;
-any other string or <code>null</code> is ignored.</p></td>
         </tr>
 
     
@@ -2838,6 +3451,50 @@ any other string or <code>null</code> is ignored.</p></td>
 
         <tr>
             
+                <td class="name"><code>types</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+                    &lt;nullable><br>
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    <code>null</code>
+                
+                </td>
+            
+
+            <td class="description last"><p>Array of strings specifying the identifier types to use for searching.
+The exact choice of strings depends on how the references were constructed.
+If <code>null</code>, it defaults to an array containing <code>&quot;entrez&quot;</code>, <code>&quot;ensembl&quot;</code> and <code>&quot;symbol&quot;</code>.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
                 <td class="name"><code>ignoreCase</code></td>
             
 
@@ -2871,87 +3528,7 @@ any other string or <code>null</code> is ignored.</p></td>
                 </td>
             
 
-            <td class="description last"><p>Whether to ignore case in the search query.</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>allowSymbol</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">boolean</span>
-
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                    <code>true</code>
-                
-                </td>
-            
-
-            <td class="description last"><p>Whether strings in <code>queries</code> might be symbols.</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>allowEntrez</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">boolean</span>
-
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                    <code>false</code>
-                
-                </td>
-            
-
-            <td class="description last"><p>Whether strings in <code>queries</code> might be Entrez IDs.</p></td>
+            <td class="description last"><p>Whether to perform case-insensitive matching.</p></td>
         </tr>
 
     
@@ -2985,8 +3562,8 @@ any other string or <code>null</code> is ignored.</p></td>
         
 <div class="param-desc">
     <p>An array of length equal to <code>queries</code>.
-Each element of the array is an array containing the <strong>gesel</strong> gene IDs that match the corresponding search string.
-Each gene ID is an index into the array returned by <a href="global.html#fetchAllGenes"><code>fetchAllGenes</code></a>.</p>
+Each element of the array is an array containing the <strong>gesel</strong> gene IDs with any identifiers that match the corresponding search string.
+See <a href="global.html#fetchAllGenes"><code>fetchAllGenes</code></a> for more details on the interpretation of these IDs.</p>
 </div>
 
 
@@ -3013,7 +3590,7 @@ Each gene ID is an index into the array returned by <a href="global.html#fetchAl
 
     
 
-    <h4 class="name" id="searchSetText"><span class="type-signature type-signature-async">(async) </span>searchSetText<span class="signature">(query, options<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Array}</span></h4>
+    <h4 class="name" id="searchSetText"><span class="type-signature type-signature-async">(async) </span>searchSetText<span class="signature">(species, query, options<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Array}</span></h4>
 
     
 
@@ -3026,7 +3603,7 @@ Each gene ID is an index into the array returned by <a href="global.html#fetchAl
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="searchSetText.js.html">searchSetText.js</a>, <a href="searchSetText.js.html#line125">line 125</a>
+        <a href="searchSetText.js.html">searchSetText.js</a>, <a href="searchSetText.js.html#line119">line 119</a>
     </li></ul></dd>
     
 
@@ -3098,6 +3675,42 @@ Each gene ID is an index into the array returned by <a href="global.html#fetchAl
     </thead>
 
     <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>species</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>The taxonomy ID of the species of interest, e.g., <code>&quot;9606&quot;</code> for human.</p></td>
+        </tr>
+
     
 
         <tr>
@@ -3341,7 +3954,7 @@ All other characters are treated as punctuation between words, except for the fo
 
     
 
-    <h4 class="name" id="setDownload"><span class="type-signature"></span>setDownload<span class="signature">(fun)</span><span class="type-signature"> &rarr; {function}</span></h4>
+    <h4 class="name" id="setGeneDownload"><span class="type-signature"></span>setGeneDownload<span class="signature">(fun)</span><span class="type-signature"> &rarr; {function}</span></h4>
 
     
 
@@ -3351,15 +3964,176 @@ All other characters are treated as punctuation between words, except for the fo
 <dl class="details">
     
     <dt class="tag-description">Description:</dt>
-    <dd class="tag-description"><ul class="dummy"><li><p>Set the global download function to fetch pre-built indices.
-By default, it uses the indices from <a href="https://github.com/LTLA/gesel-feedstock">the feedstock repository</a>.
-Applications may specify a different function, e.g., to point to another set of indices; this should be done before calling any other <strong>gesel</strong> functions.</p></li></ul></dd>
+    <dd class="tag-description"><ul class="dummy"><li><p>Set the global download function to fetch gene information.
+Applications may specify a different function, e.g., to handle authentication or caching;
+this should be done before calling any other <strong>gesel</strong> functions that might fetch resources.</p></li></ul></dd>
     
 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="utils.js.html">utils.js</a>, <a href="utils.js.html#line31">line 31</a>
+        <a href="utils.js.html">utils.js</a>, <a href="utils.js.html#line95">line 95</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <h5 class="h5-parameters">Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>fun</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Function that performs a GET request to an index file, returning a Response object containing the file contents.
+This should accept the base name of the pre-built index file of interest (e.g., <code>&quot;9606_symbol.tsv.gz&quot;</code>).</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5 class="h5-returns">Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>The previous global value of the function.</p>
+</div>
+
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">function</span>
+
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="setReferenceDownload"><span class="type-signature"></span>setReferenceDownload<span class="signature">(fun)</span><span class="type-signature"> &rarr; {function}</span></h4>
+
+    
+
+
+
+
+<dl class="details">
+    
+    <dt class="tag-description">Description:</dt>
+    <dd class="tag-description"><ul class="dummy"><li><p>Set the global download function to fetch pre-built references.
+Applications may specify a different function, e.g., to handle authentication or caching;
+this should be done before calling any other <strong>gesel</strong> functions that might fetch resources.</p></li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="utils.js.html">utils.js</a>, <a href="utils.js.html#line54">line 54</a>
     </li></ul></dd>
     
 
@@ -3451,7 +4225,7 @@ Applications may specify a different function, e.g., to point to another set of 
             <td class="description last"><p>Function that performs a GET request to an index file, returning a Response object containing the file contents.
 This accepts three arguments:</p>
 <ul>
-<li>The base name of the pre-built index file of interest (e.g., <code>&quot;collections.tsv.gz&quot;</code>).</li>
+<li>The base name of the pre-built index file of interest (e.g., <code>&quot;10090_collections.tsv.gz&quot;</code>).</li>
 <li>The starting byte of the request.</li>
 <li>The ending byte of the request.</li>
 </ul>
@@ -3524,7 +4298,7 @@ If only the first argument is supplied, the function should download the entire 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.11</a> on Sat Mar 04 2023 19:30:34 GMT+0000 (Coordinated Universal Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.11</a> on Thu Mar 09 2023 18:56:13 GMT+0000 (Coordinated Universal Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>

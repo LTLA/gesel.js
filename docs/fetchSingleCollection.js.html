@@ -31,7 +31,7 @@
     <input type="text" id="nav-search" placeholder="Search" />
     
     
-    <h2><a href="index.html">Home</a></h2><h2><a href="https://github.roche.com/GP/gesel" target="_blank" class="menu-item" id="repository" >Github repo</a></h2><h3>Global</h3><ul><li><a href="global.html#fetchAllCollections">fetchAllCollections</a></li><li><a href="global.html#fetchAllGenes">fetchAllGenes</a></li><li><a href="global.html#fetchAllSets">fetchAllSets</a></li><li><a href="global.html#fetchGenesForSet">fetchGenesForSet</a></li><li><a href="global.html#fetchSetsForGene">fetchSetsForGene</a></li><li><a href="global.html#fetchSingleCollection">fetchSingleCollection</a></li><li><a href="global.html#fetchSingleSet">fetchSingleSet</a></li><li><a href="global.html#findOverlappingSets">findOverlappingSets</a></li><li><a href="global.html#intersect">intersect</a></li><li><a href="global.html#mapGenesByEnsembl">mapGenesByEnsembl</a></li><li><a href="global.html#mapGenesByEntrez">mapGenesByEntrez</a></li><li><a href="global.html#mapGenesBySymbol">mapGenesBySymbol</a></li><li><a href="global.html#numberOfCollections">numberOfCollections</a></li><li><a href="global.html#numberOfSets">numberOfSets</a></li><li><a href="global.html#searchGenes">searchGenes</a></li><li><a href="global.html#searchSetText">searchSetText</a></li><li><a href="global.html#setDownload">setDownload</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h2><a href="https://github.roche.com/GP/gesel" target="_blank" class="menu-item" id="repository" >Github repo</a></h2><h3>Global</h3><ul><li><a href="global.html#fetchAllCollections">fetchAllCollections</a></li><li><a href="global.html#fetchAllGenes">fetchAllGenes</a></li><li><a href="global.html#fetchAllSets">fetchAllSets</a></li><li><a href="global.html#fetchGenesForSet">fetchGenesForSet</a></li><li><a href="global.html#fetchSetsForGene">fetchSetsForGene</a></li><li><a href="global.html#fetchSingleCollection">fetchSingleCollection</a></li><li><a href="global.html#fetchSingleSet">fetchSingleSet</a></li><li><a href="global.html#findOverlappingSets">findOverlappingSets</a></li><li><a href="global.html#geneBaseUrl">geneBaseUrl</a></li><li><a href="global.html#intersect">intersect</a></li><li><a href="global.html#mapGenesByIdentifier">mapGenesByIdentifier</a></li><li><a href="global.html#numberOfCollections">numberOfCollections</a></li><li><a href="global.html#numberOfSets">numberOfSets</a></li><li><a href="global.html#referenceBaseUrl">referenceBaseUrl</a></li><li><a href="global.html#searchGenes">searchGenes</a></li><li><a href="global.html#searchSetText">searchSetText</a></li><li><a href="global.html#setGeneDownload">setGeneDownload</a></li><li><a href="global.html#setReferenceDownload">setReferenceDownload</a></li></ul>
     
 </nav>
 
@@ -50,61 +50,42 @@
             <pre class="prettyprint source linenums"><code>import * as utils from "./utils.js";
 import * as full from "./fetchAllCollections.js";
 
-var init = false;
-const cache = new Map;
+const _cache = new Map;
+const _ranges = new Map;
+const _sizes = new Map;
+const _starts = new Map;
 
-var ranges;
-var sizes;
-var starts;
-
-async function initialize() {
-    let res = await utils.retrieveRangesWithExtras("collections.tsv");
-    ranges = res.ranges;
-    sizes = res.extra;
+async function initialize(species) {
+    let res = await utils.retrieveRangesWithExtras(species + "_collections.tsv");
+    _ranges.set(species, res.ranges);
+    _sizes.set(species, res.extra);
 
     let first = 0;
-    starts = [];
-    for (const s of sizes) {
+    let starts = [];
+    for (const s of res.extra) {
         starts.push(first);
         first += s;
     }
+    _starts.set(species, starts);
 
-    init = true;
+    _cache.set(species, new Map);
     return;
 }
 
-export async function fetchCollectionSizes() {
-    if (!init) {
-        if (full.init) {
-            // Pulling it from the full info instead, if we already got it.
-            let tmp_sizes = [];
-            let meta = await full.fetchAllCollections();
-            for (const x of meta) {
-                tmp_sizes.push(x.size);
-            }
-            return tmp_sizes;
-        }
-
-        await initialize();
-    }
-
-    return sizes;
+export async function fetchCollectionSizes(species) {
+    return utils.fetchSizes(species, _sizes, full, initialize);
 }
 
 /**
- * @return {number} Total number of collections.
+ * @param {string} species - The taxonomy ID of the species of interest, e.g., `"9606"` for human.
+ * @return {number} Total number of collections for this species.
  */
-export async function numberOfCollections() {
-    if (!init) {
-        if (full.init) {
-            return (await full.fetchAllCollections()).length;
-        }
-        await initialize();
-    }
-    return sizes.length;
+export async function numberOfCollections(species) {
+    return utils.fetchNumber(species, _sizes, full, initialize);
 }
 
 /**
+ * @param {string} species - The taxonomy ID of the species of interest, e.g., `"9606"` for human.
  * @param {number} collection - Collection ID, see {@linkcode fetchAllCollections} for details.
  * @param {object} [options={}] - Optional parameters.
  * @param {boolean} [options.forceRequest=false] - Whether to force a request to the server.
@@ -116,21 +97,24 @@ export async function numberOfCollections() {
  *
  * @async
  */
-export async function fetchSingleCollection(collection, { forceRequest = false } = {}) {
-    if (full.init &amp;&amp; !forceRequest) {
-        return (await full.fetchAllCollections())[collection];
+export async function fetchSingleCollection(species, collection, { forceRequest = false } = {}) {
+    let ffound = full.already_initialized(species);
+    if (ffound !== null &amp;&amp; !forceRequest) {
+        return ffound[collection];
     }
 
-    let cached = cache.get(collection);
-    if (typeof cached !== "undefined") {
-        return cached;
+    let cached = _cache.get(species);
+    if (typeof cached === "undefined") {
+        await initialize(species);
+        cached = _cache.get(species);
     }
 
-    if (!init) {
-        await initialize();
+    let cfound = cached.get(collection);
+    if (typeof cfound !== "undefined") {
+        return cfound;
     }
 
-    let text = await utils.retrieveBytesByIndex("collections.tsv", ranges, collection);
+    let text = await utils.retrieveBytesByIndex(species + "_collections.tsv", _ranges.get(species), collection);
     let split = text.split("\t");
     let output = {
         title: split[0],
@@ -138,11 +122,11 @@ export async function fetchSingleCollection(collection, { forceRequest = false }
         species: split[2],
         maintainer: split[3],
         source: split[4],
-        start: starts[collection],
-        size: sizes[collection]
+        start: _starts.get(species)[collection],
+        size: _sizes.get(species)[collection]
     };
 
-    cache.set(collection, output);
+    cached.set(collection, output);
     return output;
 }
 
@@ -161,7 +145,7 @@ export async function fetchSingleCollection(collection, { forceRequest = false }
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.11</a> on Sat Mar 04 2023 19:30:34 GMT+0000 (Coordinated Universal Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.11</a> on Thu Mar 09 2023 18:56:13 GMT+0000 (Coordinated Universal Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>
