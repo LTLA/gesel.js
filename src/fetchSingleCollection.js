@@ -36,6 +36,7 @@ export async function fetchCollectionSizes(species) {
 /**
  * @param {string} species - The taxonomy ID of the species of interest, e.g., `"9606"` for human.
  * @return {number} Total number of collections for this species.
+ * @async
  */
 export async function numberOfCollections(species) {
     return utils.fetchNumber(species, _sizes, full, initialize);
