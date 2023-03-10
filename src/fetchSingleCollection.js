@@ -23,6 +23,12 @@ async function initialize(species) {
     return;
 }
 
+/**
+ * @param {string} species - The taxonomy ID of the species of interest, e.g., `"9606"` for human.
+ * @return {Array} Number of sets in each collection.
+ * Each value corresponds to a collection in {@linkcode fetchAllCollections}.
+ * @async
+ */
 export async function fetchCollectionSizes(species) {
     return utils.fetchSizes(species, _sizes, full, initialize);
 }

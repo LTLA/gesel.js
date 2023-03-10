@@ -25,3 +25,7 @@ test("numberOfSets works as expected", async () => {
     expect(await gesel.numberOfSets("10090")).toEqual((await gesel.fetchAllSets("10090")).length);
 })
 
+test("fetchSetSizes works as expected", async () => {
+    expect((await gesel.fetchSetSizes("10090")).length).toEqual((await gesel.fetchAllSets("10090")).length);
+})
+
