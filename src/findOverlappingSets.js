@@ -3,7 +3,7 @@ import { fetchSetsForGene } from "./fetchSetsForGene.js";
 
 /**
  * @param {string} species - The taxonomy ID of the species of interest, e.g., `"9606"` for human.
- * @param {Array} genes - Array of integers containing user-supplied gene IDs, see {@linkcode fetchAllGenes} for details.
+ * @param {Array} genes - Array of unique integers containing user-supplied gene IDs, see {@linkcode fetchAllGenes} for details.
  * @param {object} [options={}] - Optional parameters.
  * @param {boolean} [options.includeSize=false] - Whether to include the size of each set in the output.
  *
@@ -19,8 +19,18 @@ import { fetchSetsForGene } from "./fetchSetsForGene.js";
  */
 export async function findOverlappingSets(species, genes, { includeSize = false } = {}) {
     await fetchSetsForGene(species, null);
-    var collected = await Promise.all(genes.map(x => fetchSetsForGene(species, x)));
-    var sets_sizes = (includeSize ? await fetchSetSizes(species) : null);
+
+    let promises = [];
+    let queried = new Set;
+    for (const g of genes) {
+        if (!queried.has(g)) {
+            promises.push(fetchSetsForGene(species, g));
+            queried.add(g);
+        }
+    }
+
+    let collected = await Promise.all(promises);
+    let sets_sizes = (includeSize ? await fetchSetSizes(species) : null);
 
     var set_count = {};
     for (const found of collected) {

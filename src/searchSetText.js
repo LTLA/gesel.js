@@ -138,15 +138,23 @@ export async function searchSetText(species, query, { inName = true, inDescripti
 
     let gathered_names = [];
     if (inName) {
+        let already_queried = new Set;
         for (const tok of tokens) {
-            gathered_names.push(fetchSetsByNameToken(species, tok));
+            if (!already_queried.has(tok)) {
+                gathered_names.push(fetchSetsByNameToken(species, tok));
+                already_queried.add(tok);
+            }
         }
     }
 
     let gathered_descriptions = [];
     if (inDescription) {
+        let already_queried = new Set;
         for (const tok of tokens) {
-            gathered_descriptions.push(fetchSetsByDescriptionToken(species, tok));
+            if (!already_queried.has(tok)) {
+                gathered_descriptions.push(fetchSetsByDescriptionToken(species, tok));
+                already_queried.add(tok);
+            }
         }
     }
 
