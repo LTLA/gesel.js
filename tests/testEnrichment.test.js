@@ -14,10 +14,11 @@ test("factorial calculations work as expected", () => {
 })
 
 test("testing for enrichment works as expected", () => {
-    expect(internals.testEnrichment(10, 50, 100, 2000) / 2.060757e-05).toBeCloseTo(1, 2); // phyper(10, 100, 1900, 50, lower.tail=FALSE)
-    expect(internals.testEnrichment(5, 100, 20, 2000) / 0.0002945125).toBeCloseTo(1, 2); // phyper(5, 20, 1980, 100, lower.tail=FALSE)
-    expect(internals.testEnrichment(0, 10, 50, 2000) / 0.2241196).toBeCloseTo(1, 2); // phyper(0, 50, 1950, 10, lower.tail=FALSE)
-    expect(internals.testEnrichment(0, 100, 50, 2000) / 0.9255374).toBeCloseTo(1, 2); // phyper(0, 50, 1950, 100, lower.tail=FALSE)
+    expect(internals.testEnrichment(11, 50, 100, 2000) / 2.060757e-05).toBeCloseTo(1, 2); // phyper(10, 100, 1900, 50, lower.tail=FALSE)
+    expect(internals.testEnrichment(6, 100, 20, 2000) / 0.0002945125).toBeCloseTo(1, 2); // phyper(5, 20, 1980, 100, lower.tail=FALSE)
+    expect(internals.testEnrichment(1, 10, 50, 2000) / 0.2241196).toBeCloseTo(1, 2); // phyper(0, 50, 1950, 10, lower.tail=FALSE)
+    expect(internals.testEnrichment(1, 100, 50, 2000) / 0.9255374).toBeCloseTo(1, 2); // phyper(0, 50, 1950, 100, lower.tail=FALSE)
+    expect(internals.testEnrichment(0, 100, 50, 2000)).toBe(1);
 })
 
 test("testing for enrichment handles the edge cases", () => {

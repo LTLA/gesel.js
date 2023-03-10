@@ -47,6 +47,16 @@ export function testEnrichment(overlap, listSize, setSize, universeSize) {
         return Number(listSize == overlap)
     }
 
+    // We want the upper tail (inclusive), but the code below computes the lower tail (inclusive).
+    // So an easy fix is to subtract one from the overlaps, and then we're basically computing
+    // lower tail (exclusive), such that 1 minus that gives us upper tail (inclusive).
+    if (overlap > 0) {
+        overlap--;
+    } else {
+        // If overlap = 0, upper tail (inclusive) is just 1.
+        return 1;
+    }
+
     // Swapping if the probabilities are too high, to avoid excessive
     // cumulative sums and associated inaccuracies as it approaches unity.
     if (inSet > 0 && universeSize > 0 && overlap / inSet > listSize / universeSize) {
@@ -76,5 +86,5 @@ export function testEnrichment(overlap, listSize, setSize, universeSize) {
         (lfactorial(universeSize) - lfactorial(listSize) - lfactorial(universeSize - listSize)); // choose(universeSize, listSize)
 
     let finalp = psum * Math.exp(dmass);
-    return (flip ? finalp : 1 - finalp);
+    return (flip ? finalp : 1 - finalp); // remember, we want the upper tail, hence we only subtract if flip = false.
 }

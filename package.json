@@ -1,7 +1,7 @@
 {
   "name": "gesel",
   "description": "Client-side search for gene set selections",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "type": "module",
   "main": "src/index.js",
   "author": {
