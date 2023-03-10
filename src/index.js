@@ -14,3 +14,5 @@ export { fetchSetsForGene } from "./fetchSetsForGene.js";
 
 export { searchSetText } from "./searchSetText.js";
 export { findOverlappingSets } from "./findOverlappingSets.js";
+
+export { testEnrichment } from "./testEnrichment.js";

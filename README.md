@@ -57,6 +57,18 @@ Once we have a set ID, we can query the references to obtain that set's details:
 let set_details = await gesel.fetchSingleSet("9606", overlaps[0].id);
 ```
 
+We can even perform a simple hypothesis test for enrichment based on the hypergeometric distribution:
+
+```js
+let all_genes = await gesel.fetchAllGenes("9606");
+let pvalue = gesel.testEnrichment(
+    overlaps[0].count, 
+    user_supplied_union.length,
+    set_details.size,
+    all_genes.get("ensembl").length
+);
+```
+
 Each set also has some associated free text in its name and description.
 We can do some simple queries via **gesel**:
 
