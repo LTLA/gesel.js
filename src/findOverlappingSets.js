@@ -32,19 +32,20 @@ export async function findOverlappingSets(species, genes, { includeSize = false 
     let collected = await Promise.all(promises);
     let sets_sizes = (includeSize ? await fetchSetSizes(species) : null);
 
-    var set_count = {};
+    var set_count = new Map;
     for (const found of collected) {
         for (const set of found) {
-            if (! (set in set_count)) {
-                set_count[set] = 1;
+            let current = set_count.get(set);
+            if (typeof current == "undefined") {
+                set_count.set(set, 1);
             } else {
-                ++(set_count[set]);
+                set_count.set(set, current + 1);
             }
         }
     }
 
     let output = [];
-    for (const [id, count] of Object.entries(set_count)) {
+    for (const [id, count] of set_count) {
         let id0 = Number(id);
         let details = { 
             "id": id0,
