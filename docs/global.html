@@ -31,7 +31,7 @@
     <input type="text" id="nav-search" placeholder="Search" />
     
     
-    <h2><a href="index.html">Home</a></h2><h2><a href="https://github.roche.com/GP/gesel" target="_blank" class="menu-item" id="repository" >Github repo</a></h2><h3>Global</h3><ul><li><a href="global.html#fetchAllCollections">fetchAllCollections</a></li><li><a href="global.html#fetchAllGenes">fetchAllGenes</a></li><li><a href="global.html#fetchAllSets">fetchAllSets</a></li><li><a href="global.html#fetchGenesForSet">fetchGenesForSet</a></li><li><a href="global.html#fetchSetsForGene">fetchSetsForGene</a></li><li><a href="global.html#fetchSingleCollection">fetchSingleCollection</a></li><li><a href="global.html#fetchSingleSet">fetchSingleSet</a></li><li><a href="global.html#findOverlappingSets">findOverlappingSets</a></li><li><a href="global.html#geneBaseUrl">geneBaseUrl</a></li><li><a href="global.html#intersect">intersect</a></li><li><a href="global.html#mapGenesByIdentifier">mapGenesByIdentifier</a></li><li><a href="global.html#numberOfCollections">numberOfCollections</a></li><li><a href="global.html#numberOfSets">numberOfSets</a></li><li><a href="global.html#referenceBaseUrl">referenceBaseUrl</a></li><li><a href="global.html#searchGenes">searchGenes</a></li><li><a href="global.html#searchSetText">searchSetText</a></li><li><a href="global.html#setGeneDownload">setGeneDownload</a></li><li><a href="global.html#setReferenceDownload">setReferenceDownload</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h2><a href="https://github.roche.com/GP/gesel" target="_blank" class="menu-item" id="repository" >Github repo</a></h2><h3>Global</h3><ul><li><a href="global.html#fetchAllCollections">fetchAllCollections</a></li><li><a href="global.html#fetchAllGenes">fetchAllGenes</a></li><li><a href="global.html#fetchAllSets">fetchAllSets</a></li><li><a href="global.html#fetchCollectionSizes">fetchCollectionSizes</a></li><li><a href="global.html#fetchGenesForSet">fetchGenesForSet</a></li><li><a href="global.html#fetchSetsForGene">fetchSetsForGene</a></li><li><a href="global.html#fetchSetSizes">fetchSetSizes</a></li><li><a href="global.html#fetchSingleCollection">fetchSingleCollection</a></li><li><a href="global.html#fetchSingleSet">fetchSingleSet</a></li><li><a href="global.html#findOverlappingSets">findOverlappingSets</a></li><li><a href="global.html#geneBaseUrl">geneBaseUrl</a></li><li><a href="global.html#intersect">intersect</a></li><li><a href="global.html#mapGenesByIdentifier">mapGenesByIdentifier</a></li><li><a href="global.html#numberOfCollections">numberOfCollections</a></li><li><a href="global.html#numberOfSets">numberOfSets</a></li><li><a href="global.html#referenceBaseUrl">referenceBaseUrl</a></li><li><a href="global.html#searchGenes">searchGenes</a></li><li><a href="global.html#searchSetText">searchSetText</a></li><li><a href="global.html#setGeneDownload">setGeneDownload</a></li><li><a href="global.html#setReferenceDownload">setReferenceDownload</a></li><li><a href="global.html#testEnrichment">testEnrichment</a></li></ul>
     
 </nav>
 
@@ -752,6 +752,162 @@ Each object can be expected to contain:</p>
 
     
 
+    <h4 class="name" id="fetchCollectionSizes"><span class="type-signature type-signature-async">(async) </span>fetchCollectionSizes<span class="signature">(species)</span><span class="type-signature"> &rarr; {Array}</span></h4>
+
+    
+
+
+
+
+<dl class="details">
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="fetchSingleCollection.js.html">fetchSingleCollection.js</a>, <a href="fetchSingleCollection.js.html#line32">line 32</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <h5 class="h5-parameters">Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>species</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The taxonomy ID of the species of interest, e.g., <code>&quot;9606&quot;</code> for human.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5 class="h5-returns">Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>Number of sets in each collection.
+Each value corresponds to a collection in <a href="global.html#fetchAllCollections"><code>fetchAllCollections</code></a>.</p>
+</div>
+
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Array</span>
+
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
     <h4 class="name" id="fetchGenesForSet"><span class="type-signature type-signature-async">(async) </span>fetchGenesForSet<span class="signature">(species, set<span class="signature-attributes">nullable</span>)</span><span class="type-signature"> &rarr; {Uint32Array}</span></h4>
 
     
@@ -1158,6 +1314,162 @@ IDs are treated as indices into the return value of <a href="global.html#fetchAl
 
     
 
+    <h4 class="name" id="fetchSetSizes"><span class="type-signature type-signature-async">(async) </span>fetchSetSizes<span class="signature">(species)</span><span class="type-signature"> &rarr; {Array}</span></h4>
+
+    
+
+
+
+
+<dl class="details">
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="fetchSingleSet.js.html">fetchSingleSet.js</a>, <a href="fetchSingleSet.js.html#line48">line 48</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <h5 class="h5-parameters">Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>species</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The taxonomy ID of the species of interest, e.g., <code>&quot;9606&quot;</code> for human.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5 class="h5-returns">Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>Number of genes in each set.
+Each value corresponds to a set in <a href="global.html#fetchAllSets"><code>fetchAllSets</code></a>.</p>
+</div>
+
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Array</span>
+
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
     <h4 class="name" id="fetchSingleCollection"><span class="type-signature type-signature-async">(async) </span>fetchSingleCollection<span class="signature">(species, collection<span class="signature-attributes">nullable</span>, options<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {object}</span></h4>
 
     
@@ -1171,7 +1483,7 @@ IDs are treated as indices into the return value of <a href="global.html#fetchAl
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="fetchSingleCollection.js.html">fetchSingleCollection.js</a>, <a href="fetchSingleCollection.js.html#line55">line 55</a>
+        <a href="fetchSingleCollection.js.html">fetchSingleCollection.js</a>, <a href="fetchSingleCollection.js.html#line62">line 62</a>
     </li></ul></dd>
     
 
@@ -1496,7 +1808,7 @@ This should be identical to the corresponding entry of the array returned by <a 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="fetchSingleSet.js.html">fetchSingleSet.js</a>, <a href="fetchSingleSet.js.html#line71">line 71</a>
+        <a href="fetchSingleSet.js.html">fetchSingleSet.js</a>, <a href="fetchSingleSet.js.html#line78">line 78</a>
     </li></ul></dd>
     
 
@@ -2778,7 +3090,7 @@ Each array contains the <strong>gesel</strong> gene IDs associated with the <cod
 
     
 
-    <h4 class="name" id="numberOfCollections"><span class="type-signature"></span>numberOfCollections<span class="signature">(species)</span><span class="type-signature"> &rarr; {number}</span></h4>
+    <h4 class="name" id="numberOfCollections"><span class="type-signature type-signature-async">(async) </span>numberOfCollections<span class="signature">(species)</span><span class="type-signature"> &rarr; {number}</span></h4>
 
     
 
@@ -2791,7 +3103,7 @@ Each array contains the <strong>gesel</strong> gene IDs associated with the <cod
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="fetchSingleCollection.js.html">fetchSingleCollection.js</a>, <a href="fetchSingleCollection.js.html#line34">line 34</a>
+        <a href="fetchSingleCollection.js.html">fetchSingleCollection.js</a>, <a href="fetchSingleCollection.js.html#line41">line 41</a>
     </li></ul></dd>
     
 
@@ -2933,7 +3245,7 @@ Each array contains the <strong>gesel</strong> gene IDs associated with the <cod
 
     
 
-    <h4 class="name" id="numberOfSets"><span class="type-signature"></span>numberOfSets<span class="signature">(species)</span><span class="type-signature"> &rarr; {number}</span></h4>
+    <h4 class="name" id="numberOfSets"><span class="type-signature type-signature-async">(async) </span>numberOfSets<span class="signature">(species)</span><span class="type-signature"> &rarr; {number}</span></h4>
 
     
 
@@ -2946,7 +3258,7 @@ Each array contains the <strong>gesel</strong> gene IDs associated with the <cod
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="fetchSingleSet.js.html">fetchSingleSet.js</a>, <a href="fetchSingleSet.js.html#line50">line 50</a>
+        <a href="fetchSingleSet.js.html">fetchSingleSet.js</a>, <a href="fetchSingleSet.js.html#line57">line 57</a>
     </li></ul></dd>
     
 
@@ -4313,6 +4625,236 @@ If only the first argument is supplied, the function should download the entire 
 
 
         
+            
+
+    
+
+    <h4 class="name" id="testEnrichment"><span class="type-signature"></span>testEnrichment<span class="signature">(overlap, listSize, setSize, universe)</span><span class="type-signature"> &rarr; {number}</span></h4>
+
+    
+
+
+
+
+<dl class="details">
+    
+    <dt class="tag-description">Description:</dt>
+    <dd class="tag-description"><ul class="dummy"><li><p>Hypergeometric test for gene set enrichment, based on the overlap between a user-supplied list and the gene set.</p></li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="testEnrichment.js.html">testEnrichment.js</a>, <a href="testEnrichment.js.html#line27">line 27</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <h5 class="h5-parameters">Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>overlap</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Number of overlapping genes between the user's list and the gene set.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>listSize</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Size of the user's list.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>setSize</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Size of the gene set.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>universe</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Size of the gene universe (i.e., the total number of genes for this species).</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5 class="h5-returns">Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>P-value for the enrichment of the user's list in the gene set.</p>
+</div>
+
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">number</span>
+
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
     
 
     
@@ -4332,7 +4874,7 @@ If only the first argument is supplied, the function should download the entire 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.11</a> on Thu Mar 09 2023 21:44:10 GMT+0000 (Coordinated Universal Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.11</a> on Fri Mar 10 2023 18:27:42 GMT+0000 (Coordinated Universal Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>
