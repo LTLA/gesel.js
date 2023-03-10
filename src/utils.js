@@ -189,12 +189,16 @@ export async function retrieveBytes(resource, start, end) {
 
 export function convertToUint32Array(txt) { // Building back the indices from the diffs.
     var output = [];
-    var last = 0;
-    txt.split("\t").forEach(x => {
-        var y = Number(x) + last;
-        output.push(y);
-        last = y;
-    });
+
+    if (txt !== "") {
+        var last = 0;
+        txt.split("\t").forEach(x => {
+            var y = Number(x) + last;
+            output.push(y);
+            last = y;
+        });
+    }
+
     return new Uint32Array(output);
 }
 
