@@ -23,6 +23,7 @@ export function lfactorial(x) {
  * @param {number} universe - Size of the gene universe (i.e., the total number of genes for this species).
  *
  * @return {number} P-value for the enrichment of the user's list in the gene set.
+ * This may be NaN if the inputs are inconsistent, e.g., `overlap` is greater than `listSize` or `setSize`.
  */
 export function testEnrichment(overlap, listSize, setSize, universeSize) {
     // This code is pretty much paraphrased from R's dhyper.c.
@@ -30,21 +31,29 @@ export function testEnrichment(overlap, listSize, setSize, universeSize) {
     let inSet = setSize;
     let flip = false;
 
-    // Mark out impossible or obvious things.
+    // If it's impossible, you get a p-value of NaN.
     if (overlap > listSize || overlap > inSet || listSize > universeSize || notInSet < 0) {
-        return 0;
+        return Number.NaN;
     }
 
     if (overlap < listSize - notInSet) {
-        return 0;
+        return Number.NaN;
     }
 
     if (listSize == universeSize) {
-        return Number(inSet == overlap);
+        if (overlap == inSet) {
+            return 1;
+        } else {
+            return Number.NaN;
+        }
     }
 
     if (notInSet == 0) {
-        return Number(listSize == overlap)
+        if (overlap == listSize) {
+            return 1;
+        } else {
+            return Number.NaN;
+        }
     }
 
     // We want the upper tail (inclusive), but the code below computes the lower tail (inclusive).

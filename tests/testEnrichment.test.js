@@ -22,16 +22,16 @@ test("testing for enrichment works as expected", () => {
 })
 
 test("testing for enrichment handles the edge cases", () => {
-    expect(internals.testEnrichment(100, 20, 200, 2000)).toBe(0);
-    expect(internals.testEnrichment(100, 200, 50, 2000)).toBe(0);
-    expect(internals.testEnrichment(10, 200, 10, 100)).toBe(0);
-    expect(internals.testEnrichment(10, 200, 1000, 500)).toBe(0);
+    expect(internals.testEnrichment(100, 20, 200, 2000)).toBeNaN();
+    expect(internals.testEnrichment(100, 200, 50, 2000)).toBeNaN();
+    expect(internals.testEnrichment(10, 200, 10, 100)).toBeNaN();
+    expect(internals.testEnrichment(10, 200, 1000, 500)).toBeNaN();
 
-    expect(internals.testEnrichment(10, 30, 50, 51)).toBe(0);
+    expect(internals.testEnrichment(10, 30, 50, 51)).toBeNaN();
 
-    expect(internals.testEnrichment(10, 50, 20, 50)).toBe(0);
+    expect(internals.testEnrichment(10, 50, 20, 50)).toBeNaN();
     expect(internals.testEnrichment(20, 50, 20, 50)).toBe(1);
-    expect(internals.testEnrichment(10, 20, 50, 50)).toBe(0);
+    expect(internals.testEnrichment(10, 20, 50, 50)).toBeNaN();
     expect(internals.testEnrichment(20, 20, 50, 50)).toBe(1);
 })
 
