@@ -50,23 +50,35 @@ async function fetchSetsByToken(species, token, file, all_ranges, all_ordered, a
         let regex = new RegExp(token.replace(/[*]/g, ".*").replace(/[?]/g, "."));
 
         let collected = [];
+        let to_cache = [];
+        let union = new Set;
 
         while (pos < ordered.length) {
-            if (initstub != "" && !ordered[pos].startsWith(initstub)) {
+            let candidate = ordered[pos];
+            if (initstub != "" && !candidate.startsWith(initstub)) {
                 break;
             }
-            if (ordered[pos].match(regex)) {
-                let rr = ranges.get(ordered[pos]);
+
+            let cfound = cached.get(candidate);
+            if (typeof cfound === "undefined") {
+                let rr = ranges.get(candidate);
                 collected.push(utils.retrieveBytes(actual_file, rr[0], rr[1]).then(utils.convertToUint32Array));
+                to_cache.push(candidate);
+            } else {
+                for (const y of cfound) {
+                    union.add(y);
+                }
             }
+
             pos++;
         }
 
         let resolved = await Promise.all(collected);
-        let union = new Set;
-        for (const x of resolved) {
+        for (var i = 0; i < resolved.length; i++) {
+            let x = resolved[i];
+            cached.set(to_cache[i], x);
             for (const y of x) {
-                union.add(Number(y));
+                union.add(y);
             }
         }
 
@@ -76,7 +88,7 @@ async function fetchSetsByToken(species, token, file, all_ranges, all_ordered, a
         // Direct handling.
         let rr = ranges.get(token);
         if (typeof rr === "undefined") {
-            return new Uint8Array;
+            return new Uint32Array;
         }
         let text = await utils.retrieveBytes(actual_file, rr[0], rr[1]);
         output = utils.convertToUint32Array(text);
