@@ -45,7 +45,7 @@ for (const x of user_supplied_ids) {
 ```
 
 Then, we can search for the overlapping sets.
-This returns an array of objects with the set IDs as well as the number of overlapping genes (and optionally the size of each set).
+This returns an array of objects with the set IDs, the number of overlapping genes, the size of each set and the enrichment p-value based on the hypergeometric distribution: 
 
 ```js
 let overlaps = await gesel.findOverlappingSets("9606", user_supplied_union);
@@ -55,18 +55,6 @@ Once we have a set ID, we can query the references to obtain that set's details:
 
 ```js
 let set_details = await gesel.fetchSingleSet("9606", overlaps[0].id);
-```
-
-We can even perform a simple hypothesis test for enrichment based on the hypergeometric distribution:
-
-```js
-let all_genes = await gesel.fetchAllGenes("9606");
-let pvalue = gesel.testEnrichment(
-    overlaps[0].count, 
-    user_supplied_union.length,
-    set_details.size,
-    gesel.effectiveNumberOfGenes("9606") // ignore genes that belong to no sets.
-);
 ```
 
 Each set also has some associated free text in its name and description.
