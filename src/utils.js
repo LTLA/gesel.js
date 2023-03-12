@@ -230,7 +230,7 @@ export function intersect(arrays) {
 async function fetch_sizes_internal(species, _sizes, full, initialize, funSizes, funFound) {
     let sizes = _sizes.get(species);
     if (typeof sizes == "undefined") {
-        let found = full.already_initialized(species);
+        let found = await full(species, { download: false });
 
         if (found !== null) {
             // Pulling it from the full info instead, if we already got it.

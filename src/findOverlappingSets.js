@@ -6,6 +6,7 @@ import { fetchSetsForGene } from "./fetchSetsForGene.js";
  * @param {Array} genes - Array of unique integers containing user-supplied gene IDs, see {@linkcode fetchAllGenes} for details.
  * @param {object} [options={}] - Optional parameters.
  * @param {boolean} [options.includeSize=false] - Whether to include the size of each set in the output.
+ * @param {boolean} [options.forceDownload=false] - See {@linkcode fetchSetsForGene}.
  *
  * @return {Array} An array of objects, where each object corresponds to a set that has non-zero overlaps with `genes`.
  * Each object contains:
@@ -17,8 +18,8 @@ import { fetchSetsForGene } from "./fetchSetsForGene.js";
  *
  * @async
  */
-export async function findOverlappingSets(species, genes, { includeSize = false } = {}) {
-    await fetchSetsForGene(species, null);
+export async function findOverlappingSets(species, genes, { includeSize = false, forceDownload = false } = {}) {
+    await fetchSetsForGene(species, null, { forceDownload });
 
     let promises = [];
     let queried = new Set;

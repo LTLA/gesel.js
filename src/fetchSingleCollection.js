@@ -30,7 +30,7 @@ async function initialize(species) {
  * @async
  */
 export async function fetchCollectionSizes(species) {
-    return utils.fetchSizes(species, _sizes, full, initialize);
+    return utils.fetchSizes(species, _sizes, full.fetchAllCollections, initialize);
 }
 
 /**
@@ -39,7 +39,7 @@ export async function fetchCollectionSizes(species) {
  * @async
  */
 export async function numberOfCollections(species) {
-    return utils.fetchNumber(species, _sizes, full, initialize);
+    return utils.fetchNumber(species, _sizes, full.fetchAllCollections, initialize);
 }
 
 /**
@@ -50,8 +50,11 @@ export async function numberOfCollections(species) {
  * This is useful for guaranteeing that caches are available in concurrent calls.
  * @param {object} [options={}] - Optional parameters.
  * @param {boolean} [options.forceRequest=false] - Whether to force a request to the server.
- * By default, the cached collection information is used if {@linkcode fetchAllCollections} has previously been called.
+ * By default, the return value is extracted from the full collection details if {@linkcode fetchAllCollections} was called before this function.
  * Setting this to `true` is only useful for testing.
+ * @param {boolean} [options.forceDownload=false] - Whether to forcibly download all collection details up-front to avoid range requests.
+ * This is done by calling {@linkcode fetchAllCollections}.
+ * Ignored if `forceRequest = true`.
  *
  * @return {object} Object containing the details of the collection.
  * This should be identical to the corresponding entry of the array returned by {@linkcode fetchAllCollections}.
@@ -59,13 +62,15 @@ export async function numberOfCollections(species) {
  * If `collection = null`, no return value is provided.
  * @async
  */
-export async function fetchSingleCollection(species, collection, { forceRequest = false } = {}) {
-    let ffound = full.already_initialized(species);
-    if (ffound !== null && !forceRequest) {
-        if (collection !== null) {
-            return ffound[collection];
-        } else {
-            return;
+export async function fetchSingleCollection(species, collection, { forceRequest = false, forceDownload = false } = {}) {
+    if (!forceRequest) {
+        let ffound = await full.fetchAllCollections(species, { download: forceDownload });
+        if (ffound !== null) {
+            if (collection !== null) {
+                return ffound[collection];
+            } else {
+                return;
+            }
         }
     }
 

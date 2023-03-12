@@ -46,7 +46,7 @@ async function initialize(species) {
  * @async
  */
 export async function fetchSetSizes(species) {
-    return utils.fetchSizes(species, _sizes, full, initialize);
+    return utils.fetchSizes(species, _sizes, full.fetchAllSets, initialize);
 }
 
 /**
@@ -55,7 +55,7 @@ export async function fetchSetSizes(species) {
  * @async
  */
 export async function numberOfSets(species) {
-    return utils.fetchNumber(species, _sizes, full, initialize);
+    return utils.fetchNumber(species, _sizes, full.fetchAllSets, initialize);
 }
 
 /**
@@ -66,8 +66,11 @@ export async function numberOfSets(species) {
  * This is useful for guaranteeing that caches are available in concurrent calls.
  * @param {object} [options={}] - Optional parameters.
  * @param {boolean} [options.forceRequest=false] - Whether to force a request to the server.
- * By default, the cached collection information is used if {@linkcode fetchAllSets} has previously been called.
+ * By default, the return value is extracted from the full set details if {@linkcode fetchAllSets} was called before this function.
  * Setting this to `true` is only useful for testing.
+ * @param {boolean} [options.forceDownload=false] - Whether to forcibly download all set details up-front to avoid range requests.
+ * This is done by calling {@linkcode fetchAllSets}.
+ * Ignored if `forceRequest = true`.
  *
  * @return {object} Object containing the details of the set.
  * This should be identical to the corresponding entry of the array returned by {@linkcode fetchAllSets}.
@@ -75,13 +78,16 @@ export async function numberOfSets(species) {
  * If `set = null`, no return value is provided.
  * @async
  */
-export async function fetchSingleSet(species, set, { forceRequest = false } = {}) {
-    let ffound = full.already_initialized(species);
-    if (ffound !== null && !forceRequest) {
-        if (set !== null) {
-            return ffound[set];
-        } else {
-            return;
+export async function fetchSingleSet(species, set, { forceRequest = false, forceDownload = false } = {}) {
+    if (!forceRequest) {
+        let ffound = await full.fetchAllSets(species, { download: forceDownload });
+        if (ffound !== null) {
+            if (set !== null) {
+                return ffound[set];
+            } else {
+                console.log(set);
+                return;
+            }
         }
     }
 

@@ -12,8 +12,11 @@ const _cache = new Map;
  * This is useful for guaranteeing that caches are available in concurrent calls.
  * @param {object} [options={}] - Optional parameters.
  * @param {boolean} [options.forceRequest=false] - Whether to force a range request to the server.
- * By default, the full set-gene mappings are used if {@linkcode fetchSetsForAllGenes} was called before this function, thus avoiding an unnecessary request.
+ * By default, the return value is extracted from the full gene-to-set mappings if {@linkcode fetchSetsForAllGenes} was called before this function. 
  * Setting this to `true` is only useful for testing.
+ * @param {boolean} [options.forceDownload=false] - Whether to forcibly download all gene-to-set mappings up-front to avoid range requests.
+ * This is done by calling {@linkcode fetchSetsForAllGenes}
+ * Ignored if `forceRequest = true`.
  *
  * @return {Uint32Array} Array of integers containing the IDs of all sets containing the gene.
  * IDs are treated as indices into the return value of {@linkcode fetchAllSets} or as input to {@linkcode fetchSingleSet}.
@@ -22,13 +25,15 @@ const _cache = new Map;
  * 
  * @async
  */
-export async function fetchSetsForGene(species, gene, { forceRequest = false } = {}) {
-    let ffound = full.already_initialized(species);
-    if (ffound !== null && !forceRequest) {
-        if (gene !== null) {
-            return ffound[gene];
-        } else {
-            return;
+export async function fetchSetsForGene(species, gene, { forceRequest = false, forceDownload = false } = {}) {
+    if (!forceRequest) {
+        let ffound = await full.fetchSetsForAllGenes(species, { download: forceDownload });
+        if (ffound !== null) {
+            if (gene !== null) {
+                return ffound[gene];
+            } else {
+                return;
+            }
         }
     }
 

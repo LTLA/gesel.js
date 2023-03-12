@@ -3,17 +3,11 @@ import { fetchAllCollections } from "./fetchAllCollections.js";
 
 var _sets = new Map;
 
-export function already_initialized(species) {
-    let found = _sets.get(species);
-    if (typeof found !== "undefined") {
-        return found;
-    } else {
-        return null;
-    }
-}
-
 /**
  * @param {string} species - The taxonomy ID of the species of interest, e.g., `"9606"` for human.
+ * @param {object} [options={}] - Optional parameters.
+ * @param {boolean} [options.download=true] - Whether to download the set details if they are not already available.
+ * If `false`, `null` is returned if the set details have not already been loaded into memory.
  *
  * @return {Array} Array of objects where each entry corresponds to a set and contains the details about that set.
  * Each object can be expected to contain:
@@ -25,13 +19,18 @@ export function already_initialized(species) {
  * - `number`, the number of the set within the collection.
  *
  * In a **gesel** context, the identifier for a set (i.e., the "set ID") is defined as the index of the set in this array.
+ *
+ * If the set details have not already been loaded and `download = false`, `null` is returned.
  * @async
  */
-export async function fetchAllSets(species) {
-    let found = already_initialized(species);
-    if (found !== null) {
+export async function fetchAllSets(species, { download = true } = {}) {
+    let found = _sets.get(species);
+    if (typeof found !== "undefined") {
         return found;
+    } else if (!download) {
+        return null;
     }
+
     found = [];
     _sets.set(species, found);
 
