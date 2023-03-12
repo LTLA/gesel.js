@@ -17,10 +17,11 @@ export function lfactorial(x) {
 /**
  * Hypergeometric test for gene set enrichment, based on the overlap between a user-supplied list and the gene set.
  *
- * @param {number} overlap - Number of overlapping genes between the user's list and the gene set.
+ * @param {number} overlap - Number of overlapping genes between the user's list and the gene set, typically obtained from {@linkcode findOverlappingSets}.
  * @param {number} listSize - Size of the user's list.
- * @param {number} setSize - Size of the gene set.
+ * @param {number} setSize - Size of the gene set, see the `size` property from {@linkcode fetchSingleSet}.
  * @param {number} universe - Size of the gene universe (i.e., the total number of genes for this species).
+ * This can either be obtained from the arrays in {@linkcode fetchAllGenes} or using {@linkcode effectiveNumberOfGenes}.
  *
  * @return {number} P-value for the enrichment of the user's list in the gene set.
  * This may be NaN if the inputs are inconsistent, e.g., `overlap` is greater than `listSize` or `setSize`.
