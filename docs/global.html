@@ -31,7 +31,7 @@
     <input type="text" id="nav-search" placeholder="Search" />
     
     
-    <h2><a href="index.html">Home</a></h2><h2><a href="https://github.roche.com/GP/gesel" target="_blank" class="menu-item" id="repository" >Github repo</a></h2><h3>Global</h3><ul><li><a href="global.html#fetchAllCollections">fetchAllCollections</a></li><li><a href="global.html#fetchAllGenes">fetchAllGenes</a></li><li><a href="global.html#fetchAllSets">fetchAllSets</a></li><li><a href="global.html#fetchCollectionSizes">fetchCollectionSizes</a></li><li><a href="global.html#fetchGenesForSet">fetchGenesForSet</a></li><li><a href="global.html#fetchSetsForGene">fetchSetsForGene</a></li><li><a href="global.html#fetchSetSizes">fetchSetSizes</a></li><li><a href="global.html#fetchSingleCollection">fetchSingleCollection</a></li><li><a href="global.html#fetchSingleSet">fetchSingleSet</a></li><li><a href="global.html#findOverlappingSets">findOverlappingSets</a></li><li><a href="global.html#geneBaseUrl">geneBaseUrl</a></li><li><a href="global.html#intersect">intersect</a></li><li><a href="global.html#mapGenesByIdentifier">mapGenesByIdentifier</a></li><li><a href="global.html#numberOfCollections">numberOfCollections</a></li><li><a href="global.html#numberOfSets">numberOfSets</a></li><li><a href="global.html#referenceBaseUrl">referenceBaseUrl</a></li><li><a href="global.html#searchGenes">searchGenes</a></li><li><a href="global.html#searchSetText">searchSetText</a></li><li><a href="global.html#setGeneDownload">setGeneDownload</a></li><li><a href="global.html#setReferenceDownload">setReferenceDownload</a></li><li><a href="global.html#testEnrichment">testEnrichment</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h2><a href="https://github.roche.com/GP/gesel" target="_blank" class="menu-item" id="repository" >Github repo</a></h2><h3>Global</h3><ul><li><a href="global.html#effectiveNumberOfGenes">effectiveNumberOfGenes</a></li><li><a href="global.html#fetchAllCollections">fetchAllCollections</a></li><li><a href="global.html#fetchAllGenes">fetchAllGenes</a></li><li><a href="global.html#fetchAllSets">fetchAllSets</a></li><li><a href="global.html#fetchCollectionSizes">fetchCollectionSizes</a></li><li><a href="global.html#fetchGenesForAllSets">fetchGenesForAllSets</a></li><li><a href="global.html#fetchGenesForSet">fetchGenesForSet</a></li><li><a href="global.html#fetchSetsForAllGenes">fetchSetsForAllGenes</a></li><li><a href="global.html#fetchSetsForGene">fetchSetsForGene</a></li><li><a href="global.html#fetchSetSizes">fetchSetSizes</a></li><li><a href="global.html#fetchSingleCollection">fetchSingleCollection</a></li><li><a href="global.html#fetchSingleSet">fetchSingleSet</a></li><li><a href="global.html#findOverlappingSets">findOverlappingSets</a></li><li><a href="global.html#geneBaseUrl">geneBaseUrl</a></li><li><a href="global.html#intersect">intersect</a></li><li><a href="global.html#mapGenesByIdentifier">mapGenesByIdentifier</a></li><li><a href="global.html#numberOfCollections">numberOfCollections</a></li><li><a href="global.html#numberOfSets">numberOfSets</a></li><li><a href="global.html#preloadSearchSetText">preloadSearchSetText</a></li><li><a href="global.html#referenceBaseUrl">referenceBaseUrl</a></li><li><a href="global.html#searchGenes">searchGenes</a></li><li><a href="global.html#searchSetText">searchSetText</a></li><li><a href="global.html#setGeneDownload">setGeneDownload</a></li><li><a href="global.html#setReferenceDownload">setReferenceDownload</a></li><li><a href="global.html#testEnrichment">testEnrichment</a></li></ul>
     
 </nav>
 
@@ -132,7 +132,7 @@
 
     
 
-    <h4 class="name" id="fetchAllCollections"><span class="type-signature type-signature-async">(async) </span>fetchAllCollections<span class="signature">(species)</span><span class="type-signature"> &rarr; {Array}</span></h4>
+    <h4 class="name" id="effectiveNumberOfGenes"><span class="type-signature"></span>effectiveNumberOfGenes<span class="signature">(species)</span><span class="type-signature"> &rarr; {number}</span></h4>
 
     
 
@@ -145,7 +145,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="fetchAllCollections.js.html">fetchAllCollections.js</a>, <a href="fetchAllCollections.js.html#line32">line 32</a>
+        <a href="fetchSetsForGene.js.html">fetchSetsForGene.js</a>, <a href="fetchSetsForGene.js.html#line13">line 13</a>
     </li></ul></dd>
     
 
@@ -260,6 +260,289 @@
 
         
 <div class="param-desc">
+    <p>Number of genes that belong to at least one set for <code>species</code>.
+This can be used as a more appropriate universe size in <a href="global.html#testEnrichment"><code>testEnrichment</code></a>.</p>
+</div>
+
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">number</span>
+
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="fetchAllCollections"><span class="type-signature type-signature-async">(async) </span>fetchAllCollections<span class="signature">(species, options<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; (nullable) {Array}</span></h4>
+
+    
+
+
+
+
+<dl class="details">
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="fetchAllCollections.js.html">fetchAllCollections.js</a>, <a href="fetchAllCollections.js.html#line29">line 29</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <h5 class="h5-parameters">Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>species</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>The taxonomy ID of the species of interest, e.g., <code>&quot;9606&quot;</code> for human.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>options</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    <code>{}</code>
+                
+                </td>
+            
+
+            <td class="description last"><p>Optional parameters.</p>
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>download</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    <code>true</code>
+                
+                </td>
+            
+
+            <td class="description last"><p>Whether to download the collection details if they are not already available.
+If <code>false</code>, <code>null</code> is returned if the collection details have not already been loaded into memory.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5 class="h5-returns">Returns:</h5>
+
+        
+<div class="param-desc">
     <p>Array of objects where each entry corresponds to a set collection and contains details about that collection.
 Each object can be expected to contain:</p>
 <ul>
@@ -274,6 +557,7 @@ All sets from the same collection are stored contiguously.</li>
 <li><code>size</code>, the number of sets in the collection.</li>
 </ul>
 <p>In a <strong>gesel</strong> context, the identifier for a collection (i.e., the &quot;collection ID&quot;) is defined as the index of the collection in this array.</p>
+<p>If the collection details have not already been loaded and <code>download = false</code>, <code>null</code> is returned.</p>
 </div>
 
 
@@ -588,7 +872,7 @@ Each value is an array where each element corresponds to a gene and is itself an
 
     
 
-    <h4 class="name" id="fetchAllSets"><span class="type-signature type-signature-async">(async) </span>fetchAllSets<span class="signature">(species)</span><span class="type-signature"> &rarr; {Array}</span></h4>
+    <h4 class="name" id="fetchAllSets"><span class="type-signature type-signature-async">(async) </span>fetchAllSets<span class="signature">(species, options<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Array}</span></h4>
 
     
 
@@ -601,7 +885,7 @@ Each value is an array where each element corresponds to a gene and is itself an
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="fetchAllSets.js.html">fetchAllSets.js</a>, <a href="fetchAllSets.js.html#line30">line 30</a>
+        <a href="fetchAllSets.js.html">fetchAllSets.js</a>, <a href="fetchAllSets.js.html#line26">line 26</a>
     </li></ul></dd>
     
 
@@ -661,7 +945,11 @@ Each value is an array where each element corresponds to a gene and is itself an
         <th>Type</th>
 
         
+        <th>Attributes</th>
+        
 
+        
+        <th>Default</th>
         
 
         <th class="last">Description</th>
@@ -687,10 +975,133 @@ Each value is an array where each element corresponds to a gene and is itself an
             </td>
 
             
+                <td class="attributes">
+                
 
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
             
 
             <td class="description last"><p>The taxonomy ID of the species of interest, e.g., <code>&quot;9606&quot;</code> for human.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>options</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    <code>{}</code>
+                
+                </td>
+            
+
+            <td class="description last"><p>Optional parameters.</p>
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>download</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    <code>true</code>
+                
+                </td>
+            
+
+            <td class="description last"><p>Whether to download the set details if they are not already available.
+If <code>false</code>, <code>null</code> is returned if the set details have not already been loaded into memory.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
         </tr>
 
     
@@ -726,6 +1137,7 @@ Each object can be expected to contain:</p>
 <li><code>number</code>, the number of the set within the collection.</li>
 </ul>
 <p>In a <strong>gesel</strong> context, the identifier for a set (i.e., the &quot;set ID&quot;) is defined as the index of the set in this array.</p>
+<p>If the set details have not already been loaded and <code>download = false</code>, <code>null</code> is returned.</p>
 </div>
 
 
@@ -908,7 +1320,7 @@ Each value corresponds to a collection in <a href="global.html#fetchAllCollectio
 
     
 
-    <h4 class="name" id="fetchGenesForSet"><span class="type-signature type-signature-async">(async) </span>fetchGenesForSet<span class="signature">(species, set<span class="signature-attributes">nullable</span>)</span><span class="type-signature"> &rarr; {Uint32Array}</span></h4>
+    <h4 class="name" id="fetchGenesForAllSets"><span class="type-signature type-signature-async">(async) </span>fetchGenesForAllSets<span class="signature">(species, options<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; (nullable) {Array}</span></h4>
 
     
 
@@ -921,7 +1333,7 @@ Each value corresponds to a collection in <a href="global.html#fetchAllCollectio
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="fetchGenesForSet.js.html">fetchGenesForSet.js</a>, <a href="fetchGenesForSet.js.html#line19">line 19</a>
+        <a href="fetchGenesForAllSets.js.html">fetchGenesForAllSets.js</a>, <a href="fetchGenesForAllSets.js.html#line18">line 18</a>
     </li></ul></dd>
     
 
@@ -985,6 +1397,8 @@ Each value corresponds to a collection in <a href="global.html#fetchAllCollectio
         
 
         
+        <th>Default</th>
+        
 
         <th class="last">Description</th>
     </tr>
@@ -1018,6 +1432,295 @@ Each value corresponds to a collection in <a href="global.html#fetchAllCollectio
                 </td>
             
 
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>The taxonomy ID of the species of interest, e.g., <code>&quot;9606&quot;</code> for human.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>options</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    <code>{}</code>
+                
+                </td>
+            
+
+            <td class="description last"><p>Optional parameters.</p>
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>download</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    <code>true</code>
+                
+                </td>
+            
+
+            <td class="description last"><p>Whether to download the set-to-gene mappings if they are not already available.
+If <code>false</code>, <code>null</code> is returned if the set-to-gene mappings have not already been loaded into memory.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5 class="h5-returns">Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>Array of length equal to the total number of sets for this <code>species</code>.
+Each element corresponds to an entry in <a href="global.html#fetchAllSets"><code>fetchAllSets</code></a> and is an array of integers containing the IDs for all genes belonging to that set.
+Gene IDs refer to indices in <a href="global.html#fetchAllGenes"><code>fetchAllGenes</code></a>.</p>
+<p>If the set-to-gene mappings have not already been loaded and <code>download = false</code>, <code>null</code> is returned.</p>
+</div>
+
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Array</span>
+
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="fetchGenesForSet"><span class="type-signature type-signature-async">(async) </span>fetchGenesForSet<span class="signature">(species, set<span class="signature-attributes">nullable</span>, options<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Uint32Array}</span></h4>
+
+    
+
+
+
+
+<dl class="details">
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="fetchGenesForSet.js.html">fetchGenesForSet.js</a>, <a href="fetchGenesForSet.js.html#line27">line 27</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <h5 class="h5-parameters">Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>species</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
             
 
             <td class="description last"><p>The taxonomy ID of the species of interest, e.g., <code>&quot;9606&quot;</code> for human.</p></td>
@@ -1053,10 +1756,168 @@ Each value corresponds to a collection in <a href="global.html#fetchAllCollectio
             
 
             
+                <td class="default">
+                
+                </td>
+            
 
             <td class="description last"><p>Set ID, see <a href="global.html#fetchAllSets"><code>fetchAllSets</code></a> for details.</p>
 <p>If <code>null</code>, no request is performed, but various internal caches are initialized for subsequent calls to this function.
 This is useful for guaranteeing that caches are available in concurrent calls.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>options</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    <code>{}</code>
+                
+                </td>
+            
+
+            <td class="description last"><p>Optional parameters.</p>
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>forceRequest</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    <code>false</code>
+                
+                </td>
+            
+
+            <td class="description last"><p>Whether to force a range request to the server.
+By default, the return value is extracted from the full set-to-gene mappings if <a href="global.html#fetchGenesForAllSets"><code>fetchGenesForAllSets</code></a> was called before this function.
+Setting this to <code>true</code> is only useful for testing.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>forceDownload</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    <code>false</code>
+                
+                </td>
+            
+
+            <td class="description last"><p>Whether to forcibly download all set-to-gene information up-front to avoid range requests.
+This is done by calling <a href="global.html#fetchGenesForAllSets"><code>fetchGenesForAllSets</code></a>.
+Ignored if <code>forceRequest = true</code>.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
         </tr>
 
     
@@ -1111,7 +1972,7 @@ Gene IDs refer to indices in <a href="global.html#fetchAllGenes"><code>fetchAllG
 
     
 
-    <h4 class="name" id="fetchSetsForGene"><span class="type-signature type-signature-async">(async) </span>fetchSetsForGene<span class="signature">(species, gene<span class="signature-attributes">nullable</span>)</span><span class="type-signature"> &rarr; {Uint32Array}</span></h4>
+    <h4 class="name" id="fetchSetsForAllGenes"><span class="type-signature type-signature-async">(async) </span>fetchSetsForAllGenes<span class="signature">(species, options<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; (nullable) {Array}</span></h4>
 
     
 
@@ -1124,7 +1985,7 @@ Gene IDs refer to indices in <a href="global.html#fetchAllGenes"><code>fetchAllG
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="fetchSetsForGene.js.html">fetchSetsForGene.js</a>, <a href="fetchSetsForGene.js.html#line20">line 20</a>
+        <a href="fetchSetsForAllGenes.js.html">fetchSetsForAllGenes.js</a>, <a href="fetchSetsForAllGenes.js.html#line18">line 18</a>
     </li></ul></dd>
     
 
@@ -1188,6 +2049,8 @@ Gene IDs refer to indices in <a href="global.html#fetchAllGenes"><code>fetchAllG
         
 
         
+        <th>Default</th>
+        
 
         <th class="last">Description</th>
     </tr>
@@ -1221,6 +2084,295 @@ Gene IDs refer to indices in <a href="global.html#fetchAllGenes"><code>fetchAllG
                 </td>
             
 
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>The taxonomy ID of the species of interest, e.g., <code>&quot;9606&quot;</code> for human.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>options</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    <code>{}</code>
+                
+                </td>
+            
+
+            <td class="description last"><p>Optional parameters.</p>
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>download</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    <code>true</code>
+                
+                </td>
+            
+
+            <td class="description last"><p>Whether to download the gene-to-set mappings if they are not already available.
+If <code>false</code>, <code>null</code> is returned if the gene-to-set mappings have not already been loaded into memory.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5 class="h5-returns">Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>Array of length equal to the total number of genes for this <code>species</code>.
+Each element corresponds to an entry in <a href="global.html#fetchAllGenes"><code>fetchAllGenes</code></a> and is an array of integers containing the IDs for all sets containing that gene.
+Set IDs refer to indices in <a href="global.html#fetchAllSets"><code>fetchAllSets</code></a>.</p>
+<p>If the gene-to-set mappings have not already been loaded and <code>download = false</code>, <code>null</code> is returned.</p>
+</div>
+
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Array</span>
+
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="fetchSetsForGene"><span class="type-signature type-signature-async">(async) </span>fetchSetsForGene<span class="signature">(species, gene<span class="signature-attributes">nullable</span>, options<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Uint32Array}</span></h4>
+
+    
+
+
+
+
+<dl class="details">
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="fetchSetsForGene.js.html">fetchSetsForGene.js</a>, <a href="fetchSetsForGene.js.html#line61">line 61</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <h5 class="h5-parameters">Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>species</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
             
 
             <td class="description last"><p>The taxonomy ID of the species of interest, e.g., <code>&quot;9606&quot;</code> for human.</p></td>
@@ -1256,10 +2408,168 @@ Gene IDs refer to indices in <a href="global.html#fetchAllGenes"><code>fetchAllG
             
 
             
+                <td class="default">
+                
+                </td>
+            
 
             <td class="description last"><p>Gene ID, see <a href="global.html#fetchAllGenes"><code>fetchAllGenes</code></a> for details.</p>
 <p>If <code>null</code>, no request is performed, but various internal caches are initialized for subsequent calls to this function.
 This is useful for guaranteeing that caches are available in concurrent calls.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>options</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    <code>{}</code>
+                
+                </td>
+            
+
+            <td class="description last"><p>Optional parameters.</p>
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>forceRequest</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    <code>false</code>
+                
+                </td>
+            
+
+            <td class="description last"><p>Whether to force a range request to the server.
+By default, the return value is extracted from the full gene-to-set mappings if <a href="global.html#fetchSetsForAllGenes"><code>fetchSetsForAllGenes</code></a> was called before this function.
+Setting this to <code>true</code> is only useful for testing.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>forceDownload</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    <code>false</code>
+                
+                </td>
+            
+
+            <td class="description last"><p>Whether to forcibly download all gene-to-set mappings up-front to avoid range requests.
+This is done by calling <a href="global.html#fetchSetsForAllGenes"><code>fetchSetsForAllGenes</code></a>
+Ignored if <code>forceRequest = true</code>.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
         </tr>
 
     
@@ -1483,7 +2793,7 @@ Each value corresponds to a set in <a href="global.html#fetchAllSets"><code>fetc
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="fetchSingleCollection.js.html">fetchSingleCollection.js</a>, <a href="fetchSingleCollection.js.html#line62">line 62</a>
+        <a href="fetchSingleCollection.js.html">fetchSingleCollection.js</a>, <a href="fetchSingleCollection.js.html#line65">line 65</a>
     </li></ul></dd>
     
 
@@ -1732,8 +3042,50 @@ This is useful for guaranteeing that caches are available in concurrent calls.</
             
 
             <td class="description last"><p>Whether to force a request to the server.
-By default, the cached collection information is used if <a href="global.html#fetchAllCollections"><code>fetchAllCollections</code></a> has previously been called.
+By default, the return value is extracted from the full collection details if <a href="global.html#fetchAllCollections"><code>fetchAllCollections</code></a> was called before this function.
 Setting this to <code>true</code> is only useful for testing.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>forceDownload</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    <code>false</code>
+                
+                </td>
+            
+
+            <td class="description last"><p>Whether to forcibly download all collection details up-front to avoid range requests.
+This is done by calling <a href="global.html#fetchAllCollections"><code>fetchAllCollections</code></a>.
+Ignored if <code>forceRequest = true</code>.</p></td>
         </tr>
 
     
@@ -1808,7 +3160,7 @@ This should be identical to the corresponding entry of the array returned by <a 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="fetchSingleSet.js.html">fetchSingleSet.js</a>, <a href="fetchSingleSet.js.html#line78">line 78</a>
+        <a href="fetchSingleSet.js.html">fetchSingleSet.js</a>, <a href="fetchSingleSet.js.html#line81">line 81</a>
     </li></ul></dd>
     
 
@@ -2057,8 +3409,50 @@ This is useful for guaranteeing that caches are available in concurrent calls.</
             
 
             <td class="description last"><p>Whether to force a request to the server.
-By default, the cached collection information is used if <a href="global.html#fetchAllSets"><code>fetchAllSets</code></a> has previously been called.
+By default, the return value is extracted from the full set details if <a href="global.html#fetchAllSets"><code>fetchAllSets</code></a> was called before this function.
 Setting this to <code>true</code> is only useful for testing.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>forceDownload</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    <code>false</code>
+                
+                </td>
+            
+
+            <td class="description last"><p>Whether to forcibly download all set details up-front to avoid range requests.
+This is done by calling <a href="global.html#fetchAllSets"><code>fetchAllSets</code></a>.
+Ignored if <code>forceRequest = true</code>.</p></td>
         </tr>
 
     
@@ -2133,7 +3527,7 @@ This should be identical to the corresponding entry of the array returned by <a 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="findOverlappingSets.js.html">findOverlappingSets.js</a>, <a href="findOverlappingSets.js.html#line20">line 20</a>
+        <a href="findOverlappingSets.js.html">findOverlappingSets.js</a>, <a href="findOverlappingSets.js.html#line21">line 21</a>
     </li></ul></dd>
     
 
@@ -2378,6 +3772,46 @@ This should be identical to the corresponding entry of the array returned by <a 
             
 
             <td class="description last"><p>Whether to include the size of each set in the output.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>forceDownload</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    <code>false</code>
+                
+                </td>
+            
+
+            <td class="description last"><p>See <a href="global.html#fetchSetsForGene"><code>fetchSetsForGene</code></a>.</p></td>
         </tr>
 
     
@@ -3400,6 +4834,149 @@ Each array contains the <strong>gesel</strong> gene IDs associated with the <cod
 
     
 
+    <h4 class="name" id="preloadSearchSetText"><span class="type-signature"></span>preloadSearchSetText<span class="signature">(species)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+
+<dl class="details">
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="searchSetText.js.html">searchSetText.js</a>, <a href="searchSetText.js.html#line126">line 126</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <h5 class="h5-parameters">Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>species</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The taxonomy ID of the species of interest, e.g., <code>&quot;9606&quot;</code> for human.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5 class="h5-returns">Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>Preloads the search indices for use in <a href="global.html#searchSetText"><code>searchSetText</code></a>.
+This performs a one-off download of the indices such that further calls to <a href="global.html#searchSetText"><code>searchSetText</code></a> do not need to perform HTTP range requests.</p>
+</div>
+
+
+
+    
+
+
+
+        
+            
+
+    
+
     <h4 class="name" id="referenceBaseUrl"><span class="type-signature"></span>referenceBaseUrl<span class="signature">(url<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {string}</span></h4>
 
     
@@ -3949,7 +5526,7 @@ See <a href="global.html#fetchAllGenes"><code>fetchAllGenes</code></a> for more 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="searchSetText.js.html">searchSetText.js</a>, <a href="searchSetText.js.html#line123">line 123</a>
+        <a href="searchSetText.js.html">searchSetText.js</a>, <a href="searchSetText.js.html#line156">line 156</a>
     </li></ul></dd>
     
 
@@ -4645,7 +6222,7 @@ If only the first argument is supplied, the function should download the entire 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="testEnrichment.js.html">testEnrichment.js</a>, <a href="testEnrichment.js.html#line28">line 28</a>
+        <a href="testEnrichment.js.html">testEnrichment.js</a>, <a href="testEnrichment.js.html#line29">line 29</a>
     </li></ul></dd>
     
 
@@ -4734,7 +6311,7 @@ If only the first argument is supplied, the function should download the entire 
 
             
 
-            <td class="description last"><p>Number of overlapping genes between the user's list and the gene set.</p></td>
+            <td class="description last"><p>Number of overlapping genes between the user's list and the gene set, typically obtained from <a href="global.html#findOverlappingSets"><code>findOverlappingSets</code></a>.</p></td>
         </tr>
 
     
@@ -4782,7 +6359,7 @@ If only the first argument is supplied, the function should download the entire 
 
             
 
-            <td class="description last"><p>Size of the gene set.</p></td>
+            <td class="description last"><p>Size of the gene set, see the <code>size</code> property from <a href="global.html#fetchSingleSet"><code>fetchSingleSet</code></a>.</p></td>
         </tr>
 
     
@@ -4806,7 +6383,8 @@ If only the first argument is supplied, the function should download the entire 
 
             
 
-            <td class="description last"><p>Size of the gene universe (i.e., the total number of genes for this species).</p></td>
+            <td class="description last"><p>Size of the gene universe (i.e., the total number of genes for this species).
+This can either be obtained from the arrays in <a href="global.html#fetchAllGenes"><code>fetchAllGenes</code></a> or using <a href="global.html#effectiveNumberOfGenes"><code>effectiveNumberOfGenes</code></a>.</p></td>
         </tr>
 
     
@@ -4875,7 +6453,7 @@ This may be NaN if the inputs are inconsistent, e.g., <code>overlap</code> is gr
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.11</a> on Fri Mar 10 2023 21:06:48 GMT+0000 (Coordinated Universal Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.11</a> on Sun Mar 12 2023 08:41:30 GMT+0000 (Coordinated Universal Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>

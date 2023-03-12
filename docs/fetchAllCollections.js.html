@@ -31,7 +31,7 @@
     <input type="text" id="nav-search" placeholder="Search" />
     
     
-    <h2><a href="index.html">Home</a></h2><h2><a href="https://github.roche.com/GP/gesel" target="_blank" class="menu-item" id="repository" >Github repo</a></h2><h3>Global</h3><ul><li><a href="global.html#fetchAllCollections">fetchAllCollections</a></li><li><a href="global.html#fetchAllGenes">fetchAllGenes</a></li><li><a href="global.html#fetchAllSets">fetchAllSets</a></li><li><a href="global.html#fetchCollectionSizes">fetchCollectionSizes</a></li><li><a href="global.html#fetchGenesForSet">fetchGenesForSet</a></li><li><a href="global.html#fetchSetsForGene">fetchSetsForGene</a></li><li><a href="global.html#fetchSetSizes">fetchSetSizes</a></li><li><a href="global.html#fetchSingleCollection">fetchSingleCollection</a></li><li><a href="global.html#fetchSingleSet">fetchSingleSet</a></li><li><a href="global.html#findOverlappingSets">findOverlappingSets</a></li><li><a href="global.html#geneBaseUrl">geneBaseUrl</a></li><li><a href="global.html#intersect">intersect</a></li><li><a href="global.html#mapGenesByIdentifier">mapGenesByIdentifier</a></li><li><a href="global.html#numberOfCollections">numberOfCollections</a></li><li><a href="global.html#numberOfSets">numberOfSets</a></li><li><a href="global.html#referenceBaseUrl">referenceBaseUrl</a></li><li><a href="global.html#searchGenes">searchGenes</a></li><li><a href="global.html#searchSetText">searchSetText</a></li><li><a href="global.html#setGeneDownload">setGeneDownload</a></li><li><a href="global.html#setReferenceDownload">setReferenceDownload</a></li><li><a href="global.html#testEnrichment">testEnrichment</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h2><a href="https://github.roche.com/GP/gesel" target="_blank" class="menu-item" id="repository" >Github repo</a></h2><h3>Global</h3><ul><li><a href="global.html#effectiveNumberOfGenes">effectiveNumberOfGenes</a></li><li><a href="global.html#fetchAllCollections">fetchAllCollections</a></li><li><a href="global.html#fetchAllGenes">fetchAllGenes</a></li><li><a href="global.html#fetchAllSets">fetchAllSets</a></li><li><a href="global.html#fetchCollectionSizes">fetchCollectionSizes</a></li><li><a href="global.html#fetchGenesForAllSets">fetchGenesForAllSets</a></li><li><a href="global.html#fetchGenesForSet">fetchGenesForSet</a></li><li><a href="global.html#fetchSetsForAllGenes">fetchSetsForAllGenes</a></li><li><a href="global.html#fetchSetsForGene">fetchSetsForGene</a></li><li><a href="global.html#fetchSetSizes">fetchSetSizes</a></li><li><a href="global.html#fetchSingleCollection">fetchSingleCollection</a></li><li><a href="global.html#fetchSingleSet">fetchSingleSet</a></li><li><a href="global.html#findOverlappingSets">findOverlappingSets</a></li><li><a href="global.html#geneBaseUrl">geneBaseUrl</a></li><li><a href="global.html#intersect">intersect</a></li><li><a href="global.html#mapGenesByIdentifier">mapGenesByIdentifier</a></li><li><a href="global.html#numberOfCollections">numberOfCollections</a></li><li><a href="global.html#numberOfSets">numberOfSets</a></li><li><a href="global.html#preloadSearchSetText">preloadSearchSetText</a></li><li><a href="global.html#referenceBaseUrl">referenceBaseUrl</a></li><li><a href="global.html#searchGenes">searchGenes</a></li><li><a href="global.html#searchSetText">searchSetText</a></li><li><a href="global.html#setGeneDownload">setGeneDownload</a></li><li><a href="global.html#setReferenceDownload">setReferenceDownload</a></li><li><a href="global.html#testEnrichment">testEnrichment</a></li></ul>
     
 </nav>
 
@@ -51,18 +51,13 @@
 
 var _collections = new Map;
 
-export function already_initialized(species) {
-    let found = _collections.get(species);
-    if (typeof found !== "undefined") {
-        return found;
-    } else {
-        return null;
-    }
-}
-
 /**
  * @param {string} species - The taxonomy ID of the species of interest, e.g., `"9606"` for human.
- * @return {Array} Array of objects where each entry corresponds to a set collection and contains details about that collection.
+ * @param {object} [options={}] - Optional parameters.
+ * @param {boolean} [options.download=true] - Whether to download the collection details if they are not already available.
+ * If `false`, `null` is returned if the collection details have not already been loaded into memory.
+ *
+ * @return {?Array} Array of objects where each entry corresponds to a set collection and contains details about that collection.
  * Each object can be expected to contain:
  * 
  * - `title`, the title for the collection.
@@ -76,13 +71,18 @@ export function already_initialized(species) {
  * - `size`, the number of sets in the collection.
  *
  * In a **gesel** context, the identifier for a collection (i.e., the "collection ID") is defined as the index of the collection in this array.
+ *
+ * If the collection details have not already been loaded and `download = false`, `null` is returned.
  * @async
  */
-export async function fetchAllCollections(species) {
-    let target = already_initialized(species);
-    if (target !== null) {
+export async function fetchAllCollections(species, { download = true } = {}) {
+    let target = _collections.get(species);
+    if (typeof target !== "undefined") {
         return target;
+    } else if (!download) {
+        return null;
     }
+
     target = [];
     _collections.set(species, target);
 
@@ -125,7 +125,7 @@ export async function fetchAllCollections(species) {
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.11</a> on Fri Mar 10 2023 21:06:48 GMT+0000 (Coordinated Universal Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.11</a> on Sun Mar 12 2023 08:41:30 GMT+0000 (Coordinated Universal Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>

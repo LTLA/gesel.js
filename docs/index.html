@@ -31,7 +31,7 @@
     <input type="text" id="nav-search" placeholder="Search" />
     
     
-    <h2><a href="index.html">Home</a></h2><h2><a href="https://github.roche.com/GP/gesel" target="_blank" class="menu-item" id="repository" >Github repo</a></h2><h3>Global</h3><ul><li><a href="global.html#fetchAllCollections">fetchAllCollections</a></li><li><a href="global.html#fetchAllGenes">fetchAllGenes</a></li><li><a href="global.html#fetchAllSets">fetchAllSets</a></li><li><a href="global.html#fetchCollectionSizes">fetchCollectionSizes</a></li><li><a href="global.html#fetchGenesForSet">fetchGenesForSet</a></li><li><a href="global.html#fetchSetsForGene">fetchSetsForGene</a></li><li><a href="global.html#fetchSetSizes">fetchSetSizes</a></li><li><a href="global.html#fetchSingleCollection">fetchSingleCollection</a></li><li><a href="global.html#fetchSingleSet">fetchSingleSet</a></li><li><a href="global.html#findOverlappingSets">findOverlappingSets</a></li><li><a href="global.html#geneBaseUrl">geneBaseUrl</a></li><li><a href="global.html#intersect">intersect</a></li><li><a href="global.html#mapGenesByIdentifier">mapGenesByIdentifier</a></li><li><a href="global.html#numberOfCollections">numberOfCollections</a></li><li><a href="global.html#numberOfSets">numberOfSets</a></li><li><a href="global.html#referenceBaseUrl">referenceBaseUrl</a></li><li><a href="global.html#searchGenes">searchGenes</a></li><li><a href="global.html#searchSetText">searchSetText</a></li><li><a href="global.html#setGeneDownload">setGeneDownload</a></li><li><a href="global.html#setReferenceDownload">setReferenceDownload</a></li><li><a href="global.html#testEnrichment">testEnrichment</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h2><a href="https://github.roche.com/GP/gesel" target="_blank" class="menu-item" id="repository" >Github repo</a></h2><h3>Global</h3><ul><li><a href="global.html#effectiveNumberOfGenes">effectiveNumberOfGenes</a></li><li><a href="global.html#fetchAllCollections">fetchAllCollections</a></li><li><a href="global.html#fetchAllGenes">fetchAllGenes</a></li><li><a href="global.html#fetchAllSets">fetchAllSets</a></li><li><a href="global.html#fetchCollectionSizes">fetchCollectionSizes</a></li><li><a href="global.html#fetchGenesForAllSets">fetchGenesForAllSets</a></li><li><a href="global.html#fetchGenesForSet">fetchGenesForSet</a></li><li><a href="global.html#fetchSetsForAllGenes">fetchSetsForAllGenes</a></li><li><a href="global.html#fetchSetsForGene">fetchSetsForGene</a></li><li><a href="global.html#fetchSetSizes">fetchSetSizes</a></li><li><a href="global.html#fetchSingleCollection">fetchSingleCollection</a></li><li><a href="global.html#fetchSingleSet">fetchSingleSet</a></li><li><a href="global.html#findOverlappingSets">findOverlappingSets</a></li><li><a href="global.html#geneBaseUrl">geneBaseUrl</a></li><li><a href="global.html#intersect">intersect</a></li><li><a href="global.html#mapGenesByIdentifier">mapGenesByIdentifier</a></li><li><a href="global.html#numberOfCollections">numberOfCollections</a></li><li><a href="global.html#numberOfSets">numberOfSets</a></li><li><a href="global.html#preloadSearchSetText">preloadSearchSetText</a></li><li><a href="global.html#referenceBaseUrl">referenceBaseUrl</a></li><li><a href="global.html#searchGenes">searchGenes</a></li><li><a href="global.html#searchSetText">searchSetText</a></li><li><a href="global.html#setGeneDownload">setGeneDownload</a></li><li><a href="global.html#setReferenceDownload">setReferenceDownload</a></li><li><a href="global.html#testEnrichment">testEnrichment</a></li></ul>
     
 </nav>
 
@@ -106,7 +106,7 @@ let pvalue = gesel.testEnrichment(
     overlaps[0].count, 
     user_supplied_union.length,
     set_details.size,
-    all_genes.get(&quot;ensembl&quot;).length
+    gesel.effectiveNumberOfGenes(&quot;9606&quot;) // ignore genes that belong to no sets.
 );
 </code></pre>
 <p>Each set also has some associated free text in its name and description.
@@ -151,6 +151,10 @@ or the identities of the sets containing a particular gene,
 or the details of a particular gene set or collection,
 without downloading the entirety of the associated refences files.
 Only the range indices need to be transferred to the client - as of time of writing, this amounts to an acceptably small payload (&lt; 2 MB).</p>
+<p>That said, some applications may prefer to download all the data up-front rather than performing range requests for each query.
+This may be more performant for batch processing where repeated range requests would unnecessarily increase network activity.
+In those cases, we provide functions like <code>fetchGenesForAllSets()</code> and options like <code>forceDownload = true</code> to trigger a full download of the relevant asset on first use.
+Subsequent calls to related functions like <code>fetchGenesForSet()</code> will then re-use this data and skip range requests.</p>
 <p><strong>gesel</strong> will automatically cache responses in memory to reduce network traffic across the lifetime of a single session.
 Note that no caching is done across sessions, though users can add their own (e.g., with IndexedDB or the Cache API) by overriding the downloader.</p></article>
     </section>
@@ -167,7 +171,7 @@ Note that no caching is done across sessions, though users can add their own (e.
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.11</a> on Fri Mar 10 2023 21:06:48 GMT+0000 (Coordinated Universal Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.11</a> on Sun Mar 12 2023 08:41:30 GMT+0000 (Coordinated Universal Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>
