@@ -28,3 +28,8 @@ test("fetching sets for genes works correctly with a full download beforehand", 
         expect(cached).toEqual(forced);
     }
 })
+
+test("effective number of genes is correctly determined", async () => {
+    let N = (await gesel.fetchAllGenes("6239", { types: [ "ensembl" ] })).get("ensembl").length;
+    expect(await gesel.effectiveNumberOfGenes("6239")).toBeLessThan(N);
+})

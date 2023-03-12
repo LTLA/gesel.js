@@ -6,6 +6,39 @@ const _cache = new Map;
 
 /**
  * @param {string} species - The taxonomy ID of the species of interest, e.g., `"9606"` for human.
+ *
+ * @return {number} Number of genes that belong to at least one set for `species`.
+ * This can be used as a more appropriate universe size in {@linkcode testEnrichment}.
+ */
+export async function effectiveNumberOfGenes(species) {
+    let ffound = await full.fetchSetsForAllGenes(species, { download: false });
+    if (ffound !== null) {
+        let okay = 0;
+        for (const x of ffound) {
+            okay += x.length > 0;
+        }
+        return okay;
+    }
+
+    let ranged = _ranges.get(species);
+    if (typeof ranged === "undefined") {
+        _cache.set(species, new Map);
+        ranged = await utils.retrieveRanges(species + "_gene2set.tsv")
+        _ranges.set(species, ranged);
+    }
+
+    let okay = 0;
+    for (var i = 1; i < ranged.length; i++) {
+        if (ranged[i] > ranged[i-1] + 1) {
+            okay++;
+        }
+    }
+
+    return okay;
+}
+
+/**
+ * @param {string} species - The taxonomy ID of the species of interest, e.g., `"9606"` for human.
  * @param {?number} gene - Gene ID, see {@linkcode fetchAllGenes} for details.
  *
  * If `null`, no request is performed, but various internal caches are initialized for subsequent calls to this function.

@@ -11,7 +11,7 @@ export { fetchSingleCollection, fetchCollectionSizes, numberOfCollections } from
 
 export { fetchGenesForSet } from "./fetchGenesForSet.js";
 export { fetchGenesForAllSets } from "./fetchGenesForAllSets.js";
-export { fetchSetsForGene } from "./fetchSetsForGene.js";
+export { fetchSetsForGene, effectiveNumberOfGenes } from "./fetchSetsForGene.js";
 export { fetchSetsForAllGenes } from "./fetchSetsForAllGenes.js";
 
 export { searchSetText, preloadSearchSetText } from "./searchSetText.js";
