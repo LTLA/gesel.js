@@ -61,7 +61,7 @@ test("searching by text works with wildcards", async () => {
             let deets = await gesel.fetchSingleSet("10090", results[i]);
             has_immune += deets.description.match("immune") !== null;
             has_immunity += deets.description.match("immunity") !== null;
-            is_okay += deets.description.match("immun") !== null;
+            is_okay += deets.description.match(/immun/i) !== null;
         }
 
         expect(has_immune).toBeGreaterThan(0);
