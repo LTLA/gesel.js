@@ -102,6 +102,39 @@ async function fetchSetsByDescriptionToken(species, token) {
     return fetchSetsByToken(species, token, "tokens-descriptions.tsv", d_ranges, d_ordered, d_cache);
 }
 
+export async function preloadTokens(species, resp, ordered, cache, msg) {
+    if (!resp.ok) {
+        throw new Error("failed to fetch full set of " + msg + " tokens for species '" + species + "'");
+    }
+
+    let lines = utils.decompressLines(await resp.arrayBuffer());
+    if (lines.length !== ordered.length) {
+        throw new Error("mismatch in lengths between token names and set indices for species '" + species + "'");
+    }
+
+    for (var i = 0; i < lines.length; i++) {
+        cache.set(ordered[i], utils.convertToUint32Array(lines[i]));
+    }
+}
+
+/**
+ * @param {string} species - The taxonomy ID of the species of interest, e.g., `"9606"` for human.
+ *
+ * @return Preloads the search indices for use in {@linkcode searchSetText}.
+ * This performs a one-off download of the indices such that further calls to {@linkcode searchSetText} do not need to perform HTTP range requests.
+ */
+export async function preloadSearchSetText(species) {
+    let full = await Promise.all([ 
+        utils.reference_download(species + "_tokens-names.tsv.gz"),
+        utils.reference_download(species + "_tokens-descriptions.tsv.gz"),
+        fetchSetsByNameToken(species, null),
+        fetchSetsByDescriptionToken(species, null)
+    ]);
+    await preloadTokens(species, full[0], n_ordered.get(species), n_cache.get(species), "name");
+    await preloadTokens(species, full[1], d_ordered.get(species), d_cache.get(species), "description");
+    return;
+}
+
 /**
  * @param {string} species - The taxonomy ID of the species of interest, e.g., `"9606"` for human.
  * @param {string} query - Query string containing multiple words to search in the names and/or descriptions of each set.

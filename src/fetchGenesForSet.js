@@ -1,4 +1,5 @@
 import * as utils from "./utils.js";
+import * as full from "./fetchGenesForAllSets.js";
 
 const _ranges = new Map;
 const _cache = new Map;
@@ -9,6 +10,10 @@ const _cache = new Map;
  *
  * If `null`, no request is performed, but various internal caches are initialized for subsequent calls to this function.
  * This is useful for guaranteeing that caches are available in concurrent calls.
+ * @param {object} [options={}] - Optional parameters.
+ * @param {boolean} [options.forceRequest=false] - Whether to force a range request to the server.
+ * By default, the full set-gene mappings are used if {@linkcode fetchGenesForAllSets} was called before this function, thus avoiding an unnecessary request.
+ * Setting this to `true` is only useful for testing.
  *
  * @return {Uint32Array} Array of integers containing the IDs for all genes belonging to the set.
  * Gene IDs refer to indices in {@linkcode fetchAllGenes}.
@@ -16,7 +21,16 @@ const _cache = new Map;
  * If `set = null`, no return value is provided.
  * @async
  */
-export async function fetchGenesForSet(species, set) {
+export async function fetchGenesForSet(species, set, { forceRequest = false } = {}) {
+    let ffound = full.already_initialized(species);
+    if (ffound !== null && !forceRequest) {
+        if (set !== null) {
+            return ffound[set];
+        } else {
+            return;
+        }
+    }
+
     let spfound = _cache.get(species);
     if (typeof spfound == "undefined") {
         spfound = new Map;
@@ -27,6 +41,7 @@ export async function fetchGenesForSet(species, set) {
     if (set == null) {
         return;
     }
+
 
     let sefound = spfound.get(set);
     if (typeof sefound !== "undefined") {

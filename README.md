@@ -123,6 +123,10 @@ or the details of a particular gene set or collection,
 without downloading the entirety of the associated refences files.
 Only the range indices need to be transferred to the client - as of time of writing, this amounts to an acceptably small payload (< 2 MB).
 
+That said, some applications may prefer to download all the data up-front rather than performing range requests for each query.
+This may be more performant for batch processing where repeated range requests would unnecessarily increase network activity.
+In those cases, we provide functions like `fetchGenesForAllSets()` to trigger an initial download.
+Subsequent calls to related functions like `fetchGenesForSet()` will then re-use this data and skip range requests.
+
 **gesel** will automatically cache responses in memory to reduce network traffic across the lifetime of a single session.
 Note that no caching is done across sessions, though users can add their own (e.g., with IndexedDB or the Cache API) by overriding the downloader.
-

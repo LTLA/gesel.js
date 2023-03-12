@@ -90,3 +90,9 @@ test("searching by text works with wildcards", async () => {
     }
 })
 
+test("searching by text works with preloading", async () => {
+    let all_info = await gesel.fetchAllSets("10090");
+    await gesel.preloadSearchSetText("10090");
+    let results = await gesel.searchSetText("10090", "GO 0000009");
+    expect(all_info[results[0]].name).toEqual("GO:0000009");
+})

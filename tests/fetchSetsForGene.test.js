@@ -6,15 +6,25 @@ test("fetching sets for genes works correctly, more or less", async () => {
     for (var i = 0; i < 10; i++) {
         let opt = Math.trunc(Math.random() * N);
         var val = await gesel.fetchSetsForGene("6239", opt);
-        expect(val.length > 0).toBe(true);
+        expect(val instanceof Uint32Array).toBe(true);
     }
 
     let last = N - 1;
     var val = await gesel.fetchSetsForGene("6239", last);
-    expect(val.length > 0).toBe(true);
+    expect(val instanceof Uint32Array).toBe(true);
 });
 
 test("fetching sets for genes works correctly with initialization", async () => {
-    expect(await gesel.fetchSetsForGene("9606", null)).toBeUndefined();
+    expect(await gesel.fetchSetsForGene("6239", null)).toBeUndefined();
 })
 
+test("fetching sets for genes works correctly with a full download beforehand", async () => {
+    let full = await gesel.fetchSetsForAllGenes("6239");
+    for (var i = 0; i < 10; i++) {
+        let opt = Math.trunc(Math.random() * full.length);
+        var forced = await gesel.fetchSetsForGene("6239", opt, { forceRequest: true });
+        expect(forced).toEqual(full[opt]);
+        var cached = await gesel.fetchSetsForGene("6239", opt);
+        expect(cached).toEqual(forced);
+    }
+})

@@ -18,3 +18,13 @@ test("fetching genes for sets works correctly with initialization", async () => 
     expect(await gesel.fetchGenesForSet("9606", null)).toBeUndefined();
 })
 
+test("fetching genes for sets works correctly with a full download beforehand", async () => {
+    let full = await gesel.fetchGenesForAllSets("9606");
+    for (var i = 0; i < 10; i++) {
+        let opt = Math.trunc(Math.random() * full.length);
+        var forced = await gesel.fetchGenesForSet("9606", opt, { forceRequest: true });
+        expect(forced).toEqual(full[opt]);
+        var cached = await gesel.fetchGenesForSet("9606", opt);
+        expect(cached).toEqual(forced);
+    }
+})

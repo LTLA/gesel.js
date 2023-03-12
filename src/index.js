@@ -10,9 +10,11 @@ export { fetchAllCollections } from "./fetchAllCollections.js";
 export { fetchSingleCollection, fetchCollectionSizes, numberOfCollections } from "./fetchSingleCollection.js";
 
 export { fetchGenesForSet } from "./fetchGenesForSet.js";
+export { fetchGenesForAllSets } from "./fetchGenesForAllSets.js";
 export { fetchSetsForGene } from "./fetchSetsForGene.js";
+export { fetchSetsForAllGenes } from "./fetchSetsForAllGenes.js";
 
-export { searchSetText } from "./searchSetText.js";
+export { searchSetText, preloadSearchSetText } from "./searchSetText.js";
 export { findOverlappingSets } from "./findOverlappingSets.js";
 
 export { testEnrichment } from "./testEnrichment.js";
