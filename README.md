@@ -65,7 +65,7 @@ let pvalue = gesel.testEnrichment(
     overlaps[0].count, 
     user_supplied_union.length,
     set_details.size,
-    all_genes.get("ensembl").length
+    gesel.effectiveNumberOfGenes("9606") // ignore genes that belong to no sets.
 );
 ```
 
@@ -125,7 +125,7 @@ Only the range indices need to be transferred to the client - as of time of writ
 
 That said, some applications may prefer to download all the data up-front rather than performing range requests for each query.
 This may be more performant for batch processing where repeated range requests would unnecessarily increase network activity.
-In those cases, we provide functions like `fetchGenesForAllSets()` to trigger an initial download.
+In those cases, we provide functions like `fetchGenesForAllSets()` and options like `forceDownload = true` to trigger a full download of the relevant asset on first use.
 Subsequent calls to related functions like `fetchGenesForSet()` will then re-use this data and skip range requests.
 
 **gesel** will automatically cache responses in memory to reduce network traffic across the lifetime of a single session.
