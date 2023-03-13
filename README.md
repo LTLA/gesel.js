@@ -1,10 +1,11 @@
-# Client-side gene set search
+# Client-side gene set enrichment
 
 ## Overview
 
 Search for interesting gene sets, client-side.
 This uses Javascript to do the queries in the browser, improving latency and avoiding the need for a back-end service.
-The queries rely on prebuilt references for gene sets of interest, e.g., [here](https://github.com/LTLA/gesel-feedstock).
+Users can test for enrichment in their own list of genes and/or search by text in the set names or descriptions.
+The queries rely on prebuilt databases containing gene sets of interest - see [here](https://github.com/LTLA/gesel-feedstock) for the expectations around the database files.
 
 ## Installation
 
@@ -78,15 +79,21 @@ let combined = gesel.intersect([ hits, overlaps.map(x => x.id) ]);
 ## Overriding the downloader
 
 By default, we use the reference gene sets collated in the [feedstock repository](https://github.com/LTLA/gesel-feedstock).
-However, users can point **gesel** to their own references by overriding the downloaders before calling any **gesel** functions.
+However, users can point **gesel** to their own references by overriding the URLs before calling any **gesel** functions.
 For example, if our prebuilt references are hosted on some other URL:
 
 ```js
-const baseUrl = "https://some.company.com/prebuilt-gesel";
+gesel.referenceBaseUrl("https://some.company.com/prebuilt-gesel-db");
+gesel.geneBaseUrl("https://some.company.com/prebuilt-gesel-genes");
+```
 
+More advanced users can override the downloader functions to customize the request and handling of the response.
+The example below attaches an authorization header to the request; the same approach can be used to cache the response on-disk for faster responsiveness on subsequent visits to an application.
+
+```js
 // To set the downloader for the reference files.
 gesel.setReferenceDownload(async (file, start = null, end = null) => {
-    const url = baseUrl + "/" + file;
+    const url = gesel.referenceBaseUrl() + "/" + file;
     if (start == null) {
         return fetch(url, { headers: { Authorization: "Bearer XXX" } });
     } else {
@@ -97,24 +104,25 @@ gesel.setReferenceDownload(async (file, start = null, end = null) => {
 
 // To set the downloader for gene information.
 gesel.setGeneDownload(file => {
-    const url = baseUrl + "/" + file;
+    const url = gesel.geneBaseUrl + "/" + file;
     return fetch(url, { headers: { Authorization: "Bearer XXX" } });
 });
 ```
 
 ## Implementation details
 
-**gesel** uses HTTP range requests to efficiently extract slices of data from the pre-built references.
+By default, **gesel** uses HTTP range requests to efficiently extract slices of data from the databases.
 This allows us to obtain the identities of genes belonging to a particular gene set,
 or the identities of the sets containing a particular gene,
 or the details of a particular gene set or collection,
 without downloading the entirety of the associated refences files.
 Only the range indices need to be transferred to the client - as of time of writing, this amounts to an acceptably small payload (< 2 MB).
 
-That said, some applications may prefer to download all the data up-front rather than performing range requests for each query.
+That said, some applications may prefer to download the entire database up-front rather than performing range requests for each query.
 This may be more performant for batch processing where repeated range requests would unnecessarily increase network activity.
-In those cases, we provide functions like `fetchGenesForAllSets()` and options like `forceDownload = true` to trigger a full download of the relevant asset on first use.
+In those cases, we provide functions like `fetchGenesForAllSets()` and options like `forceDownload = true` to trigger a full download of the relevant file(s) on first use.
 Subsequent calls to related functions like `fetchGenesForSet()` will then re-use this data and skip range requests.
+This approach transfers more data to the client but is still practical - the default human gene set database (containing the Gene Ontology and almost all MSigDB gene sets) is less than 9 MB in size, which is a tolerable payload.
 
 **gesel** will automatically cache responses in memory to reduce network traffic across the lifetime of a single session.
 Note that no caching is done across sessions, though users can add their own (e.g., with IndexedDB or the Cache API) by overriding the downloader.
