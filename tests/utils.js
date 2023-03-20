@@ -1,11 +1,10 @@
 import * as gesel from "../src/index.js";
-import * as internals from "../src/utils.js";
 import * as fs from "fs";
 import * as path from "path";
 import "isomorphic-fetch";
 
-const old_ref_download = internals.reference_download;
-const old_gene_download = internals.gene_download;
+const old_ref_download = gesel.referenceDownload();
+const old_gene_download = gesel.geneDownload();
 
 async function dump(file, old) {
     const cache = "files";
@@ -24,7 +23,7 @@ async function dump(file, old) {
     return { ok: true, arrayBuffer: () => buffer }; // mimic Response object.
 }
 
-gesel.setReferenceDownload((file, start = null, end = null) => {
+gesel.referenceDownload((file, start = null, end = null) => {
     if (start !== null) {
         return old_ref_download(file, start, end);
     } else {
@@ -32,4 +31,4 @@ gesel.setReferenceDownload((file, start = null, end = null) => {
     }
 });
 
-gesel.setGeneDownload(file => dump(file, old_gene_download));
+gesel.geneDownload(file => dump(file, old_gene_download));

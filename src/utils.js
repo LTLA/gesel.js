@@ -35,11 +35,12 @@ export function referenceBaseUrl(url) {
 export var reference_download = (file, start = null, end = null) => default_download(reference_base_url, file, start, end);
 
 /**
- * Set the global download function to fetch pre-built references.
+ * Get or set the global download function to fetch pre-built references.
+ * By default, it uses the global `fetch` in browsers and later versions of Node.js.
  * Applications may specify a different function, e.g., to handle authentication or caching; 
  * this should be done before calling any other **gesel** functions that might fetch resources.
  *
- * @param {function} fun - Function that performs a GET request to an index file, returning a Response object containing the file contents.
+ * @param {function} [fun] - Function that performs a GET request to an index file, returning a Response object containing the file contents.
  * This accepts three arguments:
  *
  * - The base name of the pre-built index file of interest (e.g., `"10090_collections.tsv.gz"`).
@@ -49,12 +50,21 @@ export var reference_download = (file, start = null, end = null) => default_down
  * If all three arguments are specified, the function should perform a HTTP range request to obtain the specified range of bytes.
  * If only the first argument is supplied, the function should download the entire file.
  *
- * @return {function} The previous global value of the function.
+ * @return {function} If `fun` is not supplied, the current global downloader is returned.
+ *
+ * If `fun` is supplied, it is used to set the global downloader, and the previous global value of the function is returned.
  */
-export function setReferenceDownload(fun) {
+export function referenceDownload(fun) {
     let prev = reference_download;
-    reference_download = fun;
+    if (typeof fun !== "undefined") {
+        reference_download = fun;
+    }
     return prev;
+}
+
+// For back-compatibility.
+export function setReferenceDownload(fun) {
+    return referenceDownload(fun);
 }
 
 var gene_base_url = "https://github.com/LTLA/gesel-feedstock/releases/download/genes-v1.0.0";
@@ -84,18 +94,28 @@ export var gene_download = (file) => default_download(gene_base_url, file, null,
 
 /**
  * Set the global download function to fetch gene information.
+ * By default, it uses the global `fetch` in browsers and later versions of Node.js.
  * Applications may specify a different function, e.g., to handle authentication or caching; 
  * this should be done before calling any other **gesel** functions that might fetch resources.
  *
- * @param {function} fun - Function that performs a GET request to an index file, returning a Response object containing the file contents.
+ * @param {function} [fun] - Function that performs a GET request to an index file, returning a Response object containing the file contents.
  * This should accept the base name of the pre-built index file of interest (e.g., `"9606_symbol.tsv.gz"`).
  *
- * @return {function} The previous global value of the function.
+ * @return {function} If `fun` is not supplied, the current global downloader is returned.
+ *
+ * If `fun` is supplied, it is used to set the global downloader, and the previous global value of the function is returned.
  */
-export function setGeneDownload(fun) {
+export function geneDownload(fun) {
     let prev = gene_download;
-    gene_download = fun;
+    if (typeof fun !== "undefined") {
+        gene_download = fun;
+    }
     return prev;
+}
+
+// For back-compatibility.
+export function setGeneDownload(fun) {
+    return geneDownload(fun);
 }
 
 export function decompressLines(buffer) {

@@ -1,4 +1,4 @@
-export { referenceBaseUrl, setReferenceDownload, geneBaseUrl, setGeneDownload, intersect } from "./utils.js";
+export { referenceBaseUrl, referenceDownload, setReferenceDownload, geneBaseUrl, geneDownload, setGeneDownload, intersect } from "./utils.js";
 
 export { fetchAllGenes } from "./fetchAllGenes.js";
 export { mapGenesByIdentifier } from "./mapGenesByIdentifier.js";

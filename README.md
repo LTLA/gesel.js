@@ -92,7 +92,7 @@ The example below attaches an authorization header to the request; the same appr
 
 ```js
 // To set the downloader for the reference files.
-gesel.setReferenceDownload(async (file, start = null, end = null) => {
+gesel.referenceDownload(async (file, start = null, end = null) => {
     const url = gesel.referenceBaseUrl() + "/" + file;
     if (start == null) {
         return fetch(url, { headers: { Authorization: "Bearer XXX" } });
@@ -103,8 +103,8 @@ gesel.setReferenceDownload(async (file, start = null, end = null) => {
 });
 
 // To set the downloader for gene information.
-gesel.setGeneDownload(file => {
-    const url = gesel.geneBaseUrl + "/" + file;
+gesel.geneDownload(file => {
+    const url = gesel.geneBaseUrl() + "/" + file;
     return fetch(url, { headers: { Authorization: "Bearer XXX" } });
 });
 ```
