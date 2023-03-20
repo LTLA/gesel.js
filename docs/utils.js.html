@@ -31,7 +31,7 @@
     <input type="text" id="nav-search" placeholder="Search" />
     
     
-    <h2><a href="index.html">Home</a></h2><h2><a href="https://github.roche.com/GP/gesel" target="_blank" class="menu-item" id="repository" >Github repo</a></h2><h3>Global</h3><ul><li><a href="global.html#effectiveNumberOfGenes">effectiveNumberOfGenes</a></li><li><a href="global.html#fetchAllCollections">fetchAllCollections</a></li><li><a href="global.html#fetchAllGenes">fetchAllGenes</a></li><li><a href="global.html#fetchAllSets">fetchAllSets</a></li><li><a href="global.html#fetchCollectionSizes">fetchCollectionSizes</a></li><li><a href="global.html#fetchGenesForAllSets">fetchGenesForAllSets</a></li><li><a href="global.html#fetchGenesForSet">fetchGenesForSet</a></li><li><a href="global.html#fetchSetsForAllGenes">fetchSetsForAllGenes</a></li><li><a href="global.html#fetchSetsForGene">fetchSetsForGene</a></li><li><a href="global.html#fetchSetSizes">fetchSetSizes</a></li><li><a href="global.html#fetchSingleCollection">fetchSingleCollection</a></li><li><a href="global.html#fetchSingleSet">fetchSingleSet</a></li><li><a href="global.html#findOverlappingSets">findOverlappingSets</a></li><li><a href="global.html#geneBaseUrl">geneBaseUrl</a></li><li><a href="global.html#intersect">intersect</a></li><li><a href="global.html#mapGenesByIdentifier">mapGenesByIdentifier</a></li><li><a href="global.html#numberOfCollections">numberOfCollections</a></li><li><a href="global.html#numberOfSets">numberOfSets</a></li><li><a href="global.html#preloadSearchSetText">preloadSearchSetText</a></li><li><a href="global.html#referenceBaseUrl">referenceBaseUrl</a></li><li><a href="global.html#reindexGenesForAllSets">reindexGenesForAllSets</a></li><li><a href="global.html#reindexSetsForAllGenes">reindexSetsForAllGenes</a></li><li><a href="global.html#searchGenes">searchGenes</a></li><li><a href="global.html#searchSetText">searchSetText</a></li><li><a href="global.html#setGeneDownload">setGeneDownload</a></li><li><a href="global.html#setReferenceDownload">setReferenceDownload</a></li><li><a href="global.html#testEnrichment">testEnrichment</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h2><a href="https://github.roche.com/GP/gesel" target="_blank" class="menu-item" id="repository" >Github repo</a></h2><h3>Global</h3><ul><li><a href="global.html#countSetOverlaps">countSetOverlaps</a></li><li><a href="global.html#effectiveNumberOfGenes">effectiveNumberOfGenes</a></li><li><a href="global.html#fetchAllCollections">fetchAllCollections</a></li><li><a href="global.html#fetchAllGenes">fetchAllGenes</a></li><li><a href="global.html#fetchAllSets">fetchAllSets</a></li><li><a href="global.html#fetchCollectionSizes">fetchCollectionSizes</a></li><li><a href="global.html#fetchGenesForAllSets">fetchGenesForAllSets</a></li><li><a href="global.html#fetchGenesForSet">fetchGenesForSet</a></li><li><a href="global.html#fetchSetsForAllGenes">fetchSetsForAllGenes</a></li><li><a href="global.html#fetchSetsForGene">fetchSetsForGene</a></li><li><a href="global.html#fetchSetSizes">fetchSetSizes</a></li><li><a href="global.html#fetchSingleCollection">fetchSingleCollection</a></li><li><a href="global.html#fetchSingleSet">fetchSingleSet</a></li><li><a href="global.html#findOverlappingSets">findOverlappingSets</a></li><li><a href="global.html#geneBaseUrl">geneBaseUrl</a></li><li><a href="global.html#geneDownload">geneDownload</a></li><li><a href="global.html#intersect">intersect</a></li><li><a href="global.html#mapGenesByIdentifier">mapGenesByIdentifier</a></li><li><a href="global.html#numberOfCollections">numberOfCollections</a></li><li><a href="global.html#numberOfSets">numberOfSets</a></li><li><a href="global.html#preloadSearchSetText">preloadSearchSetText</a></li><li><a href="global.html#referenceBaseUrl">referenceBaseUrl</a></li><li><a href="global.html#referenceDownload">referenceDownload</a></li><li><a href="global.html#reindexGenesForAllSets">reindexGenesForAllSets</a></li><li><a href="global.html#reindexSetsForAllGenes">reindexSetsForAllGenes</a></li><li><a href="global.html#searchGenes">searchGenes</a></li><li><a href="global.html#searchSetText">searchSetText</a></li><li><a href="global.html#testEnrichment">testEnrichment</a></li></ul>
     
 </nav>
 
@@ -84,11 +84,12 @@ export function referenceBaseUrl(url) {
 export var reference_download = (file, start = null, end = null) => default_download(reference_base_url, file, start, end);
 
 /**
- * Set the global download function to fetch pre-built references.
+ * Get or set the global download function to fetch pre-built references.
+ * By default, it uses the global `fetch` in browsers and later versions of Node.js.
  * Applications may specify a different function, e.g., to handle authentication or caching; 
  * this should be done before calling any other **gesel** functions that might fetch resources.
  *
- * @param {function} fun - Function that performs a GET request to an index file, returning a Response object containing the file contents.
+ * @param {function} [fun] - Function that performs a GET request to an index file, returning a Response object containing the file contents.
  * This accepts three arguments:
  *
  * - The base name of the pre-built index file of interest (e.g., `"10090_collections.tsv.gz"`).
@@ -98,12 +99,21 @@ export var reference_download = (file, start = null, end = null) => default_down
  * If all three arguments are specified, the function should perform a HTTP range request to obtain the specified range of bytes.
  * If only the first argument is supplied, the function should download the entire file.
  *
- * @return {function} The previous global value of the function.
+ * @return {function} If `fun` is not supplied, the current global downloader is returned.
+ *
+ * If `fun` is supplied, it is used to set the global downloader, and the previous global value of the function is returned.
  */
-export function setReferenceDownload(fun) {
+export function referenceDownload(fun) {
     let prev = reference_download;
-    reference_download = fun;
+    if (typeof fun !== "undefined") {
+        reference_download = fun;
+    }
     return prev;
+}
+
+// For back-compatibility.
+export function setReferenceDownload(fun) {
+    return referenceDownload(fun);
 }
 
 var gene_base_url = "https://github.com/LTLA/gesel-feedstock/releases/download/genes-v1.0.0";
@@ -133,18 +143,28 @@ export var gene_download = (file) => default_download(gene_base_url, file, null,
 
 /**
  * Set the global download function to fetch gene information.
+ * By default, it uses the global `fetch` in browsers and later versions of Node.js.
  * Applications may specify a different function, e.g., to handle authentication or caching; 
  * this should be done before calling any other **gesel** functions that might fetch resources.
  *
- * @param {function} fun - Function that performs a GET request to an index file, returning a Response object containing the file contents.
+ * @param {function} [fun] - Function that performs a GET request to an index file, returning a Response object containing the file contents.
  * This should accept the base name of the pre-built index file of interest (e.g., `"9606_symbol.tsv.gz"`).
  *
- * @return {function} The previous global value of the function.
+ * @return {function} If `fun` is not supplied, the current global downloader is returned.
+ *
+ * If `fun` is supplied, it is used to set the global downloader, and the previous global value of the function is returned.
  */
-export function setGeneDownload(fun) {
+export function geneDownload(fun) {
     let prev = gene_download;
-    gene_download = fun;
+    if (typeof fun !== "undefined") {
+        gene_download = fun;
+    }
     return prev;
+}
+
+// For back-compatibility.
+export function setGeneDownload(fun) {
+    return geneDownload(fun);
 }
 
 export function decompressLines(buffer) {
@@ -335,7 +355,7 @@ export function fetchNumber(species, _sizes, full, initialize) {
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.11</a> on Mon Mar 20 2023 16:06:04 GMT+0000 (Coordinated Universal Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.11</a> on Mon Mar 20 2023 16:37:38 GMT+0000 (Coordinated Universal Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>
