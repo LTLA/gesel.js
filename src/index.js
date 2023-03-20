@@ -15,7 +15,7 @@ export { fetchSetsForGene, effectiveNumberOfGenes } from "./fetchSetsForGene.js"
 export { fetchSetsForAllGenes } from "./fetchSetsForAllGenes.js";
 
 export { searchSetText, preloadSearchSetText } from "./searchSetText.js";
-export { findOverlappingSets } from "./findOverlappingSets.js";
+export { findOverlappingSets, countSetOverlaps } from "./findOverlappingSets.js";
 
 export { testEnrichment } from "./testEnrichment.js";
 

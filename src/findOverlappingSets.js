@@ -36,27 +36,7 @@ export async function findOverlappingSets(species, genes, { includeSize = true, 
     }
 
     let collected = await Promise.all(promises);
-    var set_count = new Map;
-    for (const found of collected) {
-        for (const set of found) {
-            let current = set_count.get(set);
-            if (typeof current == "undefined") {
-                set_count.set(set, 1);
-            } else {
-                set_count.set(set, current + 1);
-            }
-        }
-    }
-
-    let output = [];
-    for (const [id, count] of set_count) {
-        let id0 = Number(id);
-        let details = { 
-            "id": id0,
-            "count": count
-        };
-        output.push(details);
-    }
+    let output = countSetOverlaps(collected);
 
     let sets_sizes = (includeSize || testEnrichment ? await fetchSetSizes(species) : null);
     if (includeSize) {
@@ -77,3 +57,43 @@ export async function findOverlappingSets(species, genes, { includeSize = true, 
 
     return output;
 }
+
+/**
+ * This is a utility function that is called internally by {@linkcode findOverlappingSets}.
+ * However, it can be used directly to obtain overlap counts if the gene-to-set mappings are manually obtained.
+ *
+ * @param {Array} setsForSomeGenes - Array where each entry corresponds to a gene and contains an array of the set IDs containing that gene.
+ * Each inner array is typically the result of calling {@linkcode fetchSetsForGene}.
+ *
+ * @return {Array} An array of objects, where each object corresponds to a set that is present in at least one entry of `setsForSomeGenes`.
+ * Each object contains:
+ *
+ * - `id`: the ID of the set in {@linkcode fetchAllSets}.
+ * - `count`: the number of genes in the set that overlap with genes in `genes`.
+ */
+export function countSetOverlaps(setsForSomeGenes) {
+    var set_count = new Map;
+    for (const found of setsForSomeGenes) {
+        for (const set of found) {
+            let current = set_count.get(set);
+            if (typeof current == "undefined") {
+                set_count.set(set, 1);
+            } else {
+                set_count.set(set, current + 1);
+            }
+        }
+    }
+
+    let output = [];
+    for (const [id, count] of set_count) {
+        let id0 = Number(id);
+        let details = { 
+            "id": id0,
+            "count": count
+        };
+        output.push(details);
+    }
+
+    return output;
+}
+
