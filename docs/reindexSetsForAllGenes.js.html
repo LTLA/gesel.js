@@ -3,7 +3,7 @@
 <head>
     
     <meta charset="utf-8">
-    <title>mapGenesByIdentifier.js - Documentation</title>
+    <title>reindexSetsForAllGenes.js - Documentation</title>
     
     
     <script src="scripts/prettify/prettify.js"></script>
@@ -37,7 +37,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">mapGenesByIdentifier.js</h1>
+    <h1 class="page-title">reindexSetsForAllGenes.js</h1>
     
 
     
@@ -47,58 +47,33 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>import { fetchAllGenes } from "./fetchAllGenes.js";
-
-var by_symbol = new Map;
-var by_symbol_lower = new Map;
-
-/**
- * @param {string} species - The taxonomy ID of the species of interest, e.g., `"9606"` for human.
- * @param {string} type - Type of the identifier to use as the key of the map, e.g., `"ensembl"`.
- * @param {object} [options={}] - Optional parameters.
- * @param {boolean} [options.lowerCase=false] - Whether to use lower-case keys in the map.
+            <pre class="prettyprint source linenums"><code>/**
+ * Reindex the gene-to-set mappings for a user-defined gene universe.
+ * This is helpful for applications that know their own gene universe and want to create a mapping of all sets containing each of their own genes.
  *
- * @return {Map} Map where each key is a string containing a (possibly lower-cased) identifier of the specified `type` and each value is an array.
- * Each array contains the **gesel** gene IDs associated with the `type` identifier, see {@linkcode fetchAllGenes} for ore details.
+ * @param {Array} geneMapping - Array of length equal to the number of genes in a user-defined gene universe.
+ * Each entry corresponds to one gene in the user's universe and contains the corresponding gesel gene ID(s) (see {@linkcode fetchAllGenes} for details).
+ * Each entry can be either a number, for a 1:1 mapping; NaN, for a gene that has no matching gesel gene ID; or an array of gesel gene IDs, like that returned by {@linkcode searchGenes}.
+ * @param {Array} setsForGenes - Array of length equal to the number of gesel gene IDs.
+ * Each entry corresponds to a gesel gene ID and is an array containing the set IDs for all sets containing that gene.
+ * This is typically obtained from {@linkcode fetchSetsForAllGenes}.
  *
- * @async
+ * @return {Array} Array of length equal to `geneMapping`.
+ * Each entry corresponds to a gene in the user-supplied universe and is a Uint32Array where the elements are the gesel set IDs containing that gene.
+ * If a gene in `geneMapping` maps to multiple gesel IDs, we report all sets containing any of its mapped gesel gene IDs.
  */
-export async function mapGenesByIdentifier(species, type, { lowerCase = false } = {}) {
-    let host = (lowerCase ? by_symbol_lower : by_symbol);
-
-    let sfound = host.get(species);
-    if (typeof sfound === "undefined") {
-        sfound = new Map;
-        host.set(species, sfound);
-    }
-
-    let tfound = sfound.get(type);
-    if (typeof tfound === "undefined") {
-        tfound = new Map;
-        sfound.set(type, tfound);
-
-        let _genes = (await fetchAllGenes(species, { types: [ type ] })).get(type);
-        for (var i = 0; i &lt; _genes.length; i++) {
-            for (let y of _genes[i]) {
-                if (lowerCase) {
-                    y = y.toLowerCase();
-                }
-
-                let current = tfound.get(y);
-                if (typeof current !== "undefined") {
-                    current.add(i);
-                } else {
-                    tfound.set(y, new Set([i]));
-                }
+export function reindexSetsForAllGenes(geneMapping, setsForGenes) {
+    let remapped = new Array(geneMapping.length);
+    for (var i = 0; i &lt; geneMapping.length; i++) {
+        let collected = new Set;
+        for (const gesel_gene of geneMapping[i]) {
+            for (const set of setsForGenes[gesel_gene]) {
+                collected.add(set);
             }
         }
-
-        for (const [key, val] of tfound) {
-            tfound.set(key, Array.from(val));
-        }
+        remapped[i] = (new Uint32Array(collected)).sort();
     }
-
-    return tfound;
+    return remapped;
 }
 </code></pre>
         </article>
