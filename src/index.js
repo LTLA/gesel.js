@@ -18,6 +18,7 @@ export { searchSetText, preloadSearchSetText } from "./searchSetText.js";
 export { findOverlappingSets, countSetOverlaps } from "./findOverlappingSets.js";
 
 export { testEnrichment } from "./testEnrichment.js";
+export { adjustFdr } from "./adjustFdr.js";
 
 export { reindexGenesForAllSets } from "./reindexGenesForAllSets.js";
 export { reindexSetsForAllGenes } from "./reindexSetsForAllGenes.js";
