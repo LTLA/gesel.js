@@ -2,15 +2,17 @@ const factorials = [1];
 
 // Only exported for testing.
 export function lfactorial(x) {
-    // Trying to compute it exactly for low-ish numbers.
     if (x <= 44) {
+        // Computing it exactly for low-ish numbers. The limit of 44! is
+        // defined as the largest exact value representable by a double.
         while (factorials.length <= x) {
             let current = factorials.length;
             factorials.push(factorials[current - 1] * current);
         }
         return Math.log(factorials[x]);
     } else {
-        return x * Math.log(x) - x + 0.5 * Math.log(2 * x * 3.14159265358979323846);
+        // Using Ramanujan's approximation otherwise.
+        return 1/6 * Math.log(x * (1 + 4 * x * (1 + 2 * x)) + 1/30) + x * Math.log(x) - x + 0.5 * Math.log(3.14159265358979323846);
     }
 }
 
