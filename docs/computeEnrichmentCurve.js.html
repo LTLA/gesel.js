@@ -3,7 +3,7 @@
 <head>
     
     <meta charset="utf-8">
-    <title>fetchAllSets.js - Documentation</title>
+    <title>computeEnrichmentCurve.js - Documentation</title>
     
     
     <script src="scripts/prettify/prettify.js"></script>
@@ -37,7 +37,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">fetchAllSets.js</h1>
+    <h1 class="page-title">computeEnrichmentCurve.js</h1>
     
 
     
@@ -47,72 +47,63 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>import { reference_download, decompressLines } from "./utils.js";
-import { fetchAllCollections } from "./fetchAllCollections.js";
-
-var _sets = new Map;
-
-/**
- * @param {string} species - The taxonomy ID of the species of interest, e.g., `"9606"` for human.
+            <pre class="prettyprint source linenums"><code>/**
+ * Compute an enrichment curve from a gene ranking.
+ * At each position in the ranking, the value of the curve is defined as the proportion of genes with the same or higher rank that are present in the gene set.
+ * This can be used to visualize the change in enrichment as the ranking changes, typically with respect to some kind of decreasing importance.
+ *
+ * @param {Array|TypedArray} ranking - Ranking of genes, where earlier entries are considered to be more highly ranked.
+ * Each entry may either be an integer representing a gene (typically a **gesel** gene ID),
+ * or an array of such integers, e.g., as produced by {@linkcode searchGenes}.
+ * @param {Set|Array|TypedArray} setMembers - Array of integers specifying the genes (typically **gesel** gene IDs) belonging to the gene set.
+ * A preconstructed Set may also be supplied.
  * @param {object} [options={}] - Optional parameters.
- * @param {boolean} [options.download=true] - Whether to download the set details if they are not already available.
- * If `false`, `null` is returned if the set details have not already been loaded into memory.
- *
- * @return {Array} Array of objects where each entry corresponds to a set and contains the details about that set.
- * Each object can be expected to contain:
+ * @param {number} [options.pseudoCount=5] - Count to add to the total number of genes when computing the proportion.
+ * This avoids large fluctuations at the start of the curve at the cost of biasing the reported proportions.
  * 
- * - `name`, the name of the set.
- * - `description`, the description of the set.
- * - `size`, the number of genes in the set.
- * - `collection`, the index of the collection containing the set.
- * - `number`, the number of the set within the collection.
- *
- * In a **gesel** context, the identifier for a set (i.e., the "set ID") is defined as the index of the set in this array.
- *
- * If the set details have not already been loaded and `download = false`, `null` is returned.
- * @async
+ * @return {object} Object containing the following properties:
+ * 
+ * - `proportions`: a Float64Array of length equal to `ranking`.
+ *   Each entry contains the proportion of genes with equal or higher ranks that belong to the set.
+ * - `found`: a Uint32Array containing the indices of `ranking` corresponding to the genes that were found in the set.
  */
-export async function fetchAllSets(species, { download = true } = {}) {
-    let found = _sets.get(species);
-    if (typeof found !== "undefined") {
-        return found;
-    } else if (!download) {
-        return null;
+export function computeEnrichmentCurve(ranking, setMembers, { pseudoCount = 5 } = {}) {
+    if (!(setMembers instanceof Set)) {
+        setMembers = new Set(setMembers);
     }
 
-    found = [];
-    _sets.set(species, found);
+    let output = new Float64Array(ranking.length);
+    let hits = [];
+    let found = 0;
+    let total = pseudoCount;
 
-    var [ sres, _collections ] = await Promise.all([reference_download(species + "_sets.tsv.gz"), fetchAllCollections(species)]);
-    if (!sres.ok) {
-        throw new Error("failed to fetch set information for species '" + species + "'");
-    }
-    var set_data = decompressLines(await sres.arrayBuffer());
-
-    for (var i = 0; i &lt; set_data.length; i++) {
-        let x = set_data[i];
-        var details = x.split("\t");
-        found.push({
-            "name": details[0],
-            "description": details[1],
-            "size": Number(details[2])
-        });
-    }
-
-    let start = 0;
-    for (var i = 0; i &lt; _collections.length; i++) {
-        let len = _collections[i].size;
-
-        // For easier access going the other way.
-        for (var j = 0; j &lt; len; j++) {
-            found[j + start].collection = i;
-            found[j + start].number = j;
+    for (var i = 0; i &lt; ranking.length; i++) {
+        let x = ranking[i];
+        let hit = false;
+        if (typeof x == "number") {
+            hit = setMembers.has(x);
+        } else {
+            for (const y of x) {
+                if (setMembers.has(y)) {
+                    hit = true;
+                    break;
+                }
+            }
         }
 
-        start += len;
+        if (hit) {
+            hits.push(i);
+            found++;
+        }
+        total++;
+
+        output[i] = found / total;
     }
 
-    return found;
+    return {
+        proportions: output,
+        found: new Uint32Array(hits)
+    };
 }
 </code></pre>
         </article>
