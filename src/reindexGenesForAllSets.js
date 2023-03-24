@@ -1,17 +1,16 @@
 /**
  * Reindex the gene sets for a user-defined gene universe.
- * This is helpful for applications that know their own gene universe and want to convert the gesel gene IDs to indices within that universe.
+ * This is helpful for applications that know their own gene universe and want to convert the **gesel** gene IDs to indices within that universe.
  *
  * @param {Array} geneMapping - Array of length equal to the number of genes in a user-defined gene universe.
- * Each entry corresponds to one gene in the user's universe and contains the corresponding gesel gene ID(s) (see {@linkcode fetchAllGenes} for details).
- * Each entry can be either a number, for a 1:1 mapping; NaN, for a gene that has no matching gesel gene ID; or an array of gesel gene IDs, like that returned by {@linkcode searchGenes}.
+ * Each entry corresponds to one gene in the user's universe and should be an array containing the corresponding **gesel** gene ID(s) (see {@linkcode fetchAllGenes} for details).
  * @param {Array} genesForSets - Array of length equal to the number of reference gene sets.
- * Each entry corresponds to a set and is an array containing gesel gene IDs for all genes in that set.
+ * Each entry corresponds to a set and is an array containing **gesel** gene IDs for all genes in that set.
  * This is typically obtained from {@linkcode fetchGenesForAllSets}.
  *
  * @return {Array} Array of length equal to `genesForSets`. 
  * Each entry corresponds to a reference gene set and is a Uint32Array where the elements are indices into `geneMapping`, specifying the genes in the user's universe that belong to that set.
- * If a gene in `geneMapping` maps to multiple gesel IDs, it is considered to belong to all sets containing any of its mapped gesel gene IDs.
+ * If a gene in `geneMapping` maps to multiple **gesel** IDs, it is considered to belong to all sets containing any of its mapped **gesel** gene IDs.
  */
 export function reindexGenesForAllSets(geneMapping, genesForSets) {
     let reverse_mapping = new Map;
