@@ -6356,13 +6356,13 @@ If only the first argument is supplied, the function should download the entire 
     
     <dt class="tag-description">Description:</dt>
     <dd class="tag-description"><ul class="dummy"><li><p>Reindex the gene sets for a user-defined gene universe.
-This is helpful for applications that know their own gene universe and want to convert the gesel gene IDs to indices within that universe.</p></li></ul></dd>
+This is helpful for applications that know their own gene universe and want to convert the <strong>gesel</strong> gene IDs to indices within that universe.</p></li></ul></dd>
     
 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="reindexGenesForAllSets.js.html">reindexGenesForAllSets.js</a>, <a href="reindexGenesForAllSets.js.html#line16">line 16</a>
+        <a href="reindexGenesForAllSets.js.html">reindexGenesForAllSets.js</a>, <a href="reindexGenesForAllSets.js.html#line15">line 15</a>
     </li></ul></dd>
     
 
@@ -6452,8 +6452,7 @@ This is helpful for applications that know their own gene universe and want to c
             
 
             <td class="description last"><p>Array of length equal to the number of genes in a user-defined gene universe.
-Each entry corresponds to one gene in the user's universe and contains the corresponding gesel gene ID(s) (see <a href="global.html#fetchAllGenes"><code>fetchAllGenes</code></a> for details).
-Each entry can be either a number, for a 1:1 mapping; NaN, for a gene that has no matching gesel gene ID; or an array of gesel gene IDs, like that returned by <a href="global.html#searchGenes"><code>searchGenes</code></a>.</p></td>
+Each entry corresponds to one gene in the user's universe and should be an array containing the corresponding <strong>gesel</strong> gene ID(s) (see <a href="global.html#fetchAllGenes"><code>fetchAllGenes</code></a> for details).</p></td>
         </tr>
 
     
@@ -6478,7 +6477,7 @@ Each entry can be either a number, for a 1:1 mapping; NaN, for a gene that has n
             
 
             <td class="description last"><p>Array of length equal to the number of reference gene sets.
-Each entry corresponds to a set and is an array containing gesel gene IDs for all genes in that set.
+Each entry corresponds to a set and is an array containing <strong>gesel</strong> gene IDs for all genes in that set.
 This is typically obtained from <a href="global.html#fetchGenesForAllSets"><code>fetchGenesForAllSets</code></a>.</p></td>
         </tr>
 
@@ -6507,7 +6506,7 @@ This is typically obtained from <a href="global.html#fetchGenesForAllSets"><code
 <div class="param-desc">
     <p>Array of length equal to <code>genesForSets</code>.
 Each entry corresponds to a reference gene set and is a Uint32Array where the elements are indices into <code>geneMapping</code>, specifying the genes in the user's universe that belong to that set.
-If a gene in <code>geneMapping</code> maps to multiple gesel IDs, it is considered to belong to all sets containing any of its mapped gesel gene IDs.</p>
+If a gene in <code>geneMapping</code> maps to multiple <strong>gesel</strong> IDs, it is considered to belong to all sets containing any of its mapped <strong>gesel</strong> gene IDs.</p>
 </div>
 
 
@@ -6551,7 +6550,7 @@ This is helpful for applications that know their own gene universe and want to c
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="reindexSetsForAllGenes.js.html">reindexSetsForAllGenes.js</a>, <a href="reindexSetsForAllGenes.js.html#line16">line 16</a>
+        <a href="reindexSetsForAllGenes.js.html">reindexSetsForAllGenes.js</a>, <a href="reindexSetsForAllGenes.js.html#line15">line 15</a>
     </li></ul></dd>
     
 
@@ -6641,8 +6640,7 @@ This is helpful for applications that know their own gene universe and want to c
             
 
             <td class="description last"><p>Array of length equal to the number of genes in a user-defined gene universe.
-Each entry corresponds to one gene in the user's universe and contains the corresponding gesel gene ID(s) (see <a href="global.html#fetchAllGenes"><code>fetchAllGenes</code></a> for details).
-Each entry can be either a number, for a 1:1 mapping; NaN, for a gene that has no matching gesel gene ID; or an array of gesel gene IDs, like that returned by <a href="global.html#searchGenes"><code>searchGenes</code></a>.</p></td>
+Each entry corresponds to one gene in the user's universe and should be an array containing the corresponding <strong>gesel</strong> gene ID(s) (see <a href="global.html#fetchAllGenes"><code>fetchAllGenes</code></a> for details).</p></td>
         </tr>
 
     
@@ -6666,8 +6664,8 @@ Each entry can be either a number, for a 1:1 mapping; NaN, for a gene that has n
 
             
 
-            <td class="description last"><p>Array of length equal to the number of gesel gene IDs.
-Each entry corresponds to a gesel gene ID and is an array containing the set IDs for all sets containing that gene.
+            <td class="description last"><p>Array of length equal to the number of <strong>gesel</strong> gene IDs.
+Each entry corresponds to a <strong>gesel</strong> gene ID and is an array containing the set IDs for all sets containing that gene.
 This is typically obtained from <a href="global.html#fetchSetsForAllGenes"><code>fetchSetsForAllGenes</code></a>.</p></td>
         </tr>
 
@@ -6695,8 +6693,8 @@ This is typically obtained from <a href="global.html#fetchSetsForAllGenes"><code
         
 <div class="param-desc">
     <p>Array of length equal to <code>geneMapping</code>.
-Each entry corresponds to a gene in the user-supplied universe and is a Uint32Array where the elements are the gesel set IDs containing that gene.
-If a gene in <code>geneMapping</code> maps to multiple gesel IDs, we report all sets containing any of its mapped gesel gene IDs.</p>
+Each entry corresponds to a gene in the user-supplied universe and is a Uint32Array where the elements are the <strong>gesel</strong> set IDs containing that gene.
+If a gene in <code>geneMapping</code> maps to multiple <strong>gesel</strong> IDs, we report all sets containing any of its mapped <strong>gesel</strong> gene IDs.</p>
 </div>
 
 
@@ -7697,7 +7695,7 @@ This may be NaN if the inputs are inconsistent, e.g., <code>overlap</code> is gr
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.11</a> on Wed Mar 22 2023 20:20:09 GMT+0000 (Coordinated Universal Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.11</a> on Fri Mar 24 2023 06:29:42 GMT+0000 (Coordinated Universal Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>
