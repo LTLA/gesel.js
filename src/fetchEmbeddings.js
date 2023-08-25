@@ -47,7 +47,7 @@ function convertToCoordinates(lines) {
     }
 
     return {
-        "x": new Uint32Array(x), 
-        "y": new Uint32Array(y)
+        "x": new Float64Array(x), 
+        "y": new Float64Array(y)
     }
 };
