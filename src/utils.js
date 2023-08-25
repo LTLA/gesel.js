@@ -9,7 +9,7 @@ export var default_download = (base, file, start, end) => {
     }
 }
 
-var reference_base_url = "https://github.com/LTLA/gesel-feedstock/releases/download/indices-v0.2.1";
+var reference_base_url = "https://github.com/LTLA/gesel-feedstock/releases/download/indices-v0.2.2";
 
 /**
  * Get or set the base URL for the pre-built references.
