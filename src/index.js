@@ -23,3 +23,5 @@ export { computeEnrichmentCurve } from "./computeEnrichmentCurve.js";
 
 export { reindexGenesForAllSets } from "./reindexGenesForAllSets.js";
 export { reindexSetsForAllGenes } from "./reindexSetsForAllGenes.js";
+
+export { fetchEmbeddingsForSpecies } from "./fetchEmbeddings.js";

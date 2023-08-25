@@ -9,7 +9,7 @@ export var default_download = (base, file, start, end) => {
     }
 }
 
-var reference_base_url = "https://github.com/LTLA/gesel-feedstock/releases/download/indices-v0.2.1";
+var reference_base_url = "https://github.com/LTLA/gesel-feedstock/releases/download/indices-v0.2.2";
 
 /**
  * Get or set the base URL for the pre-built references.
@@ -291,4 +291,21 @@ export function fetchNumber(species, _sizes, full, initialize) {
         x => x.length,
         x => x.length
     );
+}
+
+export var embeddings_download = (file) => default_download(reference_base_url, file, null, null);
+
+export function convertToCoordinates(lines) {
+    var x = [], y = [];
+
+    for (let i = 0; i < lines.length; i++) {
+        let split = lines[i].split("\t");
+        x.push(Number(split[0]));
+        y.push(Number(split[1]));
+    }
+
+    return {
+        "x": new Uint32Array(x), 
+        "y": new Uint32Array(y)
+    }
 }
