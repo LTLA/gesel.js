@@ -3,7 +3,7 @@
 <head>
     
     <meta charset="utf-8">
-    <title>fetchAllGenes.js - Documentation</title>
+    <title>fetchEmbeddings.js - Documentation</title>
     
     
     <script src="scripts/prettify/prettify.js"></script>
@@ -37,7 +37,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">fetchAllGenes.js</h1>
+    <h1 class="page-title">fetchEmbeddings.js</h1>
     
 
     
@@ -47,77 +47,59 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>import { gene_download, decompressLines } from "./utils.js";
+            <pre class="prettyprint source linenums"><code>import * as utils from "./utils.js";
 
-var _genes = new Map;
+const _cache = new Map;
 
 /**
  * @param {string} species - The taxonomy ID of the species of interest, e.g., `"9606"` for human.
  * @param {object} [options={}] - Optional parameters.
- * @param {?Array} [options.types=null] - Array of strings specifying the identifier types to be retrieved.
- * The exact choice of strings depends on how the references were constructed.
- * If `null`, it defaults to an array containing `"symbol"`, `"entrez"` and `"ensembl"`.
+ * @param {boolean} [options.download=true] - Whether to download the gene-to-set mappings if they are not already available.
+ * If `false`, `null` is returned if the gene-to-set mappings have not already been loaded into memory.
  *
- * @return {Map} Object where each key is named after an identifier type in `types`.
- * Each value is an array where each element corresponds to a gene and is itself an array of strings containing all identifiers of the current type for that gene.
- *
- * The arrays for different identifier types are all of the same length, and corresponding elements across these arrays describe the same gene.
- * **gesel**'s identifier for each gene (i.e., the "gene ID") is defined as the index of that gene in any of these arrays.
- *
+ * @return {?Object} Object with the x and y coordinates. 
+ * 
+ * Each element in x and y corresponds to an entry in {@linkcode fetchAllSets} and 
+ * length of x and y is equal to the total number of sets for this `species`.
+ * 
+ * If the embedding mappings have not already been loaded and `download = false`, `null` is returned.
  * @async
  */
-export async function fetchAllGenes(species, { types = null } = {}) {
-    if (types == null) {
-        types = [ "symbol", "entrez", "ensembl" ];
+export async function fetchEmbeddingsForSpecies(species, { download = true } = {}) {
+    let found = _cache.get(species);
+    if (typeof found !== "undefined") {
+        return found;
+    } else if (!download) {
+        return null;
     }
 
-    let target = _genes.get(species);
-    if (typeof target == "undefined") {
-        target = new Map;
-        _genes.set(species, target);
+    // could probably just use gene_download
+    let res = await utils.reference_download(species + "_tsne.tsv.gz");
+    if (!res.ok) {
+        throw new Error("failed to fetch full tsne embeddings for species '" + species + "'");
     }
 
-    let output = new Map;
-    let promises = [];
-    let processing = [];
+    var embed_data = utils.decompressLines(await res.arrayBuffer());
+    let loaded = convertToCoordinates(embed_data);
 
-    for (const t of types) {
-        let found = target.get(t);
-        if (typeof found == "undefined") {
-            promises.push(gene_download(species + "_" + t + ".tsv.gz"));
-            processing.push(t);
-        } else {
-            output.set(t, found);
-        }
-    }
-
-    if (promises.length > 0) {
-        let resolved = await Promise.all(promises);
-        for (var i = 0; i &lt; resolved.length; i++) {
-            let res = resolved[i];
-            if (!res.ok) {
-                throw "failed to fetch symbol information for genes";
-            }
-            var buffer = await res.arrayBuffer();
-
-            let gene_data = decompressLines(buffer);
-            let processed = [];
-            for (const x of gene_data) {
-                if (x == "") {
-                    processed.push([]);
-                } else {
-                    processed.push(x.split("\t"));
-                }
-            }
-
-            let t = processing[i];
-            target.set(t, processed);
-            output.set(t, processed);
-        }
-    }
-
-    return output;
+    _cache.set(species, loaded);
+    return loaded;
 }
+
+function convertToCoordinates(lines) {
+    var x = [], y = [];
+
+    for (let i = 0; i &lt; lines.length; i++) {
+        let split = lines[i].split("\t");
+        x.push(Number(split[0]));
+        y.push(Number(split[1]));
+    }
+
+    return {
+        "x": new Uint32Array(x), 
+        "y": new Uint32Array(y)
+    }
+};
 </code></pre>
         </article>
     </section>
