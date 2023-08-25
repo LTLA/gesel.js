@@ -25,14 +25,29 @@ export async function fetchEmbeddingsForSpecies(species, { download = true } = {
     }
 
     // could probably just use gene_download
-    let res = await utils.embeddings_download(species + "_tsne.tsv.gz");
+    let res = await utils.reference_download(species + "_tsne.tsv.gz");
     if (!res.ok) {
         throw new Error("failed to fetch full tsne embeddings for species '" + species + "'");
     }
 
     var embed_data = utils.decompressLines(await res.arrayBuffer());
-    let loaded = utils.convertToCoordinates(embed_data);
+    let loaded = convertToCoordinates(embed_data);
 
     _cache.set(species, loaded);
     return loaded;
 }
+
+function convertToCoordinates(lines) {
+    var x = [], y = [];
+
+    for (let i = 0; i < lines.length; i++) {
+        let split = lines[i].split("\t");
+        x.push(Number(split[0]));
+        y.push(Number(split[1]));
+    }
+
+    return {
+        "x": new Uint32Array(x), 
+        "y": new Uint32Array(y)
+    }
+};

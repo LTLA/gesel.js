@@ -292,20 +292,3 @@ export function fetchNumber(species, _sizes, full, initialize) {
         x => x.length
     );
 }
-
-export var embeddings_download = (file) => default_download(reference_base_url, file, null, null);
-
-export function convertToCoordinates(lines) {
-    var x = [], y = [];
-
-    for (let i = 0; i < lines.length; i++) {
-        let split = lines[i].split("\t");
-        x.push(Number(split[0]));
-        y.push(Number(split[1]));
-    }
-
-    return {
-        "x": new Uint32Array(x), 
-        "y": new Uint32Array(y)
-    }
-};
