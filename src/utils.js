@@ -308,4 +308,4 @@ export function convertToCoordinates(lines) {
         "x": new Uint32Array(x), 
         "y": new Uint32Array(y)
     }
-}
+};

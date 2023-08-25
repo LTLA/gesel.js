@@ -1,3 +1,4 @@
+import * as utils from "./utils.js";
 import * as gesel from "../src/index.js"
 
 test("fetching sets for all embeddings works correctly", async () => {
