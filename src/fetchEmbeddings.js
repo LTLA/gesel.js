@@ -5,18 +5,18 @@ const _cache = new Map;
 /**
  * @param {string} species - The taxonomy ID of the species of interest, e.g., `"9606"` for human.
  * @param {object} [options={}] - Optional parameters.
- * @param {boolean} [options.download=true] - Whether to download the gene-to-set mappings if they are not already available.
- * If `false`, `null` is returned if the gene-to-set mappings have not already been loaded into memory.
+ * @param {boolean} [options.download=true] - Whether to download the embeddings if they are not already available.
+ * If `false`, `null` is returned if the embeddings have not already been loaded into memory.
  *
- * @return {?Object} Object with the x and y coordinates. 
+ * @return {?Object} Object with the `x` and `y`-coordinates for the t-SNE embedding.
  * 
- * Each element in x and y corresponds to an entry in {@linkcode fetchAllSets} and 
- * length of x and y is equal to the total number of sets for this `species`.
+ * Each value is a Float64Array of length equal to the total number of sets for this `species`.
+ * Each entry of the Float64Array corresponds to a gene set in {@linkcode fetchAllSets} and that set's x/y-coordinates on the embedding.
  * 
  * If the embedding mappings have not already been loaded and `download = false`, `null` is returned.
  * @async
  */
-export async function fetchEmbeddingsForSpecies(species, { download = true } = {}) {
+export async function fetchEmbeddings(species, { download = true } = {}) {
     let found = _cache.get(species);
     if (typeof found !== "undefined") {
         return found;
@@ -24,17 +24,21 @@ export async function fetchEmbeddingsForSpecies(species, { download = true } = {
         return null;
     }
 
-    // could probably just use gene_download
     let res = await utils.reference_download(species + "_tsne.tsv.gz");
     if (!res.ok) {
-        throw new Error("failed to fetch full tsne embeddings for species '" + species + "'");
+        throw new Error("failed to fetch embeddings for species '" + species + "'");
     }
 
-    var embed_data = utils.decompressLines(await res.arrayBuffer());
+    let embed_data = utils.decompressLines(await res.arrayBuffer());
     let loaded = convertToCoordinates(embed_data);
 
     _cache.set(species, loaded);
     return loaded;
+}
+
+// Provided for back-compatibility.
+export function fetchEmbeddingsForSpecies(species, { download = true } = {}) {
+    return fetchEmbeddings(species, { download });
 }
 
 function convertToCoordinates(lines) {
