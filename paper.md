@@ -216,7 +216,7 @@ rather, any generic static server can be used, including free offerings, e.g., f
 The client machine performs all of the calculations and the user receives the results immediately on completion, enabling low-latency applications that minimize network traffic.
 Similarly, there is no transfer of user-supplied gene lists to an external server, avoiding any questions over data ownership.
 Most importantly, as each user brings their own compute to the application, it scales to any number of users at no cost to us (i.e., the `gesel` maintainers).
-Indeed, we consider `gesel`'s development to be a natural consequence of the "client-side compute" philosophy described in @lun2022single.
+Indeed, we consider `gesel`'s development to be a natural consequence of the "client-side compute" philosophy described in @lun2023single.
 
 `gesel` works with any database files prepared according to the contract outlined in the feedstock repository [@geselfeedstock].
 This uses some standard compression tricks to reduce the size of the transferred database files, particularly for the mappings between sets and their genes.
