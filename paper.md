@@ -219,7 +219,9 @@ Most importantly, as each user brings their own compute to the application, it s
 Indeed, we consider `gesel`'s development to be a natural consequence of the "client-side compute" philosophy described in @lun2023single.
 
 `gesel` works with any database files prepared according to the contract outlined in the feedstock repository [@geselfeedstock].
-This uses some standard compression tricks to reduce the size of the transferred database files, particularly for the mappings between sets and their genes.
+These are simple tab-separated text files containing information about the genes, sets, collections, and the mappings between them.
+We store the byte ranges for each relationship in the mapping files to enable on-demand range requests.
+To reduce data transfer, we apply some standard practices like delta-encoding the sorted gene identifiers and Gzip-compressing the byte range files.
 `gesel`'s default database incorporates public gene sets from the Gene Ontology [@ashburner2000go] and, for human and mouse, the majority of the relevant MSigDB subcollections [@liberzon2011molecular].
 However, application developers can easily point `gesel` to a different database by overriding the request URL.
 For example, we adapted the scripts in the feedstock repository to create a company-specific database of custom gene sets based on biomarker lists and other signatures. 
