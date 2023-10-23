@@ -189,7 +189,9 @@ To demonstrate `gesel`'s functionality, we developed a simple web application th
 Given several parameters such as a list of user-supplied genes and a free-text query, the application shows a table containing the gene sets that satisfy the search parameters.
 Sets are sorted by increasing p-value to focus on those with significant enrichment.
 Clicking on a row corresponding to a particular gene set shows the identities of its genes, with emphasis applied to those in the user-supplied list.
-In addition, the parameters of each search are captured by query strings, allowing users to easily save and share searches by copying the URL from the browser's address bar.
+The parameters of each search are captured by query strings, allowing users to easily save and share searches by copying the URL from the browser's address bar.
+More adventurous users can also navigate a 2-dimensional embedding [@van2008visualizing] of gene sets, where sets with similar members are placed next to each other on the embedding;
+this provides an alternative representation of the search results that encourages exploration of related gene sets.
 
 # Implementation details
 
