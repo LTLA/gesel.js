@@ -11,7 +11,7 @@ authors:
     orcid: 0000-0001-5855-5031
     affiliation: 1
 affiliations:
-  - name: Genentech Inc., South San Francisco, USA
+  - name: Genentech Inc., South San Francisco, United States of America
     index: 1
 date: 12 March 2023
 bibliography: ref.bib
